@@ -1,0 +1,79 @@
+#htmlPallet-container {
+	position: relative;
+	height: 100%;
+}
+
+#htmlPallet-container table {
+	font-size: 1em;
+}
+
+.demo-description {
+	clear: both;
+	padding: 12px;
+	font-size: 1.3em;
+	line-height: 1.4em;
+}
+
+.ui-draggable,.ui-droppable {
+	background-position: top;
+}
+
+#cart h1, #products h1 {
+	padding:10px;
+	margin: 0;
+	font-size: 15px;
+}
+
+#cart h2, #products h2 {
+	font-size: 15px;
+}
+
+#products {
+	float: left;
+	width: 20%;
+	position: absolute;
+}
+
+#cart {
+	width: 76%;
+	right: 15px;
+	position: absolute;
+}
+
+#cart ol {
+	margin: 0;
+	padding: 1em 0 1em 3em;
+}
+
+.view {
+	height: 500px;
+}
+
+.ui-widget-header {
+	border: 1px solid #16385E;
+	background: #ffe000;
+	color: #000;
+	font-weight: bold;
+}
+
+.componentFeature {
+	display: none;
+	position: fixed;
+	bottom: 0px;
+	height: 300px;
+	width: 99.7%;
+	background: #FFFFFF;
+	margin-left: -13px;
+	-moz-box-shadow: 0px 0px 6px #000000;
+	-webkit-box-shadow: 0px 0px 6px #000000;
+	box-shadow: 0px 0px 6px #000000;
+	border-top-right-radius: 20px;
+	border-top-left-radius: 20px;
+}
+
+.featureBar-close {
+	position: absolute;
+	right: 15px;
+	top: 10px;
+	font-size: 25px;
+}
