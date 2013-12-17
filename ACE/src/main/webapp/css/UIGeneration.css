@@ -77,3 +77,22 @@
 	top: 10px;
 	font-size: 25px;
 }
+
+.component-img {
+	width: 50px;
+}
+/*
+.generated-item {
+	height: 50px;
+	position: relative;
+	border: 1px solid #000000;
+	padding: 10px 5px;
+	cursor: pointer;
+}
+
+.generated-item-label {
+	position: absolute;
+	left: 26px;
+	top: 6px;
+}
+*/

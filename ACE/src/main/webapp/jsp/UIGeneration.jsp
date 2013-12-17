@@ -53,31 +53,31 @@
 					<a href="#">UI-basics</a>
 				</h2>
 				<div>
-					<ul>
-						<li class="component-button" element-name="button">Button</li>
-						<li class="component-checkbox" element-name="input" element-type="checkbox">Check Box</li>
-						<li class="component-radio" element-name="input" element-type="radio">Radio Button</li>
-						<li class="component-text" element-name="input" element-type="text">Text Field</li>
-						<li class="component-textarea" element-name="textarea">Text Area</li>
-						<li class="component-a" element-name="a">hyperlink</li>
+					<ul class="list-group component-list">
+						<li class="list-group-item component-button" element-name="button">Button</li>
+						<li class="list-group-item component-checkbox" element-name="input" element-type="checkbox">Check Box</li>
+						<li class="list-group-item component-radio" element-name="input" element-type="radio">Radio Button</li>
+						<li class="list-group-item component-text" element-name="input" element-type="text">Text Field</li>
+						<li class="list-group-item component-textarea" element-name="textarea">Text Area</li>
+						<li class="list-group-item component-a" element-name="a">hyperlink</li>
 					</ul>
 				</div>
 				<h2>
 					<a href="#">Value Input Components</a>
 				</h2>
 				<div>
-					<ul>
-						<li>Text Input</li>
-						<li>Select</li>
-						<li>Combo Box</li>
+					<ul class="list-group component-list">
+						<li class="list-group-item">Text Input</li>
+						<li class="list-group-item">Select</li>
+						<li class="list-group-item">Combo Box</li>
 					</ul>
 				</div>
 				<h2>
 					<a href="#">Forms</a>
 				</h2>
 				<div>
-					<ul>
-						<li>Form</li>
+					<ul class="list-group component-list">
+						<li class="list-group-item">Form</li>
 					</ul>
 				</div>
 			</div>

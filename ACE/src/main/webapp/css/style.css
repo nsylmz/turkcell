@@ -66,3 +66,22 @@ body {
 	color: #ffffff;
 	background: #A8A8A8;
 }
+
+.list-group-item {
+	padding: 5px 5px;
+}
+
+.list-group {
+	margin-bottom: 0px;
+}
+
+.list-item-container {
+	height: 50px;
+	position: relative;
+}
+
+.list-item-label {
+	position: absolute;
+	left: 60px;
+	top: 15px;
+}

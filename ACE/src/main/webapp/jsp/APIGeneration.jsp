@@ -17,7 +17,8 @@
 	<link href="${pageContext.request.contextPath}/css/jquery-ui.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/UIGeneration.css" rel="stylesheet" type="text/css" />
-	
+	<link href="${pageContext.request.contextPath}/css/Components.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/css/flowchart.css" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -53,35 +54,65 @@
 					<a href="#">Process</a>
 				</h2>
 				<div>
-					<ul>
-						<li class="begin" element-name="Begin">Begin</li>
-						<li class="end" element-name="End">End</li>
-						<li class="if" element-name="If">If</li>
+					<ul class="list-group component-list">
+						<li class="list-group-item" element-name="Begin">
+							<div class="list-item-container">
+								<img class="component-img" src="${pageContext.request.contextPath}/img/start.png">
+								<div class="list-item-label">Begin</div>
+							</div>
+						</li>
+						<li class="list-group-item" element-name="End">
+							<div class="list-item-container">
+								<img class="component-img" src="${pageContext.request.contextPath}/img/end.png">
+								<div class="list-item-label">End</div>
+							</div>
+						</li>
+						<li class="list-group-item" element-name="If">
+							<div class="list-item-container">
+								<img class="component-img" src="${pageContext.request.contextPath}/img/if.png">
+								<div class="list-item-label">If</div>
+							</div>
+						</li>
 					</ul>
 				</div>
 				<h2>
 					<a href="#">End Points</a>
 				</h2>
 				<div>
-					<ul>
-						<li class="web-service" element-name="WebService">Web Service</li>
-						<li class="rest" element-name="Rest">Rest Service</li>
+					<ul class="list-group component-list">
+						<li class="list-group-item" element-name="WebService">
+							<div class="list-item-container">
+								<img class="component-img" src="${pageContext.request.contextPath}/img/web-service.png">
+								<div class="list-item-label">Web Service</div>
+							</div>
+						</li>
+						<li class="list-group-item" element-name="RestService">
+							<div class="list-item-container">
+								<img class="component-img" src="${pageContext.request.contextPath}/img/rest-service.png">
+								<div class="list-item-label">Rest Service</div>
+							</div>
+						</li>
 					</ul>
 				</div>
 				<h2>
 					<a href="#">Java</a>
 				</h2>
 				<div>
-					<ul>
-						<li class="java-method" element-name="JavaMethod">Java API Method</li>
+					<ul class="list-group component-list">
+						<li class="list-group-item" element-name="JavaMethod">
+							<div class="list-item-container">
+								<img class="component-img" src="${pageContext.request.contextPath}/img/java-big.png">
+								<div class="list-item-label">Java API Method</div>
+							</div>
+						</li>
 					</ul>
-				</div>
+				</div>	
 			</div>
 		</div>
 	
 		<div id="cart">
 			<h1 class="ui-widget-header">View</h1>
-			<div class="ui-widget-content view"></div>
+			<div id="flowchart-view" class="ui-widget-content view flowchart-view"></div>
 		</div>
 		
 		<div class="componentFeature">
@@ -93,10 +124,31 @@
 	<script src="${pageContext.request.contextPath}/js/jquery-ui.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/holder.js" type="text/javascript"></script>
-	<script src="${pageContext.request.contextPath}/js/UIGeneration.js" type="text/javascript"></script>
+	
+	<script src="${pageContext.request.contextPath}/js/jquery.ui.touch-punch.min.js"></script>        
+    <script src="${pageContext.request.contextPath}/js/jsBezier-0.6.js"></script>     
+    <script src="${pageContext.request.contextPath}/js/jsplumb-geom-0.1.js"></script>
+    <script src="${pageContext.request.contextPath}/js/util.js"></script>
+    <script src="${pageContext.request.contextPath}/js/dom-adapter.js"></script>        
+    <script src="${pageContext.request.contextPath}/js/jsPlumb.js"></script>
+    <script src="${pageContext.request.contextPath}/js/endpoint.js"></script>                
+    <script src="${pageContext.request.contextPath}/js/connection.js"></script>
+    <script src="${pageContext.request.contextPath}/js/anchors.js"></script>        
+    <script src="${pageContext.request.contextPath}/js/defaults.js"></script>
+    <script src="${pageContext.request.contextPath}/js/connectors-bezier.js"></script>
+    <script src="${pageContext.request.contextPath}/js/connectors-statemachine.js"></script>
+    <script src="${pageContext.request.contextPath}/js/connectors-flowchart.js"></script>
+    <script src="${pageContext.request.contextPath}/js/connector-editors.js"></script>
+    <script src="${pageContext.request.contextPath}/js/renderers-svg.js"></script>
+    <script src="${pageContext.request.contextPath}/js/renderers-canvas.js"></script>
+    <script src="${pageContext.request.contextPath}/js/renderers-vml.js"></script>
+    <script src="${pageContext.request.contextPath}/js/jquery.jsPlumb.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart.js"></script>
+    
+	<script src="${pageContext.request.contextPath}/js/APIGeneration.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
-		UIGeneration();
+		APIGeneration();
 	</script>
 </body>
 </html>

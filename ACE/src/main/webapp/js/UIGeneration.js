@@ -1,5 +1,5 @@
 function UIGeneration() {
-	$("#catalog").accordion();
+	$("#catalog").accordion({ heightStyle: "content" });
 	$("#catalog li").draggable({
 		appendTo : "body",
 		helper : "clone"
