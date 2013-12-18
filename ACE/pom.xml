@@ -32,11 +32,48 @@
 
 		<!-- Test -->
 		<junit.version>4.11</junit.version>
-
+		
+		<!-- Apache Camel -->
+		<camel.version>2.12.2</camel.version>
+		
 	</properties>
 
 	<dependencies>
-
+	
+		<!-- Apache Camel -->
+		<!--dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>examples</artifactId>
+			<version>2.12.2</version>
+		</dependency -->
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel</artifactId>
+			<version>${camel.version}</version>
+			<type>pom</type>
+		</dependency>
+		<!-- dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-spring-ws</artifactId>
+			<version>${camel.version}</version>
+		</dependency -->
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jaxb</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-cxf</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-spring</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		            
+		            
 		<!-- Spring MVC -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -256,6 +293,11 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.camel</groupId>
+				<artifactId>camel-maven-plugin</artifactId>
+				<version>${camel.version}</version>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
@@ -276,7 +318,7 @@
 							<goal>test-compile</goal>
 						</goals>
 					</execution>
-				</executions>
+				</executions>b
 				<configuration>
 					<outxml>true</outxml>
 					<complianceLevel>${javac.version}</complianceLevel>
