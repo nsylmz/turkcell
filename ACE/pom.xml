@@ -39,7 +39,13 @@
 	</properties>
 
 	<dependencies>
-	
+		<dependency>
+			<groupId>com.sun.xsom</groupId>
+			<artifactId>xsom</artifactId>
+			<version>20110809</version>
+			<scope>compile</scope>
+		</dependency>
+		
 		<!-- Apache Camel -->
 		<!--dependency>
 			<groupId>org.apache.camel</groupId>

@@ -1,0 +1,478 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Oracle JAX-WS 2.1.5. --><xs:schema xmlns:tns="http://subvention.endpoints.service.sfa.crm.turkcell.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://subvention.endpoints.service.sfa.crm.turkcell.com/">
+
+<xs:element name="Exception" type="tns:Exception"/>
+
+<xs:element name="doSubventionControlForMsisdn" type="tns:doSubventionControlForMsisdn"/>
+
+<xs:element name="doSubventionControlForMsisdnResponse" type="tns:doSubventionControlForMsisdnResponse"/>
+
+<xs:element name="getApprovalCountByType" type="tns:getApprovalCountByType"/>
+
+<xs:element name="getApprovalCountByTypeResponse" type="tns:getApprovalCountByTypeResponse"/>
+
+<xs:element name="getApprovalItemRecordCount" type="tns:getApprovalItemRecordCount"/>
+
+<xs:element name="getApprovalItemRecordCountResponse" type="tns:getApprovalItemRecordCountResponse"/>
+
+<xs:element name="getApprovalItemRecords" type="tns:getApprovalItemRecords"/>
+
+<xs:element name="getApprovalItemRecordsResponse" type="tns:getApprovalItemRecordsResponse"/>
+
+<xs:element name="getApprovalSubventionItemDetails" type="tns:getApprovalSubventionItemDetails"/>
+
+<xs:element name="getApprovalSubventionItemDetailsResponse" type="tns:getApprovalSubventionItemDetailsResponse"/>
+
+<xs:element name="listApprovalHistory" type="tns:listApprovalHistory"/>
+
+<xs:element name="listApprovalHistoryResponse" type="tns:listApprovalHistoryResponse"/>
+
+<xs:element name="sendRecordToApproval" type="tns:sendRecordToApproval"/>
+
+<xs:element name="sendRecordToApprovalResponse" type="tns:sendRecordToApprovalResponse"/>
+
+<xs:element name="updateSubventionStatus" type="tns:updateSubventionStatus"/>
+
+<xs:element name="updateSubventionStatusResponse" type="tns:updateSubventionStatusResponse"/>
+
+<xs:complexType name="getApprovalCountByType">
+<xs:sequence>
+<xs:element name="arg0" type="tns:approvalItemByEntityCountRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="approvalItemByEntityCountRequest">
+<xs:complexContent>
+<xs:extension base="tns:approvalItemRecordCountRequest">
+<xs:sequence>
+<xs:element name="isteCep" type="xs:boolean"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="approvalItemRecordCountRequest">
+<xs:complexContent>
+<xs:extension base="tns:baseWsRequest">
+<xs:sequence>
+<xs:element name="ldapName" type="xs:string" nillable="true"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="baseWsRequest">
+<xs:sequence>
+<xs:element name="systemId" type="xs:int"/>
+<xs:element name="userId" type="xs:string"/>
+<xs:element name="operationCode" type="xs:string"/>
+<xs:element name="transactionDate" type="xs:dateTime"/>
+<xs:element name="transactionId" type="xs:long"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getApprovalCountByTypeResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:approvalItemRecordCountResponse" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="approvalItemRecordCountResponse">
+<xs:complexContent>
+<xs:extension base="tns:baseWsResponse">
+<xs:sequence>
+<xs:element name="countInboxRecords" type="xs:int"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="baseWsResponse">
+<xs:sequence>
+<xs:element name="description" type="xs:string" minOccurs="0"/>
+<xs:element name="result" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="listApprovalHistory">
+<xs:sequence>
+<xs:element name="arg0" type="tns:approvalHistoryRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="approvalHistoryRequest">
+<xs:complexContent>
+<xs:extension base="tns:baseWebserviceRequest">
+<xs:sequence>
+<xs:element name="primaryKey" type="xs:int"/>
+<xs:element name="isteCep" type="xs:boolean"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="baseWebserviceRequest">
+<xs:sequence>
+<xs:element name="systemId" type="xs:int"/>
+<xs:element name="userId" type="xs:string"/>
+<xs:element name="operationCode" type="xs:string"/>
+<xs:element name="transactionDate" type="xs:dateTime"/>
+<xs:element name="transactionId" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="listApprovalHistoryResponse">
+<xs:sequence>
+<xs:element name="approvalHistoryResponse" type="tns:approvalHistoryResponse" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="approvalHistoryResponse">
+<xs:complexContent>
+<xs:extension base="tns:baseWsResponse">
+<xs:sequence>
+<xs:element name="approvalList" type="tns:tapproval" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="tapproval">
+<xs:sequence>
+<xs:element name="capprovalaction" type="xs:decimal" minOccurs="0"/>
+<xs:element name="capprovalpriority" type="xs:decimal" minOccurs="0"/>
+<xs:element name="capprovalreason" type="xs:decimal" minOccurs="0"/>
+<xs:element name="cgenerate" type="xs:decimal" minOccurs="0"/>
+<xs:element name="cintegration" type="xs:int" minOccurs="0"/>
+<xs:element name="cmodify" type="xs:decimal" minOccurs="0"/>
+<xs:element name="cstatapproval" type="xs:int" minOccurs="0"/>
+<xs:element name="ctypeapproval" type="xs:decimal" minOccurs="0"/>
+<xs:element name="customer" type="tns:tcst" nillable="true" minOccurs="0"/>
+<xs:element name="dapprovalexpiredate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="dgenerate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="dmodify" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="islemYapmasiBeklenenKullanici" type="xs:string" minOccurs="0"/>
+<xs:element name="napproval" type="xs:long"/>
+<xs:element name="ncst" type="xs:int" minOccurs="0"/>
+<xs:element name="nparentapproval" type="xs:long" minOccurs="0"/>
+<xs:element name="ntotalbillamount" type="xs:decimal" minOccurs="0"/>
+<xs:element name="ntotalrefundamount" type="xs:decimal" minOccurs="0"/>
+<xs:element name="sonIslemYapanKullanici" type="xs:string" minOccurs="0"/>
+<xs:element name="subventionBillingDay" type="xs:string" minOccurs="0"/>
+<xs:element name="tapprovaldtls" type="tns:tapprovaldtl" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="tapprovalpostns" type="tns:tapprovalpostn" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="tdescription" type="xs:string" minOccurs="0"/>
+<xs:element name="tgenerate" type="xs:string" minOccurs="0"/>
+<xs:element name="tintegration" type="xs:string" minOccurs="0"/>
+<xs:element name="tintegrationkey" type="xs:string" minOccurs="0"/>
+<xs:element name="tmodify" type="xs:string" minOccurs="0"/>
+<xs:element name="tstatapproval" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="tcst">
+<xs:sequence>
+<xs:element name="customerAddress" type="xs:string" minOccurs="0"/>
+<xs:element name="cstatcst" type="xs:int" minOccurs="0"/>
+<xs:element name="csubstatcst" type="xs:int" minOccurs="0"/>
+<xs:element name="sectorCode" type="xs:int" minOccurs="0"/>
+<xs:element name="ctypecst" type="xs:int" minOccurs="0"/>
+<xs:element name="errorMessage" type="xs:string" minOccurs="0"/>
+<xs:element name="ncst" type="xs:int" minOccurs="0"/>
+<xs:element name="ncstString" type="xs:string" minOccurs="0"/>
+<xs:element name="nposition" type="xs:int" minOccurs="0"/>
+<xs:element name="customerName" type="xs:string" minOccurs="0"/>
+<xs:element name="tstatcst" type="xs:string" minOccurs="0"/>
+<xs:element name="taxId" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="tapprovaldtl">
+<xs:sequence>
+<xs:element name="cgenerate" type="xs:decimal" minOccurs="0"/>
+<xs:element name="cmodify" type="xs:decimal" minOccurs="0"/>
+<xs:element name="cstatapprovaldtl" type="xs:decimal" minOccurs="0"/>
+<xs:element name="dgenerate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="dmodify" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="napprovaldtl" type="xs:long"/>
+<xs:element name="nbillamount" type="xs:decimal" minOccurs="0"/>
+<xs:element name="nprotestamount" type="xs:decimal" minOccurs="0"/>
+<xs:element name="nrefundamount" type="xs:decimal" minOccurs="0"/>
+<xs:element name="tapproval" type="tns:tapproval" minOccurs="0"/>
+<xs:element name="tgenerate" type="xs:string" minOccurs="0"/>
+<xs:element name="tgsmno" type="xs:string" minOccurs="0"/>
+<xs:element name="tmodify" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="tapprovalpostn">
+<xs:sequence>
+<xs:element name="capprovalpostnaction" type="xs:decimal" minOccurs="0"/>
+<xs:element name="cgenerate" type="xs:decimal" minOccurs="0"/>
+<xs:element name="cmodify" type="xs:decimal" minOccurs="0"/>
+<xs:element name="ctypepostn" type="xs:int" minOccurs="0"/>
+<xs:element name="dgenerate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="dmodify" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="napprovalpostn" type="xs:long"/>
+<xs:element name="nposition" type="xs:int" minOccurs="0"/>
+<xs:element name="tapproval" type="tns:tapproval" minOccurs="0"/>
+<xs:element name="tgenerate" type="xs:string" minOccurs="0"/>
+<xs:element name="tmodify" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getApprovalSubventionItemDetails">
+<xs:sequence>
+<xs:element name="arg0" type="tns:approvalSubventionRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="approvalSubventionRequest">
+<xs:complexContent>
+<xs:extension base="tns:baseWebserviceRequest">
+<xs:sequence>
+<xs:element name="primaryKey" type="xs:int"/>
+<xs:element name="approval" type="xs:boolean"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="getApprovalSubventionItemDetailsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:approvalSubventionResponse" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="approvalSubventionResponse">
+<xs:complexContent>
+<xs:extension base="tns:baseWsResponse">
+<xs:sequence>
+<xs:element name="activeFlag" type="xs:int" minOccurs="0"/>
+<xs:element name="approvalComments" type="xs:string" minOccurs="0"/>
+<xs:element name="approvalItemID" type="xs:long" minOccurs="0"/>
+<xs:element name="approvalItemName" type="xs:string" minOccurs="0"/>
+<xs:element name="approvalItemType" type="xs:int" minOccurs="0"/>
+<xs:element name="costProfitCurrentBenefitAmount" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitDeviceAmount" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitDistributionIncomeRatio" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitFAIAmount" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitFATAmount" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitGrossRoamingIncome" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitGrossTotalProductIncome" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitNetIncome" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitNetProfitLoss" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitNetProfitabilityRatio" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitTechnologyBudgetAmount" type="xs:double" minOccurs="0"/>
+<xs:element name="costProfitTotalBenefitAmount" type="xs:double" minOccurs="0"/>
+<xs:element name="generalInfoComments" type="xs:string" minOccurs="0"/>
+<xs:element name="generalInfoContractEndDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="generalInfoContractPeriod" type="xs:int" minOccurs="0"/>
+<xs:element name="generalInfoContractStartDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="generalInfoCustomerName" type="xs:string" minOccurs="0"/>
+<xs:element name="generalInfoGenerateUserLDAP" type="xs:string" minOccurs="0"/>
+<xs:element name="generalInfoGenerateUserName" type="xs:string" minOccurs="0"/>
+<xs:element name="generalInfoGenerateUserSurname" type="xs:string" minOccurs="0"/>
+<xs:element name="generalInfoGenerationDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="generalInfoLastUpdateDate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="generalInfoNCST" type="xs:int" minOccurs="0"/>
+<xs:element name="generalInfoSalesChannel" type="xs:string" minOccurs="0"/>
+<xs:element name="generalInfoSubSalesChannel" type="xs:string" minOccurs="0"/>
+<xs:element name="generalInfoSubventionType" type="xs:string" minOccurs="0"/>
+<xs:element name="generalInfoTotalBudget" type="xs:double" minOccurs="0"/>
+<xs:element name="generalInfoTotalIncome" type="xs:double" minOccurs="0"/>
+<xs:element name="lineInfoContractDataLine" type="xs:int" minOccurs="0"/>
+<xs:element name="lineInfoContractTotalLine" type="xs:int" minOccurs="0"/>
+<xs:element name="lineInfoContractVoiceLine" type="xs:int" minOccurs="0"/>
+<xs:element name="lineInfoCurrentDataLine" type="xs:int" minOccurs="0"/>
+<xs:element name="lineInfoCurrentVoiceLine" type="xs:int" minOccurs="0"/>
+<xs:element name="lineInfoPlanningDataLine" type="xs:int" minOccurs="0"/>
+<xs:element name="lineInfoPlanningVoiceLine" type="xs:int" minOccurs="0"/>
+<xs:element name="parentSubventionId" type="xs:int" minOccurs="0"/>
+<xs:element name="subventionID" type="xs:int" minOccurs="0"/>
+<xs:element name="tapprovalreason" type="xs:string" minOccurs="0"/>
+<xs:element name="tstatus" type="xs:string" minOccurs="0"/>
+<xs:element name="tsubvstatus" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="sendRecordToApproval">
+<xs:sequence>
+<xs:element name="arg0" type="tns:subventionApprovalRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="subventionApprovalRequest">
+<xs:complexContent>
+<xs:extension base="tns:baseWebserviceRequest">
+<xs:sequence>
+<xs:element name="primaryKey" type="xs:int"/>
+<xs:element name="status" type="xs:int"/>
+<xs:element name="nposition" type="xs:int"/>
+<xs:element name="tldapname" type="xs:string"/>
+<xs:element name="isteCep" type="xs:boolean"/>
+<xs:element name="comment" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="sendRecordToApprovalResponse">
+<xs:sequence>
+<xs:element name="subventionApprovalResponse" type="tns:subventionApprovalResponse" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="subventionApprovalResponse">
+<xs:complexContent>
+<xs:extension base="tns:baseWsResponse">
+<xs:sequence/>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="updateSubventionStatus">
+<xs:sequence>
+<xs:element name="arg0" type="tns:subventionUpdateStatusRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="subventionUpdateStatusRequest">
+<xs:complexContent>
+<xs:extension base="tns:baseWebserviceRequest">
+<xs:sequence>
+<xs:element name="subventionId" type="xs:int"/>
+<xs:element name="status" type="xs:int"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="updateSubventionStatusResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:subventionUpdateStatusResponse" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="subventionUpdateStatusResponse">
+<xs:complexContent>
+<xs:extension base="tns:baseWsResponse">
+<xs:sequence/>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="doSubventionControlForMsisdn">
+<xs:sequence>
+<xs:element name="subventionControlForMsisdnRequest" type="tns:subventionControlForMsisdnRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="subventionControlForMsisdnRequest">
+<xs:complexContent>
+<xs:extension base="tns:baseWsRequest">
+<xs:sequence>
+<xs:element name="msisdn" type="xs:string" nillable="true"/>
+<xs:element name="offerList" type="tns:subventionControlForMsisdnRequestParams" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="subventionControlForMsisdnRequestParams">
+<xs:complexContent>
+<xs:extension base="tns:baseWsRequestParam">
+<xs:sequence>
+<xs:element name="activate" type="xs:boolean"/>
+<xs:element name="offerId" type="xs:int" minOccurs="0"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="baseWsRequestParam" abstract="true">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="doSubventionControlForMsisdnResponse">
+<xs:sequence>
+<xs:element name="subventionControlForMsisdnResponse" type="tns:subventionControlForMsisdnResponse" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="subventionControlForMsisdnResponse">
+<xs:complexContent>
+<xs:extension base="tns:baseWsResponse">
+<xs:sequence/>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="Exception">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getApprovalItemRecordCount">
+<xs:sequence>
+<xs:element name="getCountApprovalItemRecordsRequest" type="tns:approvalItemRecordCountRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getApprovalItemRecordCountResponse">
+<xs:sequence>
+<xs:element name="getCountApprovalItemRecordsResponse" type="tns:approvalItemRecordCountResponse" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getApprovalItemRecords">
+<xs:sequence>
+<xs:element name="getApprovalItemRecordsRequest" type="tns:approvalItemRecordsRequest" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="approvalItemRecordsRequest">
+<xs:complexContent>
+<xs:extension base="tns:baseWsRequest">
+<xs:sequence>
+<xs:element name="ldapName" type="xs:string" nillable="true"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="getApprovalItemRecordsResponse">
+<xs:sequence>
+<xs:element name="getApprovalItemRecordsResponse" type="tns:approvalItemRecordsResponse" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="approvalItemRecordsResponse">
+<xs:complexContent>
+<xs:extension base="tns:baseWsResponse">
+<xs:sequence>
+<xs:element name="approvalsByLdapUserAndStatusResponseParams" type="tns:approvalItemRecordsResponseParams" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="approvalItemRecordsResponseParams">
+<xs:sequence>
+<xs:element name="activeFlag" type="xs:string" minOccurs="0"/>
+<xs:element name="approvalId" type="xs:string" minOccurs="0"/>
+<xs:element name="approvalName" type="xs:string" minOccurs="0"/>
+<xs:element name="approvalType" type="xs:string" minOccurs="0"/>
+<xs:element name="billingDate" type="xs:int" minOccurs="0"/>
+<xs:element name="cintegration" type="xs:int" minOccurs="0"/>
+<xs:element name="createLdapName" type="xs:string" minOccurs="0"/>
+<xs:element name="customerName" type="xs:string" minOccurs="0"/>
+<xs:element name="modifyLdapName" type="xs:string" minOccurs="0"/>
+<xs:element name="primaryKey" type="xs:int" minOccurs="0"/>
+<xs:element name="sourceSystemRecordLink" type="xs:string" minOccurs="0"/>
+<xs:element name="startTime" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
