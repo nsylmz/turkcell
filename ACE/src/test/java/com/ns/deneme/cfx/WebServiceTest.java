@@ -32,7 +32,7 @@ public class WebServiceTest {
 	@Test
 	public void testWsCall() {
 		try {
-			WsdlOperations wsdlOperations = webServiceManager.generateClientAndGetAllOperations("http://extprpws.turkcell.com.tr/tsfaws/SubventionService?wsdl");
+			WsdlOperations wsdlOperations = webServiceManager.readWsdlAndGetAllOperations("http://extprpws.turkcell.com.tr/tsfaws/SubventionService?wsdl");
 			Operation operation = webServiceManager.getOperation(wsdlOperations.getOperationNames().get(0), wsdlOperations.getDefinition());
 			Map<String, String> inputParamAndTypes = webServiceManager.getOperationInputParams(operation, wsdlOperations.getDefinition());
 			Map<String, String> outputParamAndTypes = webServiceManager.getOperationOutputParams(operation, wsdlOperations.getDefinition());

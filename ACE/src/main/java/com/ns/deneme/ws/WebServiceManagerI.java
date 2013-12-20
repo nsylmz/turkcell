@@ -11,7 +11,7 @@ public interface WebServiceManagerI {
 	public Object[] callWsOperation(String wsdlUrl, String operation, String operationSchemaName, String operationRequestType, 
 			String operationResponseType, Map<String, WSRequestParameter> paramNameAndparamValue);
 	
-	public WsdlOperations generateClientAndGetAllOperations(String wsdlUrl);
+	public WsdlOperations readWsdlAndGetAllOperations(String wsdlUrl);
 	
 	public Operation getOperation(String operationName, Definition definition);
 	

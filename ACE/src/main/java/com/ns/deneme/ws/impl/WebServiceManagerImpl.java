@@ -177,7 +177,7 @@ public class WebServiceManagerImpl implements WebServiceManagerI {
 		return null;
 	}
 	
-	public WsdlOperations generateClientAndGetAllOperations(String wsdlUrl) {
+	public WsdlOperations readWsdlAndGetAllOperations(String wsdlUrl) {
 		WsdlOperations wsdlOperations = new WsdlOperations();
 		try {
 			WSDLManagerImpl wsdlManager = new WSDLManagerImpl();
