@@ -1,7 +1,6 @@
 package com.ns.deneme.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.wsdl.Definition;
@@ -15,8 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ns.deneme.vo.WsRunParams;
 import com.ns.deneme.ws.WebServiceManagerI;
 import com.ns.deneme.ws.WsdlOperations;
@@ -46,15 +47,26 @@ public class WebServiceController {
 	}
 	 
 	@RequestMapping(value = "/readWsdl")
-	public @ResponseBody Map<String, String> readWsdl(String wsdlUrl, Model model) {
+	public @ResponseBody Map<String, String> readWsdl(@RequestParam(value="wsdlUrl") String wsdlUrl, Model model) {
 		Map<String, String> data = new HashMap<String, String>();
-		WsdlOperations wsdlOperations = webServiceManager.readWsdlAndGetAllOperations(wsdlUrl);
+		try {
+			WsdlOperations wsdlOperations = webServiceManager.readWsdlAndGetAllOperations(wsdlUrl);
+			data.put("status", "1");
+			data.put("message", "Read WSDL success.");
+			ObjectMapper mapper = new ObjectMapper();
+			data.put("oprations", mapper.writeValueAsString(wsdlOperations.getOperationNames()));
+			
+		} catch (Exception e) {
+			data.put("status", "-1");
+			data.put("message", "Read WSDL Failed!!!");
+		}
 		return data;
 	}
 	 
 	@RequestMapping(value = "/getOpDetail")
-	public @ResponseBody Map<String, String> getOperationDetail(String operationName, Definition definition, Model model) {
+	public @ResponseBody Map<String, String> getOperationDetail(String wsdlUrl, String operationName, Model model) {
 		Map<String, String> data = new HashMap<String, String>();
+		Definition definition = webServiceManager.getWsdlDefinition(wsdlUrl);
 		Operation operation = webServiceManager.getOperation(operationName, definition);
 		Map<String, String> inputParamAndTypes = webServiceManager.getOperationInputParams(operation, definition);
 		Map<String, String> outputParamAndTypes = webServiceManager.getOperationOutputParams(operation, definition);

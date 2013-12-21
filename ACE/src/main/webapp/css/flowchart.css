@@ -706,6 +706,7 @@ path, ._jsPlumb_endpoint {
 	filter: alpha(opacity=80);
 	cursor: pointer;
 }
+
 #flowchart-view .aLabel._jsPlumb_hover {
 	background-color: #5C96BC;
 	color: white;

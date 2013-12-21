@@ -193,6 +193,22 @@ public class WebServiceManagerImpl implements WebServiceManagerI {
 		return wsdlOperations;
 	}
 	
+	@Override
+	public Definition getWsdlDefinition(String wsdlUrl) {
+		Definition definition = null;
+		try {
+			WSDLManagerImpl wsdlManager = new WSDLManagerImpl();
+			definition = wsdlManager.getDefinition(wsdlUrl);
+		} catch (BusException e) {
+			logger.error(e.getMessage(), e);
+		} catch (WSDLException e) {
+			logger.error(e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return definition;
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public Operation getOperation(String operationName, Definition definition) {
@@ -471,4 +487,5 @@ public class WebServiceManagerImpl implements WebServiceManagerI {
 			logger.error(e.getMessage(), e);
 		}
 	}
+
 }

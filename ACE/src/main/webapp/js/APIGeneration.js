@@ -17,7 +17,10 @@ function APIGeneration() {
 			//cloneElement.width(60 + ui.draggable.find('.list-item-label').width());
 			//cloneElement.find('.list-item-label').removeClass("list-item-label").addClass("generated-item-label");
 			cloneElement.attr("id", "flowchart" + newElementId);
-			cloneElement.attr("onclick", "openFeatureBar('#flowchart" + newElementId + "')");
+			var elementName = ui.draggable.attr('element-name');
+			if (elementName != "Begin" && elementName != "End" && elementName != "If") {
+				cloneElement.attr("onclick", "openFeatureBar('" + elementName + "')");
+			}
 			$(this).append(cloneElement);
 
 			if (newElementId == 1) {
@@ -25,7 +28,7 @@ function APIGeneration() {
 			} else {
 				flowchart.doWhileSuspended(function() {
                 	
-                		_addEndpoints(newElementId, ["TopCenter", "BottomCenter",], ["LeftMiddle", "RightMiddle"]);  
+                		_addEndpoints(newElementId, ["TopCenter", "BottomCenter"], ["LeftMiddle", "RightMiddle"]);  
                         
                 		flowchart.bind("connection", function(connInfo, originalEvent) { 
                                 init(connInfo.connection);
@@ -56,16 +59,18 @@ function APIGeneration() {
 	});
 }
 
+var displayElementName;
 
-function openFeatureBar(elementId) {
-	if ($('.componentFeature').css("display") == "block") {
+function openFeatureBar(elementName) {
+	if ($('#' + elementName).css("display") == "block") {
 		closeFeatureBar();
 	}
-	$('.componentFeature').css("display", "block");
+	$('#' + elementName).css("display", "block");
+	displayElementName = elementName;
 }
 
 function closeFeatureBar() {
-	$('.componentFeature').css("display", "none");
+	$('#' + displayElementName).css("display", "none");
 }
 
 
@@ -75,4 +80,22 @@ function escapeRegExp(str) {
 
 function replaceAll(find, replace, str) {
 	return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
+function notify(notificationId, alertType, notificationText, showTime) {
+	if ($('#' + notificationId).length == 0) {
+		var newNotification = $('.appStore-notification').clone();
+		newNotification.attr("id", notificationId);
+		newNotification.css("display", "block");
+		newNotification.addClass(alertType);
+		newNotification.append(notificationText);
+		newNotification.find("button").attr("onclick", "closeNotification('" + notificationId + "')");
+		newNotification.appendTo(".notification-container");
+		setTimeout(function () { closeNotification(notificationId); }, showTime);
+	}
+}
+
+function closeNotification(notificationId) {
+	var notification = $("#" + notificationId);
+	notification.remove();
 }

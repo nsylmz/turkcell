@@ -10,7 +10,7 @@
 	<meta name="author" content="">
 	<link rel="shortcut icon" href="docs-assets/ico/favicon.png">
 	
-	<title>Beta Turkcell ACE</title>
+	<title>Turkcell ACE</title>
 	<link rel="shortcut icon" href="http://s.turkcell.com.tr/static_lib/assets/images/common/favicon.ico" type="image/vnd.microsoft.icon">
 	<link rel="icon" href="http://s.turkcell.com.tr/static_lib/assets/images/common/favicon.ico" type="image/vnd.microsoft.icon">
 	<link href="${pageContext.request.contextPath}/css/bootstrap.css" rel="stylesheet" type="text/css"/>
@@ -19,10 +19,17 @@
 	<link href="${pageContext.request.contextPath}/css/UIGeneration.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/Components.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/flowchart.css" rel="stylesheet" type="text/css" />
-
+	<link href="${pageContext.request.contextPath}/css/featureBar.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/css/ladda.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/css/ladda-themeless.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
+	<div class="notification-container">
+	 	<div class="alert appStore-notification">
+			<button type="button" class="close notification-close" aria-hidden="true" onclick="closeNotification()">&times;</button>
+	    </div>
+	</div>
 	<div id="htmlPallet-container" class="container">
 		<div class="navbar-wrapper">
 			<div class="container">
@@ -115,8 +122,35 @@
 			<div id="flowchart-view" class="ui-widget-content view flowchart-view"></div>
 		</div>
 		
-		<div class="componentFeature">
+		<div id="WebService" class="feature-bar">
 			<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
+			<div id="tabs" class="feature-tabs">
+				<ul>
+					<li><a href="#feature-info">Component Info</a></li>
+					<li><a href="#WebService-feature">WebService</a></li>
+				</ul>
+				<div id="feature-info">
+					<div class="component-info">
+						<div class="component-name">
+							<p>Component Name</p>
+							<input class="feature-input" type="text" name="componentName">
+						</div>
+					</div>
+				</div>
+				<div id="WebService-feature">
+					<div class="component-feature-container">
+						<div class="component-feature">
+							<p>Wsdl URL</p>
+							<input id="wsd-input" class="feature-input" type="text" name="wsdlUrl">
+							<button id="read-wsdl-button" class="ladda-button" data-style="expand-right"
+	                                onclick="readWsdlAndGetOperationName(this, '${pageContext.request.contextPath}')">
+	                            <span class="ladda-label">Read WSDL</span>
+	                        </button>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -125,30 +159,54 @@
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/holder.js" type="text/javascript"></script>
 	
-	<script src="${pageContext.request.contextPath}/js/jquery.ui.touch-punch.min.js"></script>        
-    <script src="${pageContext.request.contextPath}/js/jsBezier-0.6.js"></script>     
-    <script src="${pageContext.request.contextPath}/js/jsplumb-geom-0.1.js"></script>
-    <script src="${pageContext.request.contextPath}/js/util.js"></script>
-    <script src="${pageContext.request.contextPath}/js/dom-adapter.js"></script>        
-    <script src="${pageContext.request.contextPath}/js/jsPlumb.js"></script>
-    <script src="${pageContext.request.contextPath}/js/endpoint.js"></script>                
-    <script src="${pageContext.request.contextPath}/js/connection.js"></script>
-    <script src="${pageContext.request.contextPath}/js/anchors.js"></script>        
-    <script src="${pageContext.request.contextPath}/js/defaults.js"></script>
-    <script src="${pageContext.request.contextPath}/js/connectors-bezier.js"></script>
-    <script src="${pageContext.request.contextPath}/js/connectors-statemachine.js"></script>
-    <script src="${pageContext.request.contextPath}/js/connectors-flowchart.js"></script>
-    <script src="${pageContext.request.contextPath}/js/connector-editors.js"></script>
-    <script src="${pageContext.request.contextPath}/js/renderers-svg.js"></script>
-    <script src="${pageContext.request.contextPath}/js/renderers-canvas.js"></script>
-    <script src="${pageContext.request.contextPath}/js/renderers-vml.js"></script>
-    <script src="${pageContext.request.contextPath}/js/jquery.jsPlumb.js"></script>
-    <script src="${pageContext.request.contextPath}/js/flowchart.js"></script>
+	<script src="${pageContext.request.contextPath}/js/flowchart/jquery.ui.touch-punch.min.js"></script>        
+    <script src="${pageContext.request.contextPath}/js/flowchart/jsBezier-0.6.js"></script>     
+    <script src="${pageContext.request.contextPath}/js/flowchart/jsplumb-geom-0.1.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/util.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/dom-adapter.js"></script>        
+    <script src="${pageContext.request.contextPath}/js/flowchart/jsPlumb.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/endpoint.js"></script>                
+    <script src="${pageContext.request.contextPath}/js/flowchart/connection.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/anchors.js"></script>        
+    <script src="${pageContext.request.contextPath}/js/flowchart/defaults.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/connectors-bezier.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/connectors-statemachine.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/connectors-flowchart.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/connector-editors.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/renderers-svg.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/renderers-canvas.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/renderers-vml.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/jquery.jsPlumb.js"></script>
+    <script src="${pageContext.request.contextPath}/js/flowchart/flowchart.js"></script>
+    
+    <script src="${pageContext.request.contextPath}/js/ladda/spin.min.js"></script>
+	<script src="${pageContext.request.contextPath}/js/ladda/ladda.min.js"></script>
     
 	<script src="${pageContext.request.contextPath}/js/APIGeneration.js" type="text/javascript"></script>
+	
 
 	<script type="text/javascript">
 		APIGeneration();
+		$("#tabs").tabs();
+		
+		function readWsdlAndGetOperationName(button, basePath){
+			var wsdlUrl = $(button).parent().find('.feature-input').val();
+		    var l = Ladda.create(button);
+		    l.start();
+		    $.ajax({
+		        type: "POST",
+		        url: basePath + "/ws/readWsdl",
+		        data: "wsdlUrl=" + wsdlUrl,
+		        success: function (data) {
+		            l.stop();
+		            if (data.status == 1) {
+		            	notify('appApproveSuccessNotification', 'alert-info', 'WSDL Başarılı Bir Şekilde Okundu.', 10000);
+		            } else if (data.status < 1) {
+		            	notify('appApproveErrorNotification', 'alert-danger', 'WSDL Okuma Sırasında Hata Alındı!!!', 10000);
+		            }
+		        }
+		    });
+		}
 	</script>
 </body>
 </html>

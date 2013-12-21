@@ -13,6 +13,8 @@ public interface WebServiceManagerI {
 	
 	public WsdlOperations readWsdlAndGetAllOperations(String wsdlUrl);
 	
+	public Definition getWsdlDefinition(String wsdlUrl);
+	
 	public Operation getOperation(String operationName, Definition definition);
 	
 	public Map<String, String> getOperationInputParams(Operation op, Definition definition);
