@@ -140,12 +140,34 @@
 				<div id="WebService-feature">
 					<div class="component-feature-container">
 						<div class="component-feature">
-							<p>Wsdl URL</p>
-							<input id="wsd-input" class="feature-input" type="text" name="wsdlUrl">
-							<button id="read-wsdl-button" class="ladda-button" data-style="expand-right"
+							<label>Wsdl URL</label>
+							<input id="wsdl-input" class="feature-input" type="text" name="wsdlUrl">
+							<button id="read-wsdl-button" class="btn btn-primary ladda-button" data-style="expand-right"
 	                                onclick="readWsdlAndGetOperationName(this, '${pageContext.request.contextPath}')">
 	                            <span class="ladda-label">Read WSDL</span>
 	                        </button>
+							<div id="ws-select" class="ui-widget">
+								<label>Operations </label>
+								<select id="select-ws-opreations">
+									<option value="">Select Operation...</option>
+								</select>
+								<button id="get-operation-button" class="btn btn-primary ladda-button" data-style="expand-right"
+	                                onclick="getOpDetail(this, '${pageContext.request.contextPath}')">
+		                            <span class="ladda-label">Get Operation Detail</span>
+		                        </button>
+							</div>
+							<button id="ws-run-button" class="btn btn-primary ladda-button" data-style="expand-right"
+	                                onclick="runWS(this, '${pageContext.request.contextPath}')">
+		                            <span class="ladda-label">Test Ws Operation</span>
+		                    </button>
+						</div>
+						<div class="component-feature">
+							<div id="param-name-container" class="param-container">
+								<label class="param-name">Parameter Name</label>
+								<input id="param-name-input" class="param-input feature-input" type="text" name="param-name">
+								<label class="param-type">Parameter Type</label>
+							</div>
+							<div class="params-container"></div>
 						</div>
 					</div>
 					</div>
@@ -155,7 +177,6 @@
 	</div>
 
 	<script src="${pageContext.request.contextPath}/js/jquery-2.0.3.js" type="text/javascript"></script>
-	<script src="${pageContext.request.contextPath}/js/jquery-ui.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/holder.js" type="text/javascript"></script>
 	
@@ -182,14 +203,17 @@
     <script src="${pageContext.request.contextPath}/js/ladda/spin.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/ladda/ladda.min.js"></script>
     
+	<script src="${pageContext.request.contextPath}/js/jquery-ui.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/js/ComboBox.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/APIGeneration.js" type="text/javascript"></script>
 	
 
 	<script type="text/javascript">
 		APIGeneration();
 		$("#tabs").tabs();
-		
-		function readWsdlAndGetOperationName(button, basePath){
+		$('#WebService-feature').scroll();
+		function readWsdlAndGetOperationName(button, basePath) {
 			var wsdlUrl = $(button).parent().find('.feature-input').val();
 		    var l = Ladda.create(button);
 		    l.start();
@@ -200,13 +224,130 @@
 		        success: function (data) {
 		            l.stop();
 		            if (data.status == 1) {
-		            	notify('appApproveSuccessNotification', 'alert-info', 'WSDL Başarılı Bir Şekilde Okundu.', 10000);
+		            	notify('readWSDLSuccessNotification', 'alert-info', data.message, 5000);
+		            	var combobox = $("#select-ws-opreations");
+		            	var operations = data.operations;
+		            	var cloneOption = combobox.children().first().clone();
+		            	combobox.empty();
+		            	combobox.append(cloneOption);
+		            	var newOption;
+		            	for (var i in operations) {
+		            		newOption = cloneOption.clone();
+		            		newOption.attr("value", operations[i]);
+		            		newOption.text(operations[i]);
+		            		combobox.append(newOption);
+						}
+		            	$('#ws-run-button').css("display", "none");
+		            	createWsOpSelect();
 		            } else if (data.status < 1) {
-		            	notify('appApproveErrorNotification', 'alert-danger', 'WSDL Okuma Sırasında Hata Alındı!!!', 10000);
+		            	notify('readWSDLErrorNotification', 'alert-danger', data.message, 5000);
 		            }
 		        }
 		    });
 		}
+		
+		function getOpDetail(button, basePath) {
+			var wsdlUrl = $('#wsdl-input').val();
+			var operationName = $(button).parent().find('option:selected').val();
+		    var l = Ladda.create(button);
+		    l.start();
+		    $.ajax({
+		        type: "POST",
+		        url: basePath + "/ws/getOpDetail",
+		        data: "wsdlUrl=" + wsdlUrl + "&operationName=" + operationName,
+		        success: function (data) {
+		            l.stop();
+		            if (data.status == 1) {
+		            	notify('getOpDetailSuccessNotification', 'alert-info', data.message, 5000);
+		            	var tempParamContainer = $("#param-name-container");
+		            	var paramsContainer = $('.params-container');
+		            	var inputParams = data.inputParams;
+		            	var newParam;
+		            	var paramType;
+		            	for (var paramName in inputParams) {
+		            		paramType = inputParams[paramName];
+		            		if (paramType == "string" || paramType == "int" || paramType == "long" 
+		            				|| paramType == "float" || paramType == "double" || paramType == "boolean") {
+			            		newParam = tempParamContainer.clone();
+			            		newParam.attr("id", paramName + "-container");
+			            		newParam.find('.param-name').text(paramName);
+			            		newParam.find('.param-type').text(paramType);
+			            		newParam.find('.feature-input').attr("id", paramName + "-input");
+			            		newParam.find('.feature-input').attr("name", paramName);
+			            		paramsContainer.append(newParam);
+							} else if (paramType == "dateTime") {
+								newParam = tempParamContainer.clone();
+			            		newParam.attr("id", paramName + "-container");
+			            		newParam.find('.param-name').text(paramName);
+			            		newParam.find('.param-type').text(paramType);
+			            		newParam.find('.feature-input').attr("id", paramName + "-input");
+			            		newParam.find('.feature-input').attr("name", paramName);
+			            		newParam.find('.feature-input').datetimepicker();
+			            		paramsContainer.append(newParam);
+							} else if (paramType == "date") {
+								newParam = tempParamContainer.clone();
+			            		newParam.attr("id", paramName + "-container");
+			            		newParam.find('.param-name').text(paramName);
+			            		newParam.find('.param-type').text(paramType);
+			            		newParam.find('.feature-input').attr("id", paramName + "-input");
+			            		newParam.find('.feature-input').attr("name", paramName);
+			            		newParam.find('.feature-input').datepicker("option", "showAnim", "slide");
+			            		paramsContainer.append(newParam);
+							}
+						}
+		            	if($('.params-container').children().length > 5) {
+		            		paramsContainer.parent().css("overflow-y", "scroll");
+		            		paramsContainer.parent().css("overflow-x", "hidden");
+		            	}
+		            	$('#ws-run-button').css("display", "");
+		            } else if (data.status < 1) {
+		            	notify('getOpDetailErrorNotification', 'alert-danger', data.message, 5000);
+		            }
+		        }
+		    });
+		}
+		
+		function runWS(button, basePath) {
+		    var l = Ladda.create(button);
+		    l.start();
+			var wsdlUrl = $('#wsdl-input').val();
+			var operationName = $('#select-ws-opreations').find('option:selected').val();
+			var wsRunParams = {"wsdlUrl" : wsdlUrl, "operation" : operationName, "paramNameAndparamValue" : null};
+			var paramNameAndparamValue = {};
+			var param;
+			var paramName;
+			var paramType;
+			var paramValue;
+			$('.params-container').children().each(function() {
+				paramName = $(this).find('.param-name').text();
+				paramType = $(this).find('.param-type').text();
+				paramValue = $(this).find('.param-input').val();
+				paramNameAndparamValue[paramName] = { "paramType" : paramType, "paramValue" : paramValue};
+			});
+			wsRunParams["paramNameAndparamValue"] = paramNameAndparamValue;
+		    $.ajax({
+		        type: "POST",
+		        dataType:'json',
+		        contentType:"application/json",
+		        url: basePath + "/ws/runWS",
+		        data:JSON.stringify(wsRunParams),
+		        success: function (data) {
+		            l.stop();
+		            if (data.status == 1) {
+		            	notify('runWsSuccessNotification', 'alert-info', data.message, 5000);
+		            } else if (data.status < 1) {
+		            	notify('runWsErrorNotification', 'alert-danger', data.message, 5000);
+		            }
+		        }
+		    });
+		}
+		
+		function createWsOpSelect() {
+		    var combobox = $("#select-ws-opreations");
+		    combobox.parent().css("display", "block");
+		    combobox.combobox();
+		}
+			
 	</script>
 </body>
 </html>

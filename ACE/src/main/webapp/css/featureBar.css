@@ -39,6 +39,7 @@
 }
 
 .component-feature-container {
+	
 	height: 275px;
 }
 
@@ -84,8 +85,8 @@
 	margin: 0;
 }
 
-#wsd-input {
-	width: 550px;
+#wsdl-input {
+	width: 63%;
 }
 
 .WebService-feature {
@@ -97,7 +98,10 @@
 }
 
 .component-feature {
-	
+	width: 50%;
+	float: left;
+	height:100%;
+	position: relative;
 }
 
 #read-wsdl-button {
@@ -118,8 +122,107 @@
     border: 1px solid #A8A8A8;
 }
 
+#get-operation-button {
+	margin-left: 30px;
+	border: 1px solid #A8A8A8;
+    background-color: #16385E;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, sans-serif;
+    letter-spacing: 2px;
+    padding: 7px;
+    color: #ffffff;
+    margin-top: 15px;
+}
+
+#get-operation-button:hover {
+    background-color: #A8A8A8;
+    color: #ffffff;
+    border: 1px solid #A8A8A8;
+}
+
+#ws-run-button {
+	display: none;
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	border: 1px solid #A8A8A8;
+    background-color: #16385E;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, sans-serif;
+    letter-spacing: 2px;
+    padding: 7px;
+    color: #ffffff;
+    margin-top: 15px;
+}
+
+#ws-run-button:hover {
+    background-color: #A8A8A8;
+    color: #ffffff;
+    border: 1px solid #A8A8A8;
+}
+
+
 .feature-tabs {
 	border-top-right-radius: 20px;
 	border-top-left-radius: 20px;
 	height: 341px;
+}
+
+.custom-combobox {
+	position: relative;
+	display: inline-block;
+	width: 47.3%;
+}
+
+.custom-combobox-toggle {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin-left: -1px;
+	padding: 0;
+	/* support: IE7 */
+	*height: 1.7em;
+	*top: 0.1em;
+}
+
+.custom-combobox-input {
+	margin: 0;
+	padding: 0.3em;
+	width: 94%;
+}
+
+#ws-select {
+	display: none;
+	margin-top: 25px;
+}
+
+.ui-autocomplete { 
+	height: 150px; 
+	overflow-y: scroll; 
+	overflow-x: hidden;
+}
+
+#param-name-container {
+	display: none;
+}
+
+.params-container {
+	margin-left: 30px;
+}
+
+.param-container {
+	height: 45px;
+	margin-bottom: 10px;
+}
+
+.param-type {
+	float: right;
+	margin-right: 25px;
+}
+
+.param-input {
+	float: right;
+	margin-right: 15px;
 }

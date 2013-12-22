@@ -1,11 +1,14 @@
 package com.ns.deneme.ws.impl;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +23,8 @@ import javax.wsdl.PortType;
 import javax.wsdl.Types;
 import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.schema.Schema;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.apache.cxf.BusException;
@@ -153,26 +158,33 @@ public class WebServiceManagerImpl implements WebServiceManagerI {
 	}
 	
 	private Object prepareParam(Class<?> paramClass, String paramValue) {
-		if (paramClass.isAssignableFrom(String.class)) {
-			return paramValue;
-		} else if (paramClass.isAssignableFrom(Integer.class)) {
-			return new Integer(paramValue);
-		} else if (paramClass.isAssignableFrom(Date.class)) {
-			// TODO : Handle java.util.Date
-		} else if (paramClass.isAssignableFrom(Long.class)) {
-			return new Long(paramValue);
-		} else if (paramClass.isAssignableFrom(BigDecimal.class)) {
-			return new BigDecimal(paramValue);
-		} else if (paramClass.isAssignableFrom(Boolean.class)) {
-			return new Boolean(paramValue);
-		} else if (paramClass.isAssignableFrom(Short.class)) {
-			return new Short(paramValue);
-		} else if (paramClass.isAssignableFrom(Byte.class)) {
-			return new Byte(paramValue);
-		} else if (paramClass.isAssignableFrom(Double.class)) {
-			return new Double(paramValue);
-		} else if (paramClass.isAssignableFrom(Float.class)) {
-			return new Float(paramValue);
+		try {
+			if (paramClass.isAssignableFrom(String.class)) {
+				return paramValue;
+			} else if (paramClass.isAssignableFrom(Integer.class)) {
+				return new Integer(paramValue);
+			} else if (paramClass.isAssignableFrom(XMLGregorianCalendar.class)) {
+				DateFormat dt = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+				GregorianCalendar c = new GregorianCalendar();
+				c.setTime(dt.parse(paramValue));
+				return DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+			} else if (paramClass.isAssignableFrom(Long.class)) {
+				return new Long(paramValue);
+			} else if (paramClass.isAssignableFrom(BigDecimal.class)) {
+				return new BigDecimal(paramValue);
+			} else if (paramClass.isAssignableFrom(Boolean.class)) {
+				return new Boolean(paramValue);
+			} else if (paramClass.isAssignableFrom(Short.class)) {
+				return new Short(paramValue);
+			} else if (paramClass.isAssignableFrom(Byte.class)) {
+				return new Byte(paramValue);
+			} else if (paramClass.isAssignableFrom(Double.class)) {
+				return new Double(paramValue);
+			} else if (paramClass.isAssignableFrom(Float.class)) {
+				return new Float(paramValue);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -303,7 +315,11 @@ public class WebServiceManagerImpl implements WebServiceManagerI {
 			    	key = iter.next();
 			    	System.out.println("Import Schema Location " + imports.get(key).firstElement().getSchemaLocationURI());
 			    	XSOMParser parser = new XSOMParser();
-			    	parser.parse(new URL(imports.get(key).firstElement().getSchemaLocationURI()));
+			    	try {
+			    		parser.parse(new URL(imports.get(key).firstElement().getSchemaLocationURI()));
+					} catch (java.net.MalformedURLException me) {
+						parser.parse(new File(imports.get(key).firstElement().getSchemaLocationURI()));
+					}
 			    	sset = parser.getResult();
 			    	xsSchemaIter = sset.iterateSchema();
 					while(xsSchemaIter.hasNext()) {

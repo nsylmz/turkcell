@@ -10,12 +10,6 @@ public class WsRunParams {
 	
 	private String operation;
 	
-	private String operationSchemaName;
-	
-	private String operationRequestType;
-	
-	private String operationResponseType;
-	
 	private Map<String, WSRequestParameter> paramNameAndparamValue;
 
 	public String getWsdlUrl() {
