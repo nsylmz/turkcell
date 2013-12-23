@@ -378,7 +378,46 @@
 		}
 		
 		function saveProcess(button, basePath) {
-			
+			var l = Ladda.create(button);
+		    l.start();
+			var viewName = $('#view-input').val();
+			var viewHtml = $('<div>').append($('#flowchart-view').clone()).html();
+			var featureBars = $('<div>').append($('#WebService').clone()).html();
+			var bodyChildren = $('<div>').append($('body').children('.ui-widget')).html();
+			var view = {"viewName" : viewName, "chart" : viewHtml, "featureBars" : featureBars, "bodyChildren" : bodyChildren};
+			var processName = $('#wsdl-input').val();
+			var processType = 'WebService';
+			var processName = $('.component-name input').val();
+			var paramNameAndParamValue = {};
+			var paramName;
+			var paramType;
+			var paramValue;
+			$('.params-container').children().each(function() {
+				paramName = $(this).find('.param-name').text();
+				paramType = $(this).find('.param-type').text();
+				paramValue = $(this).find('.param-input').val();
+				paramNameAndParamValue[paramName] = { "paramType" : paramType, "paramValue" : paramValue};
+			});
+		    var wsdlUrl = $('#wsdl-input').val();
+		    paramNameAndParamValue[wsdlUrl] = { "paramType" : "string", "paramValue" : wsdlUrl};
+			var operationName = $('#select-ws-opreations').find('option:selected').val();
+			paramNameAndParamValue[operationName] = { "paramType" : "string", "paramValue" : operationName};
+		    var saveAPIGeneration = { "view" : view, "processName" : processName, "processType" : processType, "params" : paramNameAndParamValue};
+		    $.ajax({
+		        type: "POST",
+		        dataType:'json',
+		        contentType:"application/json",
+		        url: basePath + "/APIGeneration/save",
+		        data:JSON.stringify(saveAPIGeneration),
+		        success: function (data) {
+		            l.stop();
+		            if (data.status == 1) {
+		            	notify('saveProcessSuccessNotification', 'alert-info', data.message, 5000);
+		            } else if (data.status < 1) {
+		            	notify('saveProcessErrorNotification', 'alert-danger', data.message, 5000);
+		            }
+		        }
+		    });
 		}
 			
 	</script>

@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ns.deneme.neo4j.api.IMappingHelperAPI;
 import com.ns.deneme.neo4j.api.IProcessAPI;
 import com.ns.deneme.neo4j.api.IViewAPI;
+import com.ns.deneme.neo4j.domain.MappingHelper;
 import com.ns.deneme.neo4j.domain.Process;
 import com.ns.deneme.neo4j.domain.ProcessRunConfig;
 import com.ns.deneme.util.RunConfig;
@@ -36,7 +38,10 @@ public class APIGenerationController {
 	@Autowired
 	private IProcessAPI processAPI;
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@Autowired
+	private IMappingHelperAPI mappingHelperAPI;
+	
+	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String showAPIGeneration(Model model) {
 		logger.debug("Received request to show api generation creen");
 		return "APIGeneration";
@@ -47,10 +52,11 @@ public class APIGenerationController {
 		Map<String, Object> data = new HashMap<String, Object>();
 		try {
 			viewAPI.saveView(saveAPIGeneration.getView());
-			
+			Set<MappingHelper> helpers = mappingHelperAPI.findAll();
 			Process process = new Process();
 			process.setProcessName(saveAPIGeneration.getProcessName());
 			process.setProcessType(saveAPIGeneration.getProcessType());
+			Set<ProcessRunConfig> processRunConfig = new HashSet<ProcessRunConfig>();
 			if ("WebService".equals(saveAPIGeneration.getProcessType())) {
 				process.setProcessRunClass(RunConfig.WS_RUN_CLASS);
 				process.setProcessRunMethod(RunConfig.WS_RUN_METHOD);
@@ -69,12 +75,13 @@ public class APIGenerationController {
 					config.setConfigParamValue(parameter.getParamValue());
 					if (RunConfig.webServiceConfig.get(paramName) == null) {
 						config.setConfigMethodParamName(RunConfig.webServiceConfig.get("params"));
+						config.setConfigMethodParamMappingHelper(helpers);
 					} else {
 						config.setConfigMethodParamName(RunConfig.webServiceConfig.get(paramName));
 					}
+					processRunConfig.add(config);
 				}
 			}
-			Set<ProcessRunConfig> processRunConfig = new HashSet<ProcessRunConfig>();
 			process.setProcessRunConfig(processRunConfig);
 			processAPI.saveProcess(process);
 			data.put("status", "1");

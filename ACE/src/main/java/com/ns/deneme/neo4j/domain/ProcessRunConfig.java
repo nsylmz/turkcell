@@ -13,7 +13,7 @@ public class ProcessRunConfig extends AbstractEntity {
 	
 	private String configMethodParamName;
 	
-	@RelatedTo(type = "knows", direction = Direction.OUTGOING)
+	@RelatedTo(type = "knows", direction = Direction.INCOMING)
 	private Set<MappingHelper> configMethodParamMappingHelper;
 	
 	private String configParamType;
@@ -61,24 +61,4 @@ public class ProcessRunConfig extends AbstractEntity {
 		this.configParamValue = configParamValue;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-
-		if (this == obj) {
-			return true;
-		}
-
-		if (getId() == null || obj == null
-				|| !getClass().equals(obj.getClass())) {
-			return false;
-		}
-		return getId().equals(((AbstractEntity) obj).getId());
-
-	}
-
-	@Override
-	public int hashCode() {
-		return getId() == null ? 0 : getId().hashCode();
-	}
-
 }

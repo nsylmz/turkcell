@@ -3,17 +3,19 @@ package com.ns.deneme.neo4j.domain;
 import java.util.Set;
 
 import org.neo4j.graphdb.Direction;
+import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
 
 @NodeEntity
 public class Process extends AbstractEntity {
 	
+	@Indexed
 	private String processName;
 	
 	private String processType;
 
-	@RelatedTo(type = "knows", direction = Direction.OUTGOING)
+	@RelatedTo(type = "knows", direction = Direction.INCOMING)
 	private Set<ProcessRunConfig> processRunConfig;
 	
 	private String processRunClass;
@@ -60,23 +62,4 @@ public class Process extends AbstractEntity {
 		this.processRunMethod = processRunMethod;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-
-		if (this == obj) {
-			return true;
-		}
-
-		if (getId() == null || obj == null
-				|| !getClass().equals(obj.getClass())) {
-			return false;
-		}
-		return getId().equals(((AbstractEntity) obj).getId());
-
-	}
-
-	@Override
-	public int hashCode() {
-		return getId() == null ? 0 : getId().hashCode();
-	}
 }

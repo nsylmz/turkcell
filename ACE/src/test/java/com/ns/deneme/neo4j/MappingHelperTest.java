@@ -10,27 +10,34 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ns.deneme.neo4j.api.ICustomerAPI;
-import com.ns.deneme.neo4j.domain.Address;
-import com.ns.deneme.neo4j.domain.Country;
-import com.ns.deneme.neo4j.domain.Customer;
+import com.ns.deneme.neo4j.domain.MappingHelper;
+import com.ns.deneme.neo4j.repository.MappingHelperRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:spring/application-config.xml")
 @Transactional(readOnly=false, propagation = Propagation.REQUIRED, noRollbackFor = { EmptyResultDataAccessException.class }, rollbackFor = { Exception.class })
 @TransactionConfiguration(defaultRollback=false)
-public class CustomerTest {
+public class MappingHelperTest {
 	
 	@Autowired
-	private ICustomerAPI customerAPI;
+	private MappingHelperRepository mappingHelperRepository;
 	
 	@Test
 	public void test() {
-		Country country = new Country("tr", "TURKEY");
-		Address address = new Address("Handegul", "ISTANBUL", country);
-		Customer customer = new Customer("Enes", "YILMAZ", "ylmz.enes@gmail.com");
-		customer.add(address);
-		customerAPI.createCustomer(customer);
+		MappingHelper helper = new MappingHelper();
+		helper.setMapName("paramType");
+		helper.setMapRule("WSRequestParameter.paramType");
+		mappingHelperRepository.save(helper);
+		
+		helper = new MappingHelper();
+		helper.setMapName("paramValue");
+		helper.setMapRule("WSRequestParameter.paramValue");
+		mappingHelperRepository.save(helper);
+		
+		helper = new MappingHelper();
+		helper.setMapName("paramName");
+		helper.setMapRule("Map.key");
+		mappingHelperRepository.save(helper);
 	}
 
 }

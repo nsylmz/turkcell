@@ -4,15 +4,15 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
 
 @NodeEntity
 public class View extends AbstractEntity {
-	
-	private String viewName;
-	
-	private byte[] view;
 
-	private byte[] bodyChildren;
-	
-	private byte[] featureBars;
-	
+	private String viewName;
+
+	private String chart;
+
+	private String bodyChildren;
+
+	private String featureBars;
+
 	public String getViewName() {
 		return viewName;
 	}
@@ -21,47 +21,28 @@ public class View extends AbstractEntity {
 		this.viewName = viewName;
 	}
 
-	public byte[] getView() {
-		return view;
+	public String getChart() {
+		return chart;
 	}
 
-	public void setView(byte[] view) {
-		this.view = view;
+	public void setChart(String chart) {
+		this.chart = chart;
 	}
 
-	public byte[] getBodyChildren() {
+	public String getBodyChildren() {
 		return bodyChildren;
 	}
 
-	public void setBodyChildren(byte[] bodyChildren) {
+	public void setBodyChildren(String bodyChildren) {
 		this.bodyChildren = bodyChildren;
 	}
 
-	public byte[] getFeatureBars() {
+	public String getFeatureBars() {
 		return featureBars;
 	}
 
-	public void setFeatureBars(byte[] featureBars) {
+	public void setFeatureBars(String featureBars) {
 		this.featureBars = featureBars;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-
-		if (this == obj) {
-			return true;
-		}
-
-		if (getId() == null || obj == null
-				|| !getClass().equals(obj.getClass())) {
-			return false;
-		}
-		return getId().equals(((AbstractEntity) obj).getId());
-
-	}
-
-	@Override
-	public int hashCode() {
-		return getId() == null ? 0 : getId().hashCode();
-	}
 }
