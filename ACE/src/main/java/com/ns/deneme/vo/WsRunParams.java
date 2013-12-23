@@ -28,30 +28,6 @@ public class WsRunParams {
 		this.operation = operation;
 	}
 
-	public String getOperationSchemaName() {
-		return operationSchemaName;
-	}
-
-	public void setOperationSchemaName(String operationSchemaName) {
-		this.operationSchemaName = operationSchemaName;
-	}
-
-	public String getOperationRequestType() {
-		return operationRequestType;
-	}
-
-	public void setOperationRequestType(String operationRequestType) {
-		this.operationRequestType = operationRequestType;
-	}
-
-	public String getOperationResponseType() {
-		return operationResponseType;
-	}
-
-	public void setOperationResponseType(String operationResponseType) {
-		this.operationResponseType = operationResponseType;
-	}
-
 	public Map<String, WSRequestParameter> getParamNameAndparamValue() {
 		return paramNameAndparamValue;
 	}

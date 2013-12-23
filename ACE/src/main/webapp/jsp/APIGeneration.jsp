@@ -15,13 +15,13 @@
 	<link rel="icon" href="http://s.turkcell.com.tr/static_lib/assets/images/common/favicon.ico" type="image/vnd.microsoft.icon">
 	<link href="${pageContext.request.contextPath}/css/bootstrap.css" rel="stylesheet" type="text/css"/>
 	<link href="${pageContext.request.contextPath}/css/jquery-ui.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/css/ladda.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/css/ladda-themeless.min.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/UIGeneration.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/Components.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/flowchart.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/featureBar.css" rel="stylesheet" type="text/css" />
-	<link href="${pageContext.request.contextPath}/css/ladda.min.css" rel="stylesheet" type="text/css" />
-	<link href="${pageContext.request.contextPath}/css/ladda-themeless.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -54,6 +54,25 @@
 				</div>
 			</div>
 		</div>
+		<div class="view-bar bar-transition">
+			<div class="view-bar-item item-first" onclick="openSaveBar()">
+				<img class="view-item-img" title="Save View" alt="Save View" src="${pageContext.request.contextPath}/img/save-icon.png">
+				<label>Save Process</label>
+			</div>
+	        <div class="view-bar-item item-last" onclick="">
+	        	<img class="view-item-img" title="Open View" alt="Open View" src="${pageContext.request.contextPath}/img/open-icon.png">
+		        <label>Open Process</label>
+	        </div>
+	    </div>
+	    <div class="save-bar bar-transition">
+	    	<button type="button" class="close save-bar-close" aria-hidden="true" onclick="closeSaveBar()">&times;</button>
+			<label>Process Name</label>
+			<input id="view-input" class="view-name-input" type="text" name="viewInput">
+			<button id="save-view-button" class="ace-button btn btn-primary ladda-button" data-style="expand-right"
+		        onclick="saveProcess(this, '${pageContext.request.contextPath}')">
+		        <span class="ladda-label">Save Process</span>
+	        </button>
+	    </div>
 		<div id="products">
 			<h1 class="ui-widget-header">API Elements</h1>
 			<div id="catalog">
@@ -118,7 +137,7 @@
 		</div>
 	
 		<div id="cart">
-			<h1 class="ui-widget-header">View</h1>
+			<h1 class="ui-widget-header">API Process</h1>
 			<div id="flowchart-view" class="ui-widget-content view flowchart-view"></div>
 		</div>
 		
@@ -142,7 +161,7 @@
 						<div class="component-feature">
 							<label>Wsdl URL</label>
 							<input id="wsdl-input" class="feature-input" type="text" name="wsdlUrl">
-							<button id="read-wsdl-button" class="btn btn-primary ladda-button" data-style="expand-right"
+							<button id="read-wsdl-button" class="ace-button btn btn-primary ladda-button" data-style="expand-right"
 	                                onclick="readWsdlAndGetOperationName(this, '${pageContext.request.contextPath}')">
 	                            <span class="ladda-label">Read WSDL</span>
 	                        </button>
@@ -151,12 +170,12 @@
 								<select id="select-ws-opreations">
 									<option value="">Select Operation...</option>
 								</select>
-								<button id="get-operation-button" class="btn btn-primary ladda-button" data-style="expand-right"
+								<button id="get-operation-button" class="ace-button btn btn-primary ladda-button" data-style="expand-right"
 	                                onclick="getOpDetail(this, '${pageContext.request.contextPath}')">
 		                            <span class="ladda-label">Get Operation Detail</span>
 		                        </button>
 							</div>
-							<button id="ws-run-button" class="btn btn-primary ladda-button" data-style="expand-right"
+							<button id="ws-run-button" class="ace-button btn btn-primary ladda-button" data-style="expand-right"
 	                                onclick="runWS(this, '${pageContext.request.contextPath}')">
 		                            <span class="ladda-label">Test Ws Operation</span>
 		                    </button>
@@ -299,7 +318,7 @@
 		            		paramsContainer.parent().css("overflow-y", "scroll");
 		            		paramsContainer.parent().css("overflow-x", "hidden");
 		            	}
-		            	$('#ws-run-button').css("display", "");
+		            	$('#ws-run-button').css("display", "block");
 		            } else if (data.status < 1) {
 		            	notify('getOpDetailErrorNotification', 'alert-danger', data.message, 5000);
 		            }
@@ -346,6 +365,20 @@
 		    var combobox = $("#select-ws-opreations");
 		    combobox.parent().css("display", "block");
 		    combobox.combobox();
+		}
+		
+		function openSaveBar() {
+			$(".view-bar").css("left", "-165px");
+			$(".save-bar").css("left", "0px");
+		}
+		
+		function closeSaveBar() {
+			$(".save-bar").css("left", "-255px");
+			$(".view-bar").css("left", "0px");
+		}
+		
+		function saveProcess(button, basePath) {
+			
 		}
 			
 	</script>

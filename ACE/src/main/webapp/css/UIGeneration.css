@@ -106,3 +106,112 @@
 	top: 5px;
 	font-size: 17px;
 }
+
+.view-bar {
+	background: #ffe000;
+	width: 160px;
+	position: absolute;
+	z-index: 1000;
+	top: 520px;
+	left: 0px;
+	-moz-box-shadow: 0px 0px 6px #000;
+	-webkit-box-shadow: 0px 0px 6px #000;
+	box-shadow: 0px 0px 6px #000;
+	border-bottom-right-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.view-bar-item {
+	width: 100%;
+	float: right;
+	text-align: right;
+	padding-top: 20px;
+	padding-right: 15px;
+	padding-bottom: 20px;
+	padding-left: 25px;
+}
+
+.view-bar-item:hover {
+	text-decoration: none;
+	cursor: pointer;
+	color: #FFFFFF;
+	background: #A8A8A8;
+	-moz-box-shadow: 0px 0px 3px #000 inset;
+	-webkit-box-shadow: 0px 0px 3px #000 inset;
+	box-shadow: 0px 0px 3px #000 inset;
+}
+
+.view-bar-item label:hover {
+	cursor: pointer;
+}
+
+.item-first {
+	border-top-right-radius: 10px;
+}
+
+.item-last {
+	border-bottom-right-radius: 10px;
+}
+
+.view-item-img {
+	width: 50px;
+	margin-top: -12px;
+}
+
+.save-bar {
+	background: #ffe000;
+	width: 250px;
+	position: absolute;
+	z-index: 1000;
+	top: 532px;
+	left: -255px;
+	-moz-box-shadow: 0px 0px 6px #000;
+	-webkit-box-shadow: 0px 0px 6px #000;
+	box-shadow: 0px 0px 6px #000;
+	border-bottom-right-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.save-bar label {
+	text-align: center;
+	width: 100%;
+	margin-top: 5px;
+	font-size: 1.3em;
+}
+
+.save-bar-close {
+	position: absolute;
+	right: 10px;
+	top: 5px;
+	font-size: 25px;
+	z-index: 1;
+}
+
+#save-view-button {
+    margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 60px;
+}
+
+.view-name-input {
+	width: 200px;
+	padding: 8px 8px;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	color: #9d9e9e;
+	text-shadow: 1px 1px 0 rgba(256, 256, 256, 1.0);
+	background: #fff;
+	border: 1px solid #fff;
+	border-radius: 5px;
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.50);
+	-moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.50);
+	-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.50);
+	transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	-ms-transition: all 0.5s;
+	margin-left: 15px;
+}
+

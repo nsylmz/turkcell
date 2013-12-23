@@ -105,40 +105,12 @@
 }
 
 #read-wsdl-button {
-	border: 1px solid #A8A8A8;
-    background-color: #16385E;
-    cursor: pointer;
-    display: inline-block;
-    font-family: "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, sans-serif;
-    letter-spacing: 2px;
-    padding: 7px;
-    color: #ffffff;
-    margin-top: 15px;
-}
-
-#read-wsdl-button:hover {
-    background-color: #A8A8A8;
-    color: #ffffff;
-    border: 1px solid #A8A8A8;
+    margin-top: -3px;
 }
 
 #get-operation-button {
 	margin-left: 30px;
-	border: 1px solid #A8A8A8;
-    background-color: #16385E;
-    cursor: pointer;
-    display: inline-block;
-    font-family: "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, sans-serif;
-    letter-spacing: 2px;
-    padding: 7px;
-    color: #ffffff;
-    margin-top: 15px;
-}
-
-#get-operation-button:hover {
-    background-color: #A8A8A8;
-    color: #ffffff;
-    border: 1px solid #A8A8A8;
+    margin-top: -3px;
 }
 
 #ws-run-button {
@@ -146,23 +118,7 @@
 	position: absolute;
 	bottom: 0px;
 	right: 0px;
-	border: 1px solid #A8A8A8;
-    background-color: #16385E;
-    cursor: pointer;
-    display: inline-block;
-    font-family: "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, sans-serif;
-    letter-spacing: 2px;
-    padding: 7px;
-    color: #ffffff;
-    margin-top: 15px;
 }
-
-#ws-run-button:hover {
-    background-color: #A8A8A8;
-    color: #ffffff;
-    border: 1px solid #A8A8A8;
-}
-
 
 .feature-tabs {
 	border-top-right-radius: 20px;

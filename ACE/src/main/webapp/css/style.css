@@ -132,3 +132,49 @@ body {
 .ui-timepicker-rtl dl dd {
 	margin: 0 45% 10px 10px;
 }
+
+
+#read-wsdl-button {
+	border: 1px solid #A8A8A8;
+    background-color: #16385E;
+    cursor: pointer;
+    font-family: "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, sans-serif;
+    letter-spacing: 2px;
+    padding: 7px;
+    color: #ffffff;
+    margin-top: -3px;
+}
+
+#read-wsdl-button:hover {
+    background-color: #A8A8A8;
+    color: #ffffff;
+    border: 1px solid #A8A8A8;
+}
+
+.ace-button {
+	border: 1px solid #A8A8A8;
+    background-color: #16385E;
+    cursor: pointer;
+    font-family: "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, sans-serif;
+    letter-spacing: 2px;
+    padding: 7px;
+    color: #ffffff;
+}
+
+.ace-button:hover {
+    background-color: #A8A8A8;
+    color: #ffffff;
+    border: 1px solid #A8A8A8;
+}
+
+.bar-transition {
+	-webkit-transform-style: preserve-3d;
+	-webkit-transition: all 0.3s linear;
+	-moz-transform-style: preserve-3d;
+	-moz-transition: all 0.3s linear;
+	-o-transform-style: preserve-3d;
+	-o-transition: all 0.3s linear;
+	transform-style: preserve-3d;
+	transition: all 0.3s linear;
+}
+
