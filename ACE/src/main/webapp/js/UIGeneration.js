@@ -14,10 +14,11 @@ function UIGeneration() {
 			var elementName = ui.draggable.attr('element-name');
 			var elementType = ui.draggable.attr('element-type');
 			cloneElement.removeClass("temp-component");
-			cloneElement.attr("id", "flowchart" + newElementId);
 			if (elementType) {
+				cloneElement.attr("id", elementName + "-" + elementType + "-" + newElementId);
 				cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + elementName  + "', '" + elementType + "')");
 			} else {
+				cloneElement.attr("id", elementName + "-" + newElementId);
 				cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + elementName  + "', " + elementType + ")");
 			}
 			cloneElement.draggable({
@@ -26,24 +27,6 @@ function UIGeneration() {
 			});
 			$(this).append(cloneElement);
 			newElementId++;
-			
-			/*
-			var elementName = ui.draggable.attr('element-name');
-			var elementType = ui.draggable.attr('element-type');
-			var newElement = document.createElement(elementName);
-			newElement.setAttribute("id", newElementId);
-			if (elementType != null) {
-				newElement.setAttribute("type", elementType);
-			}
-			newElement.setAttribute("onclick", "openFeatureBar('" + newElementId + "', '" + elementName  + "', '" + elementType + "')");
-			newElement.innerHTML = ui.draggable.text();
-			this.appendChild(newElement);
-			$(newElement).draggable({
-				containment : "parent",
-				cancel : false
-			});
-			newElementId++;
-			*/
 		}
 	});
 }

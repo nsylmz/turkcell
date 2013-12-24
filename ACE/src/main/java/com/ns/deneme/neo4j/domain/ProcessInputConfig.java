@@ -3,32 +3,35 @@ package com.ns.deneme.neo4j.domain;
 import java.util.Set;
 
 import org.neo4j.graphdb.Direction;
+import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
 
 @SuppressWarnings("serial")
 @NodeEntity
-public class ProcessRunConfig extends AbstractEntity {
+public class ProcessInputConfig extends AbstractEntity {
 
-	@Indexed(unique = true)
-	private String configParamName;
-	
+	@Indexed
+	private String inputParamName;
+
+	@Indexed
 	private String configMethodParamName;
-	
+
+	@Fetch
 	@RelatedTo(type = "knows", direction = Direction.INCOMING)
 	private Set<MappingHelper> configMethodParamMappingHelper;
-	
-	private String configParamType;
-	
-	private String configParamValue;
 
-	public String getConfigParamName() {
-		return configParamName;
+	private String inputParamType;
+
+	private String inputParamValue;
+
+	public String getInputParamName() {
+		return inputParamName;
 	}
 
-	public void setConfigParamName(String configParamName) {
-		this.configParamName = configParamName;
+	public void setInputParamName(String inputParamName) {
+		this.inputParamName = inputParamName;
 	}
 
 	public String getConfigMethodParamName() {
@@ -48,20 +51,20 @@ public class ProcessRunConfig extends AbstractEntity {
 		this.configMethodParamMappingHelper = configMethodParamMappingHelper;
 	}
 
-	public String getConfigParamType() {
-		return configParamType;
+	public String getInputParamType() {
+		return inputParamType;
 	}
 
-	public void setConfigParamType(String configParamType) {
-		this.configParamType = configParamType;
+	public void setInputParamType(String inputParamType) {
+		this.inputParamType = inputParamType;
 	}
 
-	public String getConfigParamValue() {
-		return configParamValue;
+	public String getInputParamValue() {
+		return inputParamValue;
 	}
 
-	public void setConfigParamValue(String configParamValue) {
-		this.configParamValue = configParamValue;
+	public void setInputParamValue(String inputParamValue) {
+		this.inputParamValue = inputParamValue;
 	}
-	
+
 }

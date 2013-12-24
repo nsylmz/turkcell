@@ -46,10 +46,6 @@
 	display: none!important;
 }
 
-#WebService {
-	display: none;
-}
-
 .feature-info {
 	
 }
@@ -84,7 +80,7 @@
 	margin: 0;
 }
 
-#wsdl-input {
+.wsdl-input {
 	width: 63%;
 }
 
@@ -103,16 +99,16 @@
 	position: relative;
 }
 
-#read-wsdl-button {
+.read-wsdl-button {
     margin-top: -3px;
 }
 
-#get-operation-button {
+.get-operation-button {
 	margin-left: 30px;
     margin-top: -3px;
 }
 
-#ws-run-button {
+.ws-run-button {
 	display: none;
 	position: absolute;
 	bottom: 0px;
@@ -148,7 +144,7 @@
 	width: 94%;
 }
 
-#ws-select {
+.ws-select {
 	display: none;
 	margin-top: 25px;
 }

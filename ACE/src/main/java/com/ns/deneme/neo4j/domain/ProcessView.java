@@ -8,18 +8,14 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 
 @SuppressWarnings("serial")
 @NodeEntity
-public class View extends AbstractEntity {
+public class ProcessView extends AbstractEntity {
 
 	@Indexed(unique = true)
 	private String viewName;
 
-	private String chart;
-
-	private String featureBars;
-	
 	@Fetch
 	@RelatedTo(type = "knows", direction = Direction.BOTH)
-	private Process process;
+	private ProcessComponent startProcess;
 
 	public String getViewName() {
 		return viewName;
@@ -29,28 +25,12 @@ public class View extends AbstractEntity {
 		this.viewName = viewName;
 	}
 
-	public String getChart() {
-		return chart;
+	public ProcessComponent getStartProcess() {
+		return startProcess;
 	}
 
-	public void setChart(String chart) {
-		this.chart = chart;
+	public void setStartProcess(ProcessComponent startProcess) {
+		this.startProcess = startProcess;
 	}
 
-	public String getFeatureBars() {
-		return featureBars;
-	}
-
-	public void setFeatureBars(String featureBars) {
-		this.featureBars = featureBars;
-	}
-
-	public Process getProcess() {
-		return process;
-	}
-
-	public void setProcess(Process process) {
-		this.process = process;
-	}
-	
 }

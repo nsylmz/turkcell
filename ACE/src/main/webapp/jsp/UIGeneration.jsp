@@ -79,7 +79,7 @@
 							<div class="list-item-container">
 								<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
 								<div class="list-item-label">Button</div>
-								<button class="temp-component ace-button btn btn-primary ladda-button" data-style="expand-right">
+								<button class="temp-component ace-button btn btn-primary ladda-button" element-name="button" data-style="expand-right">
 				                	<span class="ladda-label">button</span>
 				                </button>
 							</div>
@@ -204,21 +204,55 @@
 			$(".view-bar").css("left", "0px");
 		}
 		
+		function runProcess(button, basePath) {
+			var l = Ladda.create(button);
+		    l.start();
+		    var processName = $(button).parent().find('.processes').find('option:selected').val();
+		    $.ajax({
+		        type: "POST",
+                data: "processName=" + processName,
+		        url: basePath + "/UIGeneration/runProcess",
+		        success: function (data) {
+		            l.stop();
+		            if (data.status == 1) {
+		            	notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
+		            } else if (data.status < 1) {
+		            	notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
+		            }
+		        }
+		    });
+		}
+		
 		function saveView(button, basePath) {
 			var l = Ladda.create(button);
 		    l.start();
+		    var componentFeatures = {};
+		    $('.view').children().each(function() {
+		    	var elementName = $(this).attr("element-name");
+		    	var elementType = $(this).attr("element-type");
+		    	var positionLeft = $(this).css("left");
+		    	var positionTop = $(this).css("top");
+		    	var featureBar = $("#" + $(this).attr("id") + "-feature-bar");
+		    	var componentName = featureBar.find('.component-name').val();
+		    	var componentProcessName = $("#button-1-feature-bar").find('option:selected').val();
+		    	componentFeatures = {"componentName" : componentName, "positionLeft" : positionLeft, 
+		    						 "positionTop" : positionTop, "componentProcessName" : componentProcessName, 
+		    						 "elementName" : elementName, "elementType" : elementType};
+		    });
+		    var viewName = $('#view-input').val();
+		    var uiView = {"viewName" : viewName, "components" : componentFeatures};
 		    $.ajax({
 		        type: "POST",
 		        dataType:'json',
 		        contentType:"application/json",
-		        url: basePath + "/APIGeneration/save",
-		        data:JSON.stringify(),
+		        url: basePath + "/UIGeneration/saveView",
+		        data:JSON.stringify(uiView),
 		        success: function (data) {
 		            l.stop();
 		            if (data.status == 1) {
-		            	notify('saveProcessSuccessNotification', 'alert-info', data.message, 5000);
+		            	notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
 		            } else if (data.status < 1) {
-		            	notify('saveProcessErrorNotification', 'alert-danger', data.message, 5000);
+		            	notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
 		            }
 		        }
 		    });

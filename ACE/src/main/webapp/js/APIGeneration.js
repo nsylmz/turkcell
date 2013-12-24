@@ -12,15 +12,11 @@ function APIGeneration() {
 		accept : "li",
 		drop : function(event, ui) {
 			var cloneElement = ui.draggable.find('.list-item-container').clone();
+			var elementName = ui.draggable.attr('element-name');
 			cloneElement.removeClass("list-item-container").addClass("generated-item");
 			cloneElement.find('.list-item-label').remove();
-			//cloneElement.width(60 + ui.draggable.find('.list-item-label').width());
-			//cloneElement.find('.list-item-label').removeClass("list-item-label").addClass("generated-item-label");
 			cloneElement.attr("id", "flowchart" + newElementId);
-			var elementName = ui.draggable.attr('element-name');
-			if (elementName != "Begin" && elementName != "End" && elementName != "If") {
-				cloneElement.attr("onclick", "openFeatureBar('" + elementName + "')");
-			}
+			cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + elementName + "')");
 			$(this).append(cloneElement);
 
 			if (newElementId == 1) {
@@ -59,6 +55,41 @@ function APIGeneration() {
 	});
 }
 
+function createNewFeatureBar(elementId, elementName) {
+	var cloneFeatureBar;
+	var tempFeatureBar;
+	tempFeatureBar = $('#' + elementName + '-feature-bar');
+	cloneFeatureBar = tempFeatureBar.clone();
+	cloneFeatureBar.attr("id", elementName + '-' + elementId + '-feature-bar');
+	cloneFeatureBar.find(".close").attr("onclick", "closeFeatureBar('" + elementId + "', '" + elementName + "')");
+	cloneFeatureBar.find(".processes").combobox();
+	tempFeatureBar.parent().append(cloneFeatureBar);
+	
+	cloneFeatureBar.find(".feature-tabs").tabs();
+	cloneFeatureBar.find('#WebService-feature').scroll();
+	return cloneFeatureBar;
+}
+
+function openFeatureBar(elementId, elementName) {
+	$('.feature-container').find(".feature-bar:visible").hide();
+	var	featureBar = $('#' + elementName + '-' + elementId + '-feature-bar');
+	if (featureBar.length == 0) {
+		featureBar = createNewFeatureBar(elementId, elementName);
+	}
+	if (featureBar.hasClass("display-none")) {
+		featureBar.removeClass("display-none");
+	} else {
+		featureBar.show();
+	}
+}
+
+function closeFeatureBar(elementId, elementName) {
+	var	featureBar = $('#' + elementName + '-' + elementId + '-feature-bar');
+	if (featureBar) {
+		featureBar.hide();
+	}
+}
+/*
 var displayElementName;
 
 function openFeatureBar(elementName) {
@@ -72,7 +103,7 @@ function openFeatureBar(elementName) {
 function closeFeatureBar() {
 	$('#' + displayElementName).css("display", "none");
 }
-
+*/
 
 function escapeRegExp(str) {
 	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");

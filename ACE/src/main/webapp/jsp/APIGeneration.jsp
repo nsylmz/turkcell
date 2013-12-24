@@ -80,19 +80,19 @@
 				</h2>
 				<div>
 					<ul class="list-group component-list">
-						<li class="list-group-item" element-name="Begin">
+						<li class="list-group-item" element-name="begin">
 							<div class="list-item-container">
 								<img class="component-img" src="${pageContext.request.contextPath}/img/start.png">
 								<div class="list-item-label">Begin</div>
 							</div>
 						</li>
-						<li class="list-group-item" element-name="End">
+						<li class="list-group-item" element-name="end">
 							<div class="list-item-container">
 								<img class="component-img" src="${pageContext.request.contextPath}/img/end.png">
 								<div class="list-item-label">End</div>
 							</div>
 						</li>
-						<li class="list-group-item" element-name="If">
+						<li class="list-group-item" element-name="if">
 							<div class="list-item-container">
 								<img class="component-img" src="${pageContext.request.contextPath}/img/if.png">
 								<div class="list-item-label">If</div>
@@ -105,13 +105,13 @@
 				</h2>
 				<div>
 					<ul class="list-group component-list">
-						<li class="list-group-item" element-name="WebService">
+						<li class="list-group-item" element-name="webservice">
 							<div class="list-item-container">
 								<img class="component-img" src="${pageContext.request.contextPath}/img/web-service.png">
 								<div class="list-item-label">Web Service</div>
 							</div>
 						</li>
-						<li class="list-group-item" element-name="RestService">
+						<li class="list-group-item" element-name="restservice">
 							<div class="list-item-container">
 								<img class="component-img" src="${pageContext.request.contextPath}/img/rest-service.png">
 								<div class="list-item-label">Rest Service</div>
@@ -124,7 +124,7 @@
 				</h2>
 				<div>
 					<ul class="list-group component-list">
-						<li class="list-group-item" element-name="JavaMethod">
+						<li class="list-group-item" element-name="javamethod">
 							<div class="list-item-container">
 								<img class="component-img" src="${pageContext.request.contextPath}/img/java-big.png">
 								<div class="list-item-label">Java API Method</div>
@@ -137,76 +137,62 @@
 
 		<div id="cart">
 			<h1 class="ui-widget-header">API Process</h1>
-			<c:choose>
-				<c:when test="${empty view}">
-					<div id="flowchart-view" class="ui-widget-content view flowchart-view"></div>
-				</c:when>
-				<c:otherwise>
-					<c:out value="${view.chart}" escapeXml="false"/>
-				</c:otherwise>
-			</c:choose>
+			<div id="flowchart-view" class="ui-widget-content view flowchart-view"></div>
 		</div>
 
-		<c:choose>
-			<c:when test="${empty view}">
-				<div id="WebService" class="feature-bar">
-					<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
-					<div id="tabs" class="feature-tabs">
-						<ul>
-							<li><a href="#feature-info">Component Info</a></li>
-							<li><a href="#WebService-feature">WebService</a></li>
-						</ul>
-						<div id="feature-info">
-							<div class="component-info">
-								<div class="component-name">
-									<p>Component Name</p>
-									<input class="feature-input" type="text" name="componentName">
-								</div>
-							</div>
-						</div>
-						<div id="WebService-feature">
-							<div class="component-feature-container">
-								<div class="component-feature">
-									<label>Wsdl URL</label>
-									<input id="wsdl-input" class="feature-input" type="text" name="wsdlUrl">
-									<button id="read-wsdl-button" class="ace-button btn btn-primary ladda-button" data-style="expand-down"
-			                                onclick="readWsdlAndGetOperationName(this, '${pageContext.request.contextPath}')">
-			                            <span class="ladda-label">Read WSDL</span>
-			                        </button>
-									<div id="ws-select" class="ui-widget">
-										<label>Operations </label>
-										<select id="select-ws-opreations">
-											<option value="">Select Operation...</option>
-										</select>
-										<button id="get-operation-button" class="ace-button btn btn-primary ladda-button" data-style="expand-down"
-			                                onclick="getOpDetail(this, '${pageContext.request.contextPath}')">
-				                            <span class="ladda-label">Get Operation Detail</span>
-				                        </button>
-									</div>
-									<button id="ws-run-button" class="ace-button btn btn-primary ladda-button" data-style="expand-left"
-			                                onclick="runWS(this, '${pageContext.request.contextPath}')">
-				                            <span class="ladda-label">Test Ws Operation</span>
-				                    </button>
-								</div>
-								<div class="component-feature">
-									<div id="param-name-container" class="param-container">
-										<label class="param-name">Parameter Name</label>
-										<input id="param-name-input" class="param-input feature-input" type="text" name="param-name">
-										<label class="param-type">Parameter Type</label>
-									</div>
-									<div class="params-container"></div>
-								</div>
-							</div>
+		<div class="feature-container">
+			<div id="webservice-feature-bar" class="feature-bar display-none">
+				<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
+				<div id="tabs" class="feature-tabs">
+					<ul>
+						<li><a href="#feature-info">Component Info</a></li>
+						<li><a href="#WebService-feature">WebService</a></li>
+					</ul>
+					<div id="feature-info">
+						<div class="component-info">
+							<div class="component-name">
+								<p>Component Name</p>
+								<input class="feature-input" type="text" name="componentName">
 							</div>
 						</div>
 					</div>
-				</c:when>
-				<c:otherwise>
-					<c:out value="${view.featureBars}" escapeXml="false"/>
-				</c:otherwise>
-			</c:choose>
+					<div id="WebService-feature">
+						<div class="component-feature-container">
+							<div class="component-feature">
+								<label>Wsdl URL</label>
+								<input class="wsdl-input feature-input" type="text" name="wsdlUrl">
+								<button class="read-wsdl-button ace-button btn btn-primary ladda-button" data-style="expand-down"
+		                                onclick="readWsdlAndGetOperationName(this, '${pageContext.request.contextPath}')">
+		                            <span class="ladda-label">Read WSDL</span>
+		                        </button>
+								<div class="ws-select ui-widget">
+									<label>Operations </label>
+									<select class="ws-opreations">
+										<option value="">Select Operation...</option>
+									</select>
+									<button class="get-operation-button ace-button btn btn-primary ladda-button" data-style="expand-down"
+		                                onclick="getOpDetail(this, '${pageContext.request.contextPath}')">
+			                            <span class="ladda-label">Get Operation Detail</span>
+			                        </button>
+								</div>
+								<button class="ws-run-button ace-button btn btn-primary ladda-button" data-style="expand-left"
+		                                onclick="runWS(this, '${pageContext.request.contextPath}')">
+			                            <span class="ladda-label">Test Ws Operation</span>
+			                    </button>
+							</div>
+							<div class="component-feature">
+								<div id="param-name-container" class="param-container">
+									<label class="param-name">Parameter Name</label>
+									<input id="param-name-input" class="param-input feature-input" type="text" name="param-name">
+									<label class="param-type">Parameter Type</label>
+								</div>
+								<div class="params-container"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
 
 	<script src="${pageContext.request.contextPath}/js/jquery-2.0.3.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
@@ -242,8 +228,6 @@
 	
 	<script type="text/javascript">
 		APIGeneration();
-		$("#tabs").tabs();
-		$('#WebService-feature').scroll();
 		function readWsdlAndGetOperationName(button, basePath) {
 			var wsdlUrl = $(button).parent().find('.feature-input').val();
 		    var l = Ladda.create(button);
@@ -256,7 +240,7 @@
 		            l.stop();
 		            if (data.status == 1) {
 		            	notify('readWSDLSuccessNotification', 'alert-info', data.message, 5000);
-		            	var combobox = $("#select-ws-opreations");
+		            	var combobox = $(button).parent().find(".ws-opreations");
 		            	var operations = data.operations;
 		            	var cloneOption = combobox.children().first().clone();
 		            	combobox.empty();
@@ -268,8 +252,8 @@
 		            		newOption.text(operations[i]);
 		            		combobox.append(newOption);
 						}
-		            	$('#ws-run-button').css("display", "none");
-		            	createWsOpSelect();
+		            	$(button).parent().find('.ws-run-button').css("display", "none");
+		            	createWsOpSelect(combobox);
 		            } else if (data.status < 1) {
 		            	notify('readWSDLErrorNotification', 'alert-danger', data.message, 5000);
 		            }
@@ -278,7 +262,7 @@
 		}
 		
 		function getOpDetail(button, basePath) {
-			var wsdlUrl = $('#wsdl-input').val();
+			var wsdlUrl = $(button).parent().parent().find('.wsdl-input').val();
 			var operationName = $(button).parent().find('option:selected').val();
 		    var l = Ladda.create(button);
 		    l.start();
@@ -290,8 +274,8 @@
 		            l.stop();
 		            if (data.status == 1) {
 		            	notify('getOpDetailSuccessNotification', 'alert-info', data.message, 5000);
-		            	var tempParamContainer = $("#param-name-container");
-		            	var paramsContainer = $('.params-container');
+		            	var tempParamContainer = $(button).parent().parent().parent().find("#param-name-container");
+		            	var paramsContainer = $(button).parent().parent().parent().find('.params-container');
 		            	var inputParams = data.inputParams;
 		            	var newParam;
 		            	var paramType;
@@ -326,11 +310,11 @@
 			            		paramsContainer.append(newParam);
 							}
 						}
-		            	if($('.params-container').children().length > 5) {
+		            	if(paramsContainer.children().length > 5) {
 		            		paramsContainer.parent().css("overflow-y", "scroll");
 		            		paramsContainer.parent().css("overflow-x", "hidden");
 		            	}
-		            	$('#ws-run-button').css("display", "block");
+		            	$(button).parent().parent().find(".ws-run-button").css("display", "block");
 		            } else if (data.status < 1) {
 		            	notify('getOpDetailErrorNotification', 'alert-danger', data.message, 5000);
 		            }
@@ -341,15 +325,15 @@
 		function runWS(button, basePath) {
 		    var l = Ladda.create(button);
 		    l.start();
-			var wsdlUrl = $('#wsdl-input').val();
-			var operationName = $('#select-ws-opreations').find('option:selected').val();
+			var wsdlUrl = $(button).parent().find('.wsdl-input').val();
+			var operationName = $(button).parent().find('.ws-opreations').find('option:selected').val();
 			var wsRunParams = {"wsdlUrl" : wsdlUrl, "operation" : operationName, "paramNameAndparamValue" : null};
 			var paramNameAndparamValue = {};
 			var param;
 			var paramName;
 			var paramType;
 			var paramValue;
-			$('.params-container').children().each(function() {
+			$(button).parent().parent().find('.params-container').children().each(function() {
 				paramName = $(this).find('.param-name').text();
 				paramType = $(this).find('.param-type').text();
 				paramValue = $(this).find('.param-input').val();
@@ -373,8 +357,7 @@
 		    });
 		}
 		
-		function createWsOpSelect() {
-		    var combobox = $("#select-ws-opreations");
+		function createWsOpSelect(combobox) {
 		    combobox.parent().css("display", "block");
 		    combobox.combobox();
 		}

@@ -178,6 +178,13 @@ body {
 	transition: all 0.3s linear;
 }
 
+.ui-accordion .ui-accordion-content {
+	padding: 1em 2.2em;
+	border-top: 0;
+	overflow: auto;
+	max-height: 200px;
+}
+
 .display-none {
 	display: none;
 }
