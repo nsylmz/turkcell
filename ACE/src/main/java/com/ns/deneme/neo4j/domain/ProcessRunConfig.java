@@ -3,12 +3,15 @@ package com.ns.deneme.neo4j.domain;
 import java.util.Set;
 
 import org.neo4j.graphdb.Direction;
+import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
 
+@SuppressWarnings("serial")
 @NodeEntity
 public class ProcessRunConfig extends AbstractEntity {
-	
+
+	@Indexed(unique = true)
 	private String configParamName;
 	
 	private String configMethodParamName;

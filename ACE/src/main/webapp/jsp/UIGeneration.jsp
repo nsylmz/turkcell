@@ -15,8 +15,11 @@
 	<link rel="icon" href="http://s.turkcell.com.tr/static_lib/assets/images/common/favicon.ico" type="image/vnd.microsoft.icon">
 	<link href="${pageContext.request.contextPath}/css/bootstrap.css" rel="stylesheet" type="text/css"/>
 	<link href="${pageContext.request.contextPath}/css/jquery-ui.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/css/ladda.min.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/css/ladda-themeless.min.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/UIGeneration.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.request.contextPath}/css/featureBar.css" rel="stylesheet" type="text/css" />
 	
 
 </head>
@@ -25,7 +28,6 @@
 	<div id="htmlPallet-container" class="container">
 		<div class="navbar-wrapper">
 			<div class="container">
-
 				<div class="navbar navbar-inverse navbar-static-top">
 					<div class="container">
 						<div class="navbar-header">
@@ -46,6 +48,25 @@
 				</div>
 			</div>
 		</div>
+		<div class="view-bar bar-transition">
+			<div class="view-bar-item item-first" onclick="openSaveBar()">
+				<img class="view-item-img" title="Save View" alt="Save View" src="${pageContext.request.contextPath}/img/save-icon.png">
+				<label>Save View</label>
+			</div>
+	        <div class="view-bar-item item-last" onclick="">
+	        	<img class="view-item-img" title="Open View" alt="Open View" src="${pageContext.request.contextPath}/img/open-icon.png">
+		        <label>Open View</label>
+	        </div>
+	    </div>
+	    <div class="save-bar bar-transition">
+	    	<button type="button" class="close save-bar-close" aria-hidden="true" onclick="closeSaveBar()">&times;</button>
+			<label>View Name</label>
+			<input id="view-input" class="view-name-input" type="text" name="viewInput">
+			<button id="save-view-button" class="ace-button btn btn-primary ladda-button" data-style="expand-right"
+		        onclick="saveView(this, '${pageContext.request.contextPath}')">
+		        <span class="ladda-label">Save View</span>
+	        </button>
+	    </div>
 		<div id="products">
 			<h1 class="ui-widget-header">Components</h1>
 			<div id="catalog">
@@ -54,12 +75,45 @@
 				</h2>
 				<div>
 					<ul class="list-group component-list">
-						<li class="list-group-item component-button" element-name="button">Button</li>
-						<li class="list-group-item component-checkbox" element-name="input" element-type="checkbox">Check Box</li>
-						<li class="list-group-item component-radio" element-name="input" element-type="radio">Radio Button</li>
-						<li class="list-group-item component-text" element-name="input" element-type="text">Text Field</li>
-						<li class="list-group-item component-textarea" element-name="textarea">Text Area</li>
-						<li class="list-group-item component-a" element-name="a">hyperlink</li>
+						<li class="list-group-item" element-name="button">
+							<div class="list-item-container">
+								<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
+								<div class="list-item-label">Button</div>
+								<button class="temp-component ace-button btn btn-primary ladda-button" data-style="expand-right">
+				                	<span class="ladda-label">button</span>
+				                </button>
+							</div>
+						</li>
+						<li class="list-group-item" element-name="input" element-type="checkbox">
+							<div class="list-item-container">
+								<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
+								<div class="list-item-label">Check Box</div>
+							</div>
+						</li>
+						<li class="list-group-item" element-name="input" element-type="radio">
+							<div class="list-item-container">
+								<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
+								<div class="list-item-label">Radio Button</div>
+							</div>
+						</li>
+						<li class="list-group-item" element-name="input" element-type="text">
+							<div class="list-item-container">
+								<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
+								<div class="list-item-label">Text Field</div>
+							</div>
+						</li>
+						<li class="list-group-item" element-name="input" element-type="textarea">
+							<div class="list-item-container">
+								<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
+								<div class="list-item-label">Text Area</div>
+							</div>
+						</li>
+						<li class="list-group-item" element-name="a">
+							<div class="list-item-container">
+								<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
+								<div class="list-item-label">Hyperlink</div>
+							</div>
+						</li>
 					</ul>
 				</div>
 				<h2>
@@ -88,19 +142,87 @@
 			<div class="ui-widget-content view"></div>
 		</div>
 		
-		<div class="componentFeature">
-			<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
+		<div class="feature-container">
+			<div id="button-feature-bar" class="feature-bar display-none">
+				<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
+				<div id="tabs" class="feature-tabs">
+					<ul>
+						<li><a href="#feature-info">Button Features</a></li>
+					</ul>
+					<div id="feature-info">
+						<div class="component-info">
+							<div class="component-feature-container">
+								<div class="component-feature">
+									<div class="component-name-container">
+										<label>Component Name</label>
+										<input class="component-name feature-input" type="text" name="componentName">
+									</div>
+									<div class="component-process-container">
+										<div class="ui-widget">
+											<label>Process </label>
+											<select class="processes">
+												<option value="">Select Process...</option>
+												<c:if test="${not empty processes}">
+		     										<c:forEach var="process" varStatus="status" items="${processes}">
+														<option value="${process.processName}">${process.processName}</option>
+													</c:forEach>
+												</c:if>
+											</select>
+											<button class="test-process-button ace-button btn btn-primary ladda-button" data-style="expand-down"
+				                                	onclick="runProcess(this, '${pageContext.request.contextPath}')">
+					                            <span class="ladda-label">Test Process</span>
+					                        </button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
-
 	<script src="${pageContext.request.contextPath}/js/jquery-2.0.3.js" type="text/javascript"></script>
-	<script src="${pageContext.request.contextPath}/js/jquery-ui.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/holder.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/js/ladda/spin.min.js"></script>
+	<script src="${pageContext.request.contextPath}/js/ladda/ladda.min.js"></script>
+	<script src="${pageContext.request.contextPath}/js/jquery-ui.js" type="text/javascript"></script>
+	<script src="${pageContext.request.contextPath}/js/ComboBox.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/UIGeneration.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
 		UIGeneration();
+		$(".feature-tabs").tabs();
+		
+		function openSaveBar() {
+			$(".view-bar").css("left", "-165px");
+			$(".save-bar").css("left", "0px");
+		}
+		
+		function closeSaveBar() {
+			$(".save-bar").css("left", "-255px");
+			$(".view-bar").css("left", "0px");
+		}
+		
+		function saveView(button, basePath) {
+			var l = Ladda.create(button);
+		    l.start();
+		    $.ajax({
+		        type: "POST",
+		        dataType:'json',
+		        contentType:"application/json",
+		        url: basePath + "/APIGeneration/save",
+		        data:JSON.stringify(),
+		        success: function (data) {
+		            l.stop();
+		            if (data.status == 1) {
+		            	notify('saveProcessSuccessNotification', 'alert-info', data.message, 5000);
+		            } else if (data.status < 1) {
+		            	notify('saveProcessErrorNotification', 'alert-danger', data.message, 5000);
+		            }
+		        }
+		    });
+		}
 	</script>
 </body>
 </html>

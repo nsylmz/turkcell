@@ -178,3 +178,6 @@ body {
 	transition: all 0.3s linear;
 }
 
+.display-none {
+	display: none;
+}

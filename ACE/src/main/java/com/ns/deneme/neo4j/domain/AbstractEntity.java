@@ -1,8 +1,11 @@
 package com.ns.deneme.neo4j.domain;
 
+import java.io.Serializable;
+
 import org.springframework.data.neo4j.annotation.GraphId;
 
-public abstract class AbstractEntity {
+@SuppressWarnings("serial")
+public abstract class AbstractEntity implements Serializable {
 
 	@GraphId
 	private Long id;
@@ -11,6 +14,7 @@ public abstract class AbstractEntity {
 		return id;
 	}
 	
+	/*
 	@Override
 	public boolean equals(Object obj) {
 
@@ -30,5 +34,5 @@ public abstract class AbstractEntity {
 	public int hashCode() {
 		return getId() == null ? 0 : getId().hashCode();
 	}
-	
+	*/
 }

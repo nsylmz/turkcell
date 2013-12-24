@@ -215,3 +215,16 @@
 	margin-left: 15px;
 }
 
+.temp-component {
+	display: none;
+}
+
+.component-process-container {
+	margin-top: 25px;
+}
+
+.test-process-button {
+	left: 65%;
+	position: absolute;
+	margin-top: -3px;
+}

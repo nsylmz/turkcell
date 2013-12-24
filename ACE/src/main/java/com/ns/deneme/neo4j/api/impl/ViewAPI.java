@@ -20,4 +20,8 @@ public class ViewAPI implements IViewAPI {
     public void saveView(View view) {
     	viewRepository.save(view);        
     }
+    
+    public View findViewByName(String viewName) {
+    	return viewRepository.findByPropertyValue("viewName", viewName.trim());
+    }
 }

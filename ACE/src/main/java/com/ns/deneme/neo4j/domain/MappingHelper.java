@@ -3,10 +3,11 @@ package com.ns.deneme.neo4j.domain;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
+@SuppressWarnings("serial")
 @NodeEntity
 public class MappingHelper extends AbstractEntity {
 	
-	@Indexed
+	@Indexed(unique = true)
 	private String mapName;
 	
 	private String mapRule;

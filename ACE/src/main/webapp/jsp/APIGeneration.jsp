@@ -33,7 +33,6 @@
 	<div id="htmlPallet-container" class="container">
 		<div class="navbar-wrapper">
 			<div class="container">
-
 				<div class="navbar navbar-inverse navbar-static-top">
 					<div class="container">
 						<div class="navbar-header">
@@ -135,63 +134,77 @@
 				</div>	
 			</div>
 		</div>
-	
+
 		<div id="cart">
 			<h1 class="ui-widget-header">API Process</h1>
-			<div id="flowchart-view" class="ui-widget-content view flowchart-view"></div>
+			<c:choose>
+				<c:when test="${empty view}">
+					<div id="flowchart-view" class="ui-widget-content view flowchart-view"></div>
+				</c:when>
+				<c:otherwise>
+					<c:out value="${view.chart}" escapeXml="false"/>
+				</c:otherwise>
+			</c:choose>
 		</div>
-		
-		<div id="WebService" class="feature-bar">
-			<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
-			<div id="tabs" class="feature-tabs">
-				<ul>
-					<li><a href="#feature-info">Component Info</a></li>
-					<li><a href="#WebService-feature">WebService</a></li>
-				</ul>
-				<div id="feature-info">
-					<div class="component-info">
-						<div class="component-name">
-							<p>Component Name</p>
-							<input class="feature-input" type="text" name="componentName">
-						</div>
-					</div>
-				</div>
-				<div id="WebService-feature">
-					<div class="component-feature-container">
-						<div class="component-feature">
-							<label>Wsdl URL</label>
-							<input id="wsdl-input" class="feature-input" type="text" name="wsdlUrl">
-							<button id="read-wsdl-button" class="ace-button btn btn-primary ladda-button" data-style="expand-right"
-	                                onclick="readWsdlAndGetOperationName(this, '${pageContext.request.contextPath}')">
-	                            <span class="ladda-label">Read WSDL</span>
-	                        </button>
-							<div id="ws-select" class="ui-widget">
-								<label>Operations </label>
-								<select id="select-ws-opreations">
-									<option value="">Select Operation...</option>
-								</select>
-								<button id="get-operation-button" class="ace-button btn btn-primary ladda-button" data-style="expand-right"
-	                                onclick="getOpDetail(this, '${pageContext.request.contextPath}')">
-		                            <span class="ladda-label">Get Operation Detail</span>
-		                        </button>
+
+		<c:choose>
+			<c:when test="${empty view}">
+				<div id="WebService" class="feature-bar">
+					<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
+					<div id="tabs" class="feature-tabs">
+						<ul>
+							<li><a href="#feature-info">Component Info</a></li>
+							<li><a href="#WebService-feature">WebService</a></li>
+						</ul>
+						<div id="feature-info">
+							<div class="component-info">
+								<div class="component-name">
+									<p>Component Name</p>
+									<input class="feature-input" type="text" name="componentName">
+								</div>
 							</div>
-							<button id="ws-run-button" class="ace-button btn btn-primary ladda-button" data-style="expand-right"
-	                                onclick="runWS(this, '${pageContext.request.contextPath}')">
-		                            <span class="ladda-label">Test Ws Operation</span>
-		                    </button>
 						</div>
-						<div class="component-feature">
-							<div id="param-name-container" class="param-container">
-								<label class="param-name">Parameter Name</label>
-								<input id="param-name-input" class="param-input feature-input" type="text" name="param-name">
-								<label class="param-type">Parameter Type</label>
+						<div id="WebService-feature">
+							<div class="component-feature-container">
+								<div class="component-feature">
+									<label>Wsdl URL</label>
+									<input id="wsdl-input" class="feature-input" type="text" name="wsdlUrl">
+									<button id="read-wsdl-button" class="ace-button btn btn-primary ladda-button" data-style="expand-down"
+			                                onclick="readWsdlAndGetOperationName(this, '${pageContext.request.contextPath}')">
+			                            <span class="ladda-label">Read WSDL</span>
+			                        </button>
+									<div id="ws-select" class="ui-widget">
+										<label>Operations </label>
+										<select id="select-ws-opreations">
+											<option value="">Select Operation...</option>
+										</select>
+										<button id="get-operation-button" class="ace-button btn btn-primary ladda-button" data-style="expand-down"
+			                                onclick="getOpDetail(this, '${pageContext.request.contextPath}')">
+				                            <span class="ladda-label">Get Operation Detail</span>
+				                        </button>
+									</div>
+									<button id="ws-run-button" class="ace-button btn btn-primary ladda-button" data-style="expand-left"
+			                                onclick="runWS(this, '${pageContext.request.contextPath}')">
+				                            <span class="ladda-label">Test Ws Operation</span>
+				                    </button>
+								</div>
+								<div class="component-feature">
+									<div id="param-name-container" class="param-container">
+										<label class="param-name">Parameter Name</label>
+										<input id="param-name-input" class="param-input feature-input" type="text" name="param-name">
+										<label class="param-type">Parameter Type</label>
+									</div>
+									<div class="params-container"></div>
+								</div>
 							</div>
-							<div class="params-container"></div>
+							</div>
 						</div>
 					</div>
-					</div>
-				</div>
-			</div>
+				</c:when>
+				<c:otherwise>
+					<c:out value="${view.featureBars}" escapeXml="false"/>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 
@@ -227,7 +240,6 @@
 	<script src="${pageContext.request.contextPath}/js/ComboBox.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/APIGeneration.js" type="text/javascript"></script>
 	
-
 	<script type="text/javascript">
 		APIGeneration();
 		$("#tabs").tabs();
@@ -383,9 +395,7 @@
 			var viewName = $('#view-input').val();
 			var viewHtml = $('<div>').append($('#flowchart-view').clone()).html();
 			var featureBars = $('<div>').append($('#WebService').clone()).html();
-			var bodyChildren = $('<div>').append($('body').children('.ui-widget')).html();
-			var view = {"viewName" : viewName, "chart" : viewHtml, "featureBars" : featureBars, "bodyChildren" : bodyChildren};
-			var processName = $('#wsdl-input').val();
+			var view = {"viewName" : viewName, "chart" : viewHtml, "featureBars" : featureBars};
 			var processType = 'WebService';
 			var processName = $('.component-name input').val();
 			var paramNameAndParamValue = {};
@@ -399,9 +409,9 @@
 				paramNameAndParamValue[paramName] = { "paramType" : paramType, "paramValue" : paramValue};
 			});
 		    var wsdlUrl = $('#wsdl-input').val();
-		    paramNameAndParamValue[wsdlUrl] = { "paramType" : "string", "paramValue" : wsdlUrl};
+		    paramNameAndParamValue["wsdlUrl"] = { "paramType" : "string", "paramValue" : wsdlUrl};
 			var operationName = $('#select-ws-opreations').find('option:selected').val();
-			paramNameAndParamValue[operationName] = { "paramType" : "string", "paramValue" : operationName};
+			paramNameAndParamValue["operationName"] = { "paramType" : "string", "paramValue" : operationName};
 		    var saveAPIGeneration = { "view" : view, "processName" : processName, "processType" : processType, "params" : paramNameAndParamValue};
 		    $.ajax({
 		        type: "POST",
