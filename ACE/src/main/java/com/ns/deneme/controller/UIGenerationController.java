@@ -3,6 +3,7 @@ package com.ns.deneme.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,7 +49,30 @@ public class UIGenerationController {
 			processNames.add(processView.getViewName());
 		}
 		model.addAttribute("processNames", processNames);
+		List<String> uiViewNames = new ArrayList<String>();
+		for (UIView uiView : uiVewAPI.findAll()) {
+			uiViewNames.add(uiView.getViewName());
+		}
+		model.addAttribute("viewNames", uiViewNames);
 		return "UIGeneration";
+	}
+	
+	@RequestMapping(value = "/getAllViewNames", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> getAllViewNames(Model model) {
+		Map<String, Object> data = new LinkedHashMap<String, Object>();
+		List<String> uiViewNames = new ArrayList<String>();
+		for (UIView uiView : uiVewAPI.findAll()) {
+			uiViewNames.add(uiView.getViewName());
+		}
+		if (uiViewNames.size() > 0) {
+			data.put("status", "1");
+			data.put("message", "View Name Successfully Retrieved.");
+		} else {
+			data.put("status", "-1");
+			data.put("message", "There Is No View For Demostrate!!!");
+		}
+		model.addAttribute("viewNames", uiViewNames);
+		return data;
 	}
 	
 	@RequestMapping(value = "/{viewName}", method = RequestMethod.GET)
@@ -71,6 +95,7 @@ public class UIGenerationController {
 				for (UIComponent component : uiView.getComponents()) {
 					componentVO = new UIComponentVO();
 					componentVO.setComponentName(component.getComponentName());
+					componentVO.setComponentLabel(component.getComponentLabel());
 					componentVO.setElementName(component.getElementName());
 					componentVO.setElementType(component.getElementType());
 					componentVO.setPositionLeft(component.getPositionLeft());
@@ -81,6 +106,12 @@ public class UIGenerationController {
 				uiViewVO.setComponents(componentVOs);
 				String json = mapper.writeValueAsString(uiViewVO).replaceAll("\"", "'");
 				model.addAttribute("uiView", json);
+				
+				List<String> uiViewNames = new ArrayList<String>();
+				for (UIView view : uiVewAPI.findAll()) {
+					uiViewNames.add(view.getViewName());
+				}
+				model.addAttribute("viewNames", uiViewNames);
 			}
 		} catch (JsonProcessingException e) {
 			logger.error(e.getMessage(), e);
@@ -98,6 +129,7 @@ public class UIGenerationController {
 			for (UIComponentVO uiComponentVO : uiViewVO.getComponents()) {
 				uiComponent = new UIComponent();
 				uiComponent.setComponentName(uiComponentVO.getComponentName());
+				uiComponent.setComponentLabel(uiComponentVO.getComponentLabel());
 				uiComponent.setElementName(uiComponentVO.getElementName());
 				uiComponent.setElementType(uiComponentVO.getElementType());
 				uiComponent.setPositionLeft(uiComponentVO.getPositionLeft());

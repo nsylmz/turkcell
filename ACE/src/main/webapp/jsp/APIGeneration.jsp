@@ -41,7 +41,7 @@
 								<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 									class="icon-bar"></span>
 							</button>
-							<a class="navbar-brand" href="${pageContext.request.contextPath}/UIGeneration">Application Creation Enviroment</a>
+							<a class="navbar-brand" href="${pageContext.request.contextPath}/UIGeneration">Application Creation Environment</a>
 						</div>
 						<div class="navbar-collapse collapse">
 							<ul class="nav navbar-nav">

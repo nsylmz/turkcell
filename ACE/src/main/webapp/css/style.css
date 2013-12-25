@@ -188,3 +188,33 @@ body {
 .display-none {
 	display: none;
 }
+
+.modal-header,
+.modal-footer {
+	background-color: #ffe000;
+}
+
+.notification-container {
+    position: fixed;
+    z-index: 1100;
+    bottom: 50%;
+    left: 39%;
+    width: 300px;
+    padding: 5px 0px;
+    display: block;
+}
+
+.appStore-notification {
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    position: relative;
+}
+
+.notification-close {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	font-size: 17px;
+}	

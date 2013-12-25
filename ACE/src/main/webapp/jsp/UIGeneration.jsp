@@ -36,7 +36,7 @@
 								<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 									class="icon-bar"></span>
 							</button>
-							<a class="navbar-brand" href="${pageContext.request.contextPath}/UIGeneration">Application Creation Enviroment</a>
+							<a class="navbar-brand" href="${pageContext.request.contextPath}/UIGeneration">Application Creation Environment</a>
 						</div>
 						<div class="navbar-collapse collapse">
 							<ul class="nav navbar-nav">
@@ -53,11 +53,34 @@
 				<img class="view-item-img" title="Save View" alt="Save View" src="${pageContext.request.contextPath}/img/save-icon.png">
 				<label>Save View</label>
 			</div>
-	        <div class="view-bar-item item-last" onclick="">
-	        	<img class="view-item-img" title="Open View" alt="Open View" src="${pageContext.request.contextPath}/img/open-icon.png">
-		        <label>Open View</label>
+	        <div class="view-bar-item item-last" onclick="openViewModal('${pageContext.request.contextPath}')">
+				<img class="view-item-img" title="Open View" alt="Open View" src="${pageContext.request.contextPath}/img/open-icon.png">
+				<label>Open View</label>
 	        </div>
 	    </div>
+	    <div class="modal fade" id="openViewModal" tabindex="-1" role="dialog" aria-labelledby="openViewModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 class="modal-title">Application Creation Environment</h3>
+					</div>
+					<div class="modal-body" id="openViewModalBody">
+						<c:if test="${not empty viewNames}">
+							<ol id="selectable">
+		    					<c:forEach var="viewName" items="${viewNames}">
+									<li class="ui-widget-content">${viewName}</li>
+								</c:forEach>
+							</ol>
+							<button type="button" class="ace-button go-to-view-button" onclick="goToUIView(this, '${pageContext.request.contextPath}')">go to ui view</button>
+						</c:if>
+					</div>
+                    <div class="modal-footer">
+                      	<button type="button" class="ace-button modal-close" data-dismiss="modal">close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	    <div class="save-bar bar-transition">
 	    	<button type="button" class="close save-bar-close" aria-hidden="true" onclick="closeSaveBar()">&times;</button>
 			<label>View Name</label>
@@ -157,6 +180,11 @@
 										<label>Component Name</label>
 										<input class="component-name feature-input" type="text" name="componentName">
 									</div>
+									<div class="component-label-container">
+										<label>Component Label</label>
+										<input class="component-label feature-input" type="text" name="componentLabel" 
+											onkeypress="changeButtonLabel(this)" onkeyup="changeButtonLabel(this)" onchange="changeButtonLabel(this)">
+									</div>
 									<div class="component-process-container">
 										<div class="ui-widget">
 											<label>Process </label>
@@ -191,39 +219,71 @@
 	<script src="${pageContext.request.contextPath}/js/UIGeneration.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
-		
 		UIGeneration();
 		$(".feature-tabs").tabs();
+		$( "#selectable" ).selectable();
 		
+		function openViewModal(basePath) {
+			$('#openViewModal').modal('toggle');
+			/*
+			$.ajax({
+				type : "POST",
+				url : basePath + "/UIGeneration/getAllViewNames",
+				success : function(data) {
+					if (data.status == 1) {
+						$('#openViewModal').modal('toggle');
+					} else if (data.status < 1) {
+						notify('getAllViewNamesErrorNotification', 'alert-danger', data.message, 5000);
+					}
+				}
+			});
+			*/
+		}
+		
+		function goToUIView(button, basePath) {
+			var viewName = $(button).parent().find('.ui-selected').text();
+			if (viewName) {
+				window.location.href = basePath + "/UIGeneration/" + viewName;
+			} else {
+				notify('noViewSelectedErrorNotification', 'alert-info', 'No UIView Selected!!! Please Select UI View.', 5000);
+			}
+		}
+		
+		function changeButtonLabel(input) {
+			var uiComponentId = $(input).parent().parent().parent().parent().parent().parent().parent().attr("id").replace("-feature-bar", "");
+			$('#' + uiComponentId).find('span').text($(input).val());
+		}
+
 		function openSaveBar() {
 			$(".view-bar").css("left", "-165px");
 			$(".save-bar").css("left", "0px");
 		}
-		
+
 		function closeSaveBar() {
 			$(".save-bar").css("left", "-255px");
 			$(".view-bar").css("left", "0px");
 		}
-		
+
 		function runProcess(button, basePath) {
 			var l = Ladda.create(button);
-		    l.start();
-		    var processName = $(button).parent().find('.processes').find('option:selected').val();
-		    $.ajax({
-		        type: "POST",
-                data: "processName=" + processName,
-		        url: basePath + "/UIGeneration/runProcess",
-		        success: function (data) {
-		            l.stop();
-		            if (data.status == 1) {
-		            	notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
-		            } else if (data.status < 1) {
-		            	notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
-		            }
-		        }
-		    });
+			l.start();
+			var processName = $(button).parent().find('.processes').find(
+					'option:selected').val();
+			$.ajax({
+				type : "POST",
+				data : "processName=" + processName,
+				url : basePath + "/UIGeneration/runProcess",
+				success : function(data) {
+					l.stop();
+					if (data.status == 1) {
+						notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
+					} else if (data.status < 1) {
+						notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
+					}
+				}
+			});
 		}
-		
+
 		function loadElementToView(component) {
 			var tempElement;
 			if (component["elementType"]) {
@@ -243,6 +303,7 @@
 			cloneElement.css("position", "relative");
 			cloneElement.css("left", component["positionLeft"]);
 			cloneElement.css("top", component["positionTop"]);
+			cloneElement.find('span').text(component["componentLabel"]);
 			cloneElement.draggable({
 				containment : "parent",
 				cancel : false
@@ -251,63 +312,73 @@
 			newElementId++;
 			return cloneElement;
 		}
-		
+
 		function loadComponentFeatureBar(elementId, component) {
 			var featureBar = createNewFeatureBar(elementId, component["elementName"], component["elementType"]);
 			featureBar.find('.component-name').val(component["componentName"]);
+			featureBar.find('.component-label').val(component["componentLabel"]);
 			featureBar.find('.processes').val(component["componentProcessName"]);
 			featureBar.find('.custom-combobox-input').val(component["componentProcessName"]);
 		}
-		
+
 		function onload(uiView) {
 			if (uiView) {
-				 $('#view-input').val(uiView["viewName"]);
-				 var components = uiView["components"];
-				 var component;
-				 var loadedElement;
-				 for (var i in components) {
-					 component = components[i];
-					 loadedElement = loadElementToView(component);
-					 loadComponentFeatureBar(loadedElement.attr("id").split("-")[1], component);
+				$('#view-input').val(uiView["viewName"]);
+				var components = uiView["components"];
+				var component;
+				var loadedElement;
+				for ( var i in components) {
+					component = components[i];
+					loadedElement = loadElementToView(component);
+					loadComponentFeatureBar(
+							loadedElement.attr("id").split("-")[1], component);
 				}
 			}
 		}
-		
+
 		function saveView(button, basePath) {
 			var l = Ladda.create(button);
-		    l.start();
-		    var componentFeatures;
-		    var components = [];
-		    $('.view').children().each(function() {
-		    	var elementName = $(this).attr("element-name");
-		    	var elementType = $(this).attr("element-type");
-		    	var positionLeft = $(this).css("left");
-		    	var positionTop = $(this).css("top");
-		    	var featureBar = $("#" + $(this).attr("id") + "-feature-bar");
-		    	var componentName = featureBar.find('.component-name').val();
-		    	var componentProcessName = featureBar.find('option:selected').val();
-		    	componentFeatures = {"componentName" : componentName, "positionLeft" : positionLeft, 
-		    						 "positionTop" : positionTop, "componentProcessName" : componentProcessName, 
-		    						 "elementName" : elementName, "elementType" : elementType};
-		    	components.push(componentFeatures);
-		    });
-		    var viewName = $('#view-input').val();
-		    var uiView = {"viewName" : viewName, "components" : components};
-		    $.ajax({
-		        type: "POST",
-		        dataType:'json',
-		        contentType:"application/json",
-		        url: basePath + "/UIGeneration/saveView",
-		        data:JSON.stringify(uiView),
-		        success: function (data) {
-		            l.stop();
-		            if (data.status == 1) {
-		            	notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
-		            } else if (data.status < 1) {
-		            	notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
-		            }
-		        }
-		    });
+			l.start();
+			var componentFeatures;
+			var components = [];
+			$('.view').children().each(
+					function() {
+						var elementName = $(this).attr("element-name");
+						var elementType = $(this).attr("element-type");
+						var positionLeft = $(this).css("left");
+						var positionTop = $(this).css("top");
+						var featureBar = $("#" + $(this).attr("id") + "-feature-bar");
+						var componentName = featureBar.find('.component-name').val();
+						var componentLabel = featureBar.find('.component-label').val();
+						var componentProcessName = featureBar.find('option:selected').val();
+						componentFeatures = {
+							"componentName" : componentName,
+							"componentLabel" : componentLabel,
+							"positionLeft" : positionLeft,
+							"positionTop" : positionTop,
+							"componentProcessName" : componentProcessName,
+							"elementName" : elementName,
+							"elementType" : elementType
+						};
+						components.push(componentFeatures);
+					});
+			var viewName = $('#view-input').val();
+			var uiView = { "viewName" : viewName, "components" : components };
+			$.ajax({
+				type : "POST",
+				dataType : 'json',
+				contentType : "application/json",
+				url : basePath + "/UIGeneration/saveView",
+				data : JSON.stringify(uiView),
+				success : function(data) {
+					l.stop();
+					if (data.status == 1) {
+						notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
+					} else if (data.status < 1) {
+						notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
+					}
+				}
+			});
 		}
 	</script>
 </body>

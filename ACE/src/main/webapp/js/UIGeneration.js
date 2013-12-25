@@ -88,3 +88,21 @@ function escapeRegExp(str) {
 function replaceAll(find, replace, str) {
 	return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
+
+function notify(notificationId, alertType, notificationText, showTime) {
+	if ($('#' + notificationId).length == 0) {
+		var newNotification = $('.appStore-notification').clone();
+		newNotification.attr("id", notificationId);
+		newNotification.css("display", "block");
+		newNotification.addClass(alertType);
+		newNotification.append(notificationText);
+		newNotification.find("button").attr("onclick", "closeNotification('" + notificationId + "')");
+		newNotification.appendTo(".notification-container");
+		setTimeout(function () { closeNotification(notificationId); }, showTime);
+	}
+}
+
+function closeNotification(notificationId) {
+	var notification = $("#" + notificationId);
+	notification.remove();
+}

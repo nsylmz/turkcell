@@ -177,3 +177,7 @@
 	float: right;
 	margin-right: 15px;
 }
+
+.component-label-container {
+	margin-top: 25px;
+}

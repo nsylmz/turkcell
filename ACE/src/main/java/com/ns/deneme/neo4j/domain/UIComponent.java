@@ -7,8 +7,10 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
 @NodeEntity
 public class UIComponent extends AbstractEntity {
 
-	@Indexed(unique = true)
+	@Indexed
 	private String componentName;
+	
+	private String componentLabel;
 
 	private String elementName;
 
@@ -30,6 +32,14 @@ public class UIComponent extends AbstractEntity {
 
 	public String getElementName() {
 		return elementName;
+	}
+
+	public String getComponentLabel() {
+		return componentLabel;
+	}
+
+	public void setComponentLabel(String componentLabel) {
+		this.componentLabel = componentLabel;
 	}
 
 	public void setElementName(String elementName) {

@@ -3,15 +3,17 @@ package com.ns.deneme.vo;
 public class UIComponentVO {
 
 	private String componentName;
-	
+
+	private String componentLabel;
+
 	private String positionLeft;
-	
+
 	private String positionTop;
-	
+
 	private String componentProcessName;
-	
+
 	private String elementName;
-	
+
 	private String elementType;
 
 	public String getComponentName() {
@@ -24,6 +26,14 @@ public class UIComponentVO {
 
 	public String getPositionLeft() {
 		return positionLeft;
+	}
+
+	public String getComponentLabel() {
+		return componentLabel;
+	}
+
+	public void setComponentLabel(String componentLabel) {
+		this.componentLabel = componentLabel;
 	}
 
 	public void setPositionLeft(String positionLeft) {
@@ -61,5 +71,5 @@ public class UIComponentVO {
 	public void setElementType(String elementType) {
 		this.elementType = elementType;
 	}
-	
+
 }

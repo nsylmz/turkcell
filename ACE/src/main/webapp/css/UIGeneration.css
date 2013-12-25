@@ -82,31 +82,6 @@
 }
 */
 
-.notification-container {
-    position: fixed;
-    z-index: 1050;
-    bottom: 50%;
-    left: 39%;
-    width: 300px;
-    padding: 5px 0px;
-    display: block;
-}
-
-.appStore-notification {
-    display: none;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    position: relative;
-}
-
-.notification-close {
-	position: absolute;
-	right: 5px;
-	top: 5px;
-	font-size: 17px;
-}
-
 .view-bar {
 	background: #ffe000;
 	width: 160px;
@@ -227,4 +202,27 @@
 	left: 65%;
 	position: absolute;
 	margin-top: -3px;
+}
+
+.ui-selectable {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 60%;
+}
+
+.ui-selectable .ui-selected {
+	background: #16385E;
+	color: white;
+}
+
+.ui-selectable li {
+	margin: 3px;
+	padding: 0.4em;
+	font-size: 1.1em;
+	height: 18px;
+}
+
+.go-to-view-button {
+	float: right;
 }
