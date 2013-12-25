@@ -14,7 +14,7 @@ public class ProcessView extends AbstractEntity {
 	private String viewName;
 
 	@Fetch
-	@RelatedTo(type = "knows", direction = Direction.BOTH)
+	@RelatedTo(type = "has", direction = Direction.BOTH)
 	private ProcessComponent startProcess;
 
 	public String getViewName() {

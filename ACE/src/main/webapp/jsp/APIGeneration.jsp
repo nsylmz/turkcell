@@ -151,7 +151,7 @@
 					<div id="feature-info">
 						<div class="component-info">
 							<div class="component-name">
-								<p>Component Name</p>
+								<label>Component Name</label>
 								<input class="feature-input" type="text" name="componentName">
 							</div>
 						</div>
@@ -187,6 +187,57 @@
 									<label class="param-type">Parameter Type</label>
 								</div>
 								<div class="params-container"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="begin-feature-bar" class="feature-bar display-none">
+				<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
+				<div id="tabs" class="feature-tabs">
+					<ul>
+						<li><a href="#feature-info">Component Info</a></li>
+					</ul>
+					<div id="feature-info">
+						<div class="component-info">
+							<div class="component-name">
+								<label>Component Name</label>
+								<input class="feature-input" type="text" name="componentName">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="end-feature-bar" class="feature-bar display-none">
+				<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
+				<div id="tabs" class="feature-tabs">
+					<ul>
+						<li><a href="#feature-info">Component Info</a></li>
+					</ul>
+					<div id="feature-info">
+						<div class="component-info">
+							<div class="component-name">
+								<label>Component Name</label>
+								<input class="feature-input" type="text" name="componentName">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="if-feature-bar" class="feature-bar display-none">
+				<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
+				<div id="tabs" class="feature-tabs">
+					<ul>
+						<li><a href="#feature-info">Component Info</a></li>
+					</ul>
+					<div id="feature-info">
+						<div class="component-info">
+							<div class="component-name">
+								<label>Component Name</label>
+								<input class="feature-input" type="text" name="componentName">
 							</div>
 						</div>
 					</div>
@@ -375,33 +426,68 @@
 		function saveProcess(button, basePath) {
 			var l = Ladda.create(button);
 		    l.start();
-			var viewName = $('#view-input').val();
-			var viewHtml = $('<div>').append($('#flowchart-view').clone()).html();
-			var featureBars = $('<div>').append($('#WebService').clone()).html();
-			var view = {"viewName" : viewName, "chart" : viewHtml, "featureBars" : featureBars};
-			var processType = 'WebService';
-			var processName = $('.component-name input').val();
-			var paramNameAndParamValue = {};
-			var paramName;
-			var paramType;
-			var paramValue;
-			$('.params-container').children().each(function() {
-				paramName = $(this).find('.param-name').text();
-				paramType = $(this).find('.param-type').text();
-				paramValue = $(this).find('.param-input').val();
-				paramNameAndParamValue[paramName] = { "paramType" : paramType, "paramValue" : paramValue};
+			var connectionIds = {};
+			var connection;
+			for (var i in flowchart.getAllConnections()) {
+				connection = flowchart.getAllConnections()[i];
+				connectionIds[connection.source.id] = connection.target.id;
+			}
+			var startProcessName;
+			var connectionIdAndName = {};
+			var components = [];
+			var componentFeatures;
+			var paramNameAndParamValue;
+			var featureBar;
+			var processName;
+	    	var processType;
+	    	var positionLeft;
+	    	var positionTop;
+	    	var wsdlUrl;
+	    	var operationName;
+			$('.view').children('.generated-item').each( function() {
+		    	featureBar = $("#" + $(this).attr("id") + "-feature-bar");
+		    	paramNameAndParamValue = {};
+		    	featureBar.find('.params-container').children().each(function() {
+					paramName = $(this).find('.param-name').text();
+					paramType = $(this).find('.param-type').text();
+					paramValue = $(this).find('.param-input').val();
+					paramNameAndParamValue[paramName] = { "paramType" : paramType, "paramValue" : paramValue};
+				});
+				
+		    	processName = featureBar.find('.component-name input').val();
+		    	processType = $(this).attr("id").split("-")[0];
+		    	positionLeft = $(this).css("left");
+		    	positionTop = $(this).css("top");
+		    	if (processType == "webservice") {
+			    	wsdlUrl = featureBar.find('.wsdl-input').val();
+				    paramNameAndParamValue["wsdlUrl"] = { "paramType" : "string", "paramValue" : wsdlUrl};
+					operationName = featureBar.find('.ws-opreations option:selected').val();
+					paramNameAndParamValue["operationName"] = { "paramType" : "string", "paramValue" : operationName};
+				}
+		    	componentFeatures = {"processName" : processName, "processType" : processType, "positionLeft" : positionLeft, 
+		    						 "positionTop" : positionTop, "params" : paramNameAndParamValue};
+		    	components.push(componentFeatures);
+		    	connectionIdAndName[$(this).attr("id")] = processName;
+		    	if (processType == "begin") {
+		    		startProcessName = processName;
+				}
 			});
-		    var wsdlUrl = $('#wsdl-input').val();
-		    paramNameAndParamValue["wsdlUrl"] = { "paramType" : "string", "paramValue" : wsdlUrl};
-			var operationName = $('#select-ws-opreations').find('option:selected').val();
-			paramNameAndParamValue["operationName"] = { "paramType" : "string", "paramValue" : operationName};
-		    var saveAPIGeneration = { "view" : view, "processName" : processName, "processType" : processType, "params" : paramNameAndParamValue};
+			var connections = {};
+			for (var sourceId in connectionIds) {
+				connections[connectionIdAndName[sourceId]] = connectionIdAndName[connectionIds[sourceId]];
+			}
+			var viewName = $('#view-input').val();
+			var processView = {};
+			processView["viewName"] = viewName;
+			processView["components"] = components;
+			processView["connections"] = connections;
+			processView["startProcessName"] = startProcessName;
 		    $.ajax({
 		        type: "POST",
 		        dataType:'json',
 		        contentType:"application/json",
 		        url: basePath + "/APIGeneration/save",
-		        data:JSON.stringify(saveAPIGeneration),
+		        data:JSON.stringify(processView),
 		        success: function (data) {
 		            l.stop();
 		            if (data.status == 1) {

@@ -24,7 +24,7 @@
 
 </head>
 
-<body>
+<body onload="onload(${uiView})">
 	<div id="htmlPallet-container" class="container">
 		<div class="navbar-wrapper">
 			<div class="container">
@@ -162,9 +162,9 @@
 											<label>Process </label>
 											<select class="processes">
 												<option value="">Select Process...</option>
-												<c:if test="${not empty processes}">
-		     										<c:forEach var="process" varStatus="status" items="${processes}">
-														<option value="${process.processName}">${process.processName}</option>
+												<c:if test="${not empty processNames}">
+		     										<c:forEach var="processName" items="${processNames}">
+														<option value="${processName}">${processName}</option>
 													</c:forEach>
 												</c:if>
 											</select>
@@ -191,6 +191,7 @@
 	<script src="${pageContext.request.contextPath}/js/UIGeneration.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
+		
 		UIGeneration();
 		$(".feature-tabs").tabs();
 		
@@ -223,10 +224,60 @@
 		    });
 		}
 		
+		function loadElementToView(component) {
+			var tempElement;
+			if (component["elementType"]) {
+				tempElement = $("#products").find("li[element-name='" + component["elementName"] + "'][element-type='" + component["elementType"] + "']").find(".temp-component");
+			} else {
+				tempElement = $("#products").find("li[element-name='" + component["elementName"] + "']").find(".temp-component");
+			}
+			var cloneElement = tempElement.clone();
+			cloneElement.removeClass("temp-component");
+			if (component["elementType"]) {
+				cloneElement.attr("id", component["elementName"] + "-" + component["elementType"] + "-" + newElementId);
+				cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + component["elementName"]  + "', '" + component["elementType"] + "')");
+			} else {
+				cloneElement.attr("id", component["elementName"] + "-" + newElementId);
+				cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + component["elementName"]  + "', " + component["elementType"] + ")");
+			}
+			cloneElement.css("position", "relative");
+			cloneElement.css("left", component["positionLeft"]);
+			cloneElement.css("top", component["positionTop"]);
+			cloneElement.draggable({
+				containment : "parent",
+				cancel : false
+			});
+			$('.view').append(cloneElement);
+			newElementId++;
+			return cloneElement;
+		}
+		
+		function loadComponentFeatureBar(elementId, component) {
+			var featureBar = createNewFeatureBar(elementId, component["elementName"], component["elementType"]);
+			featureBar.find('.component-name').val(component["componentName"]);
+			featureBar.find('.processes').val(component["componentProcessName"]);
+			featureBar.find('.custom-combobox-input').val(component["componentProcessName"]);
+		}
+		
+		function onload(uiView) {
+			if (uiView) {
+				 $('#view-input').val(uiView["viewName"]);
+				 var components = uiView["components"];
+				 var component;
+				 var loadedElement;
+				 for (var i in components) {
+					 component = components[i];
+					 loadedElement = loadElementToView(component);
+					 loadComponentFeatureBar(loadedElement.attr("id").split("-")[1], component);
+				}
+			}
+		}
+		
 		function saveView(button, basePath) {
 			var l = Ladda.create(button);
 		    l.start();
-		    var componentFeatures = {};
+		    var componentFeatures;
+		    var components = [];
 		    $('.view').children().each(function() {
 		    	var elementName = $(this).attr("element-name");
 		    	var elementType = $(this).attr("element-type");
@@ -234,13 +285,14 @@
 		    	var positionTop = $(this).css("top");
 		    	var featureBar = $("#" + $(this).attr("id") + "-feature-bar");
 		    	var componentName = featureBar.find('.component-name').val();
-		    	var componentProcessName = $("#button-1-feature-bar").find('option:selected').val();
+		    	var componentProcessName = featureBar.find('option:selected').val();
 		    	componentFeatures = {"componentName" : componentName, "positionLeft" : positionLeft, 
 		    						 "positionTop" : positionTop, "componentProcessName" : componentProcessName, 
 		    						 "elementName" : elementName, "elementType" : elementType};
+		    	components.push(componentFeatures);
 		    });
 		    var viewName = $('#view-input').val();
-		    var uiView = {"viewName" : viewName, "components" : componentFeatures};
+		    var uiView = {"viewName" : viewName, "components" : components};
 		    $.ajax({
 		        type: "POST",
 		        dataType:'json',

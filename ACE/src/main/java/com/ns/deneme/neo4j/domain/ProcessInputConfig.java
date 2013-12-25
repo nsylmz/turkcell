@@ -19,7 +19,7 @@ public class ProcessInputConfig extends AbstractEntity {
 	private String configMethodParamName;
 
 	@Fetch
-	@RelatedTo(type = "knows", direction = Direction.INCOMING)
+	@RelatedTo(type = "hasMapper", direction = Direction.INCOMING)
 	private Set<MappingHelper> configMethodParamMappingHelper;
 
 	private String inputParamType;

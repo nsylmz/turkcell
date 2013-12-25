@@ -15,16 +15,16 @@ function APIGeneration() {
 			var elementName = ui.draggable.attr('element-name');
 			cloneElement.removeClass("list-item-container").addClass("generated-item");
 			cloneElement.find('.list-item-label').remove();
-			cloneElement.attr("id", "flowchart" + newElementId);
+			cloneElement.attr("id", elementName + "-" + newElementId);
 			cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + elementName + "')");
 			$(this).append(cloneElement);
 
 			if (newElementId == 1) {
-				flowchart = drawFlowchart(newElementId);
+				flowchart = drawFlowchart(cloneElement.attr("id"));
 			} else {
 				flowchart.doWhileSuspended(function() {
                 	
-                		_addEndpoints(newElementId, ["TopCenter", "BottomCenter"], ["LeftMiddle", "RightMiddle"]);  
+                		_addEndpoints(cloneElement.attr("id"), ["TopCenter", "BottomCenter"], ["LeftMiddle", "RightMiddle"]);  
                         
                 		flowchart.bind("connection", function(connInfo, originalEvent) { 
                                 init(connInfo.connection);

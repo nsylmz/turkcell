@@ -16,7 +16,7 @@ public class ProcessConfig extends AbstractEntity {
 	private String configName;
 
 	@Fetch
-	@RelatedTo(type = "knows", direction = Direction.BOTH)
+	@RelatedTo(type = "hasInputConfig", direction = Direction.BOTH)
 	private Set<ProcessInputConfig> inputConfig;
 
 	private String processRunClass;

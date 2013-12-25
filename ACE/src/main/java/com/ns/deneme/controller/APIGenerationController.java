@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ns.deneme.neo4j.api.IMappingHelperAPI;
-import com.ns.deneme.neo4j.api.IProcessComponentAPI;
 import com.ns.deneme.neo4j.api.IProcessViewAPI;
 import com.ns.deneme.neo4j.domain.MappingHelper;
 import com.ns.deneme.neo4j.domain.ProcessComponent;
@@ -32,7 +29,6 @@ import com.ns.deneme.neo4j.domain.ProcessView;
 import com.ns.deneme.util.RunConfig;
 import com.ns.deneme.vo.ProcessComponentVO;
 import com.ns.deneme.vo.ProcessViewVO;
-import com.ns.deneme.vo.ViewVO;
 import com.ns.deneme.ws.WSRequestParameter;
 
 @Controller
@@ -43,9 +39,6 @@ public class APIGenerationController {
 	
 	@Autowired
 	private IProcessViewAPI processViewAPI;
-	
-	@Autowired
-	private IProcessComponentAPI processComponentAPI;
 	
 	@Autowired
 	private IMappingHelperAPI mappingHelperAPI;
@@ -113,7 +106,7 @@ public class APIGenerationController {
 				processComponent.setPositionLeft(processComponentVO.getPositionLeft());
 				processComponent.setPositionTop(processComponentVO.getPositionTop());
 				
-				if ("WebService".equals(processComponentVO.getProcessType())) {
+				if ("webservice".equals(processComponentVO.getProcessType())) {
 					processConfig = new ProcessConfig();
 					processConfig.setConfigName(processComponentVO.getProcessName() + "Config");
 					processConfig.setProcessRunClass(RunConfig.WS_RUN_CLASS);
@@ -137,19 +130,47 @@ public class APIGenerationController {
 						}
 						processInputConfigs.add(processInputConfig);
 					}
+					processConfig.setInputConfig(processInputConfigs);
 					processComponent.setProcessConfig(processConfig);
 				}
 				components.add(processComponent);
 			}
-			// TODO create components
-			
+			Map<String, String> connections = processViewVO.getConnections();
+			Set<String> connKeys = connections.keySet();
+			Iterator<String> connIter = connKeys.iterator();
+			String source;
+			String target;
+			ProcessComponent sourceComponent;
+			ProcessComponent targetComponent;
+			ProcessComponent startProcess = null;
+			while (connIter.hasNext()) {
+				source = (String) connIter.next();
+				target = connections.get(source);
+				sourceComponent = findComponent(source, components);
+				targetComponent = findComponent(target, components);
+				sourceComponent.setNextProcess(targetComponent);
+				if (source.trim().equals(processViewVO.getStartProcessName())) {
+					startProcess = sourceComponent;
+				}
+			}
+			processView.setStartProcess(startProcess);
+			processViewAPI.saveProcessView(processView);
 			data.put("status", "1");
-			data.put("message", "Saved Successfully.");			
+			data.put("message", "Saved Successfully.");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			data.put("status", "-1");
 			data.put("message", "Save Failed!!!");
 		}
 		return data;
+	}
+	
+	private ProcessComponent findComponent(String componentName, List<ProcessComponent> components) {
+		for (ProcessComponent processComponent : components) {
+			if (processComponent.getProcessName().trim().equals(componentName)) {
+				return processComponent;
+			}
+		}
+		return null;
 	}
 }

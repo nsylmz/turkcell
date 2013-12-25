@@ -20,11 +20,11 @@ public class ProcessComponent extends AbstractEntity {
 	private String positionTop;
 
 	@Fetch
-	@RelatedTo(type = "knows", direction = Direction.BOTH)
+	@RelatedTo(type = "hasConfig", direction = Direction.BOTH)
 	private ProcessConfig processConfig;
 
 	@Fetch
-	@RelatedTo(type = "knows", direction = Direction.BOTH)
+	@RelatedTo(type = "hasNextProcess", direction = Direction.BOTH)
 	private ProcessComponent nextProcess;
 
 	public String getProcessName() {

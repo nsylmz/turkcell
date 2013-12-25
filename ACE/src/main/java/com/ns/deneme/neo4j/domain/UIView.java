@@ -16,7 +16,7 @@ public class UIView extends AbstractEntity {
 	private String viewName;
 
 	@Fetch
-	@RelatedTo(type = "knows", direction = Direction.BOTH)
+	@RelatedTo(type = "has", direction = Direction.BOTH)
 	private Set<UIComponent> components;
 
 	public String getViewName() {
