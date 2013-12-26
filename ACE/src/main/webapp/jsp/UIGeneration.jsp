@@ -196,10 +196,10 @@
 													</c:forEach>
 												</c:if>
 											</select>
-											<button class="test-process-button ace-button btn btn-primary ladda-button" data-style="expand-down"
+											<!-- button class="test-process-button ace-button btn btn-primary ladda-button" data-style="expand-down"
 				                                	onclick="runProcess(this, '${pageContext.request.contextPath}')">
 					                            <span class="ladda-label">Test Process</span>
-					                        </button>
+					                        </button -->
 										</div>
 									</div>
 								</div>
@@ -225,19 +225,6 @@
 		
 		function openViewModal(basePath) {
 			$('#openViewModal').modal('toggle');
-			/*
-			$.ajax({
-				type : "POST",
-				url : basePath + "/UIGeneration/getAllViewNames",
-				success : function(data) {
-					if (data.status == 1) {
-						$('#openViewModal').modal('toggle');
-					} else if (data.status < 1) {
-						notify('getAllViewNamesErrorNotification', 'alert-danger', data.message, 5000);
-					}
-				}
-			});
-			*/
 		}
 		
 		function goToUIView(button, basePath) {

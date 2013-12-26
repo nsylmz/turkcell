@@ -1,11 +1,11 @@
 var flowchart;
+var newElementId = 1;
 function APIGeneration() {
 	$("#catalog").accordion({ heightStyle: "content" });
 	$("#catalog li").draggable({
 		appendTo : "body",
 		helper : "clone"
 	});
-	var newElementId = 1;
 	$(".view").droppable({
 		activeClass : "ui-state-default",
 		hoverClass : "ui-state-hover",

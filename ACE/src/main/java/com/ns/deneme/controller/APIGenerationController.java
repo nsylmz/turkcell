@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ns.deneme.neo4j.api.IMappingHelperAPI;
 import com.ns.deneme.neo4j.api.IProcessViewAPI;
 import com.ns.deneme.neo4j.domain.MappingHelper;
@@ -46,37 +49,79 @@ public class APIGenerationController {
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String showAPIGeneration(Model model) {
 		logger.debug("Received request to show api generation creen");
+		List<String> processNames = new ArrayList<String>();
+		for (ProcessView processView : processViewAPI.findAll()) {
+			processNames.add(processView.getViewName());
+		}
+		model.addAttribute("viewNames", processNames);
 		return "APIGeneration";
 	}
 	
 	@RequestMapping(value = "/{viewName}", method = RequestMethod.GET)
 	public String getProcessView(@PathVariable String viewName, Model model) {
-		/*
 		try {
-			ProcessView view = viewAPI.findProcessViewByName(viewName);
+			ProcessView view = processViewAPI.findProcessViewByName(viewName);
 			if (view != null) {
-				ViewVO viewVO = new ViewVO();
+				ProcessViewVO viewVO = new ProcessViewVO();
 				viewVO.setViewName(view.getViewName());
-				viewVO.setFeatureBars(view.getFeatureBars());
-				viewVO.setChart(view.getChart());
-				Map<String, String> configMap = new HashMap<String, String>();
-				Set<ProcessInputConfig> configs = view.getProcess().getProcessRunConfig();
-				Iterator<ProcessInputConfig> iter = configs.iterator();
-				ProcessInputConfig runConfig;
-				while (iter.hasNext()) {
-					runConfig = (ProcessInputConfig) iter.next();
-					if (runConfig.getConfigParamName() != null && runConfig.getConfigParamName().length() >0) {
-						configMap.put(runConfig.getConfigParamName(), runConfig.getConfigParamValue());
+				List<ProcessComponentVO> components = new ArrayList<>();
+				Map<String, String> connections = new LinkedHashMap<String, String>();
+				Map<String, WSRequestParameter> params;
+				Set<ProcessInputConfig> processInputConfigs;
+				Iterator<ProcessInputConfig> paramsIter;
+				ProcessInputConfig processInputConfig;
+				WSRequestParameter wsRequestParameter;
+				ProcessComponentVO componentVO = new ProcessComponentVO();
+				
+				ProcessComponent processComponent = view.getStartProcess();
+				viewVO.setStartProcessName(processComponent.getProcessName());
+				componentVO.setProcessName(processComponent.getProcessName());
+				componentVO.setPositionLeft(processComponent.getPositionLeft());
+				componentVO.setPositionTop(processComponent.getPositionTop());
+				componentVO.setProcessType(processComponent.getProcessType());
+				components.add(componentVO);
+				
+				
+				while (processComponent.getNextProcess() != null) {
+					connections.put(processComponent.getProcessName(), processComponent.getNextProcess().getProcessName());
+//					processComponent = processComponentAPI.findProcessComponentByName(processComponent.getNextProcess().getProcessName()); 
+					processComponent = processComponent.getNextProcess();
+					componentVO = new ProcessComponentVO();
+					componentVO.setProcessName(processComponent.getProcessName());
+					componentVO.setPositionLeft(processComponent.getPositionLeft());
+					componentVO.setPositionTop(processComponent.getPositionTop());
+					componentVO.setProcessType(processComponent.getProcessType());
+					
+					if (processComponent.getProcessConfig() != null 
+							&& processComponent.getProcessConfig().getInputConfig() != null) {
+						params = new LinkedHashMap<String, WSRequestParameter>();
+						processInputConfigs = processComponent.getProcessConfig().getInputConfig();
+						paramsIter = processInputConfigs.iterator();
+						while (paramsIter.hasNext()) {
+							processInputConfig = (ProcessInputConfig) paramsIter.next();
+							wsRequestParameter = new WSRequestParameter();
+							wsRequestParameter.setParamType(processInputConfig.getInputParamType());
+							wsRequestParameter.setParamValue(processInputConfig.getInputParamValue());
+							params.put(processInputConfig.getInputParamName(), wsRequestParameter);
+						}
+						componentVO.setParams(params);
 					}
+					components.add(componentVO);
 				}
+				viewVO.setComponents(components);
+				viewVO.setConnections(connections);
 				ObjectMapper mapper = new ObjectMapper();
-				viewVO.setFeatureJson(mapper.writeValueAsString(configMap));
-				model.addAttribute("view", viewVO);
+				String json = mapper.writeValueAsString(viewVO).replaceAll("\"", "'");
+				model.addAttribute("processView", json);
 			}
+			List<String> processNames = new ArrayList<String>();
+			for (ProcessView processView : processViewAPI.findAll()) {
+				processNames.add(processView.getViewName());
+			}
+			model.addAttribute("viewNames", processNames);
 		} catch (JsonProcessingException e) {
 			logger.error(e.getMessage(), e);
 		}
-		 */
 		return "APIGeneration";
 	}
 	

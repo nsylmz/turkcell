@@ -19,12 +19,17 @@
 	<link href="${pageContext.request.contextPath}/css/ladda-themeless.min.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/UIGeneration.css" rel="stylesheet" type="text/css" />
-	<link href="${pageContext.request.contextPath}/css/Components.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/flowchart.css" rel="stylesheet" type="text/css" />
 	<link href="${pageContext.request.contextPath}/css/featureBar.css" rel="stylesheet" type="text/css" />
 </head>
-
-<body>
+<c:choose>
+    <c:when test="${not empty processView}">
+      <body onload="onload(${processView}, '${pageContext.request.contextPath}')">
+    </c:when>
+    <c:otherwise>
+        <body>
+    </c:otherwise>
+</c:choose>
 	<div class="notification-container">
 	 	<div class="alert appStore-notification">
 			<button type="button" class="close notification-close" aria-hidden="true" onclick="closeNotification()">&times;</button>
@@ -58,11 +63,34 @@
 				<img class="view-item-img" title="Save View" alt="Save View" src="${pageContext.request.contextPath}/img/save-icon.png">
 				<label>Save Process</label>
 			</div>
-	        <div class="view-bar-item item-last" onclick="">
+	        <div class="view-bar-item item-last" onclick="openViewModal('${pageContext.request.contextPath}')">
 	        	<img class="view-item-img" title="Open View" alt="Open View" src="${pageContext.request.contextPath}/img/open-icon.png">
 		        <label>Open Process</label>
 	        </div>
 	    </div>
+	     <div class="modal fade" id="openViewModal" tabindex="-1" role="dialog" aria-labelledby="openViewModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 class="modal-title">Application Creation Environment</h3>
+					</div>
+					<div class="modal-body" id="openViewModalBody">
+						<c:if test="${not empty viewNames}">
+							<ol id="selectable">
+		    					<c:forEach var="viewName" items="${viewNames}">
+									<li class="ui-widget-content">${viewName}</li>
+								</c:forEach>
+							</ol>
+							<button type="button" class="ace-button go-to-view-button" onclick="goToAPIView(this, '${pageContext.request.contextPath}')">go to view</button>
+						</c:if>
+					</div>
+                    <div class="modal-footer">
+                      	<button type="button" class="ace-button modal-close" data-dismiss="modal">close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	    <div class="save-bar bar-transition">
 	    	<button type="button" class="close save-bar-close" aria-hidden="true" onclick="closeSaveBar()">&times;</button>
 			<label>Process Name</label>
@@ -244,6 +272,29 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="modal fade" id="wsResponseModal" tabindex="-1" role="dialog" aria-labelledby="wsResponseModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 class="modal-title">Application Creation Environment</h3>
+					</div>
+					<div class="modal-body" id="wsResponseModalBody">
+						<label class="class-name">ClassName</label>
+						<ul class="list-group ws-response-content">
+							<li class="list-group-item ws-response-item">
+								<div class="ws-item-field-name">fieldName</div>
+								<div class="ws-item-field-value">fieldValue</div>
+							</li>
+						</ul>
+					</div>
+                    <div class="modal-footer">
+                      	<button type="button" class="ace-button modal-close" data-dismiss="modal">close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 	<script src="${pageContext.request.contextPath}/js/jquery-2.0.3.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
@@ -279,8 +330,24 @@
 	
 	<script type="text/javascript">
 		APIGeneration();
+		$( "#selectable" ).selectable();
+		
+		function openViewModal(basePath) {
+			$('#openViewModal').modal('toggle');
+		}
+		
+		function goToAPIView(button, basePath) {
+			var viewName = $(button).parent().find('.ui-selected').text();
+			if (viewName) {
+				window.location.href = basePath + "/APIGeneration/" + viewName;
+			} else {
+				notify('noViewSelectedErrorNotification', 'alert-info', 'No APIView Selected!!! Please Select API View.', 5000);
+			}
+		}
+		
 		function readWsdlAndGetOperationName(button, basePath) {
 			var wsdlUrl = $(button).parent().find('.feature-input').val();
+		    var combobox = $(button).parent().find(".ws-opreations");
 		    var l = Ladda.create(button);
 		    l.start();
 		    $.ajax({
@@ -291,7 +358,7 @@
 		            l.stop();
 		            if (data.status == 1) {
 		            	notify('readWSDLSuccessNotification', 'alert-info', data.message, 5000);
-		            	var combobox = $(button).parent().find(".ws-opreations");
+		            	
 		            	var operations = data.operations;
 		            	var cloneOption = combobox.children().first().clone();
 		            	combobox.empty();
@@ -305,6 +372,7 @@
 						}
 		            	$(button).parent().find('.ws-run-button').css("display", "none");
 		            	createWsOpSelect(combobox);
+		            	return combobox;
 		            } else if (data.status < 1) {
 		            	notify('readWSDLErrorNotification', 'alert-danger', data.message, 5000);
 		            }
@@ -315,6 +383,7 @@
 		function getOpDetail(button, basePath) {
 			var wsdlUrl = $(button).parent().parent().find('.wsdl-input').val();
 			var operationName = $(button).parent().find('option:selected').val();
+			var paramsContainer = $(button).parent().parent().parent().find('.params-container');
 		    var l = Ladda.create(button);
 		    l.start();
 		    $.ajax({
@@ -326,7 +395,8 @@
 		            if (data.status == 1) {
 		            	notify('getOpDetailSuccessNotification', 'alert-info', data.message, 5000);
 		            	var tempParamContainer = $(button).parent().parent().parent().find("#param-name-container");
-		            	var paramsContainer = $(button).parent().parent().parent().find('.params-container');
+		            	
+		            	paramsContainer.empty();
 		            	var inputParams = data.inputParams;
 		            	var newParam;
 		            	var paramType;
@@ -400,12 +470,30 @@
 		        success: function (data) {
 		            l.stop();
 		            if (data.status == 1) {
-		            	notify('runWsSuccessNotification', 'alert-info', data.message, 5000);
+		            	showWsResponse(data.wsResponse);
 		            } else if (data.status < 1) {
 		            	notify('runWsErrorNotification', 'alert-danger', data.message, 5000);
 		            }
 		        }
 		    });
+		}
+		
+		function showWsResponse(wsResponse) {
+			var wsResponseMadolBody = $('#wsResponseModalBody');
+			wsResponseMadolBody.find('.class-name').text(wsResponse["className"]);
+			var wsFieldList = wsResponseMadolBody.find('.ws-response-content');
+			var tempFieldItem = wsFieldList.children().first().clone();
+			wsFieldList.empty();
+			var field;
+			var newField;
+			for ( var i in wsResponse["fields"]) {
+				field = wsResponse["fields"][i];
+				newField = tempFieldItem.clone();
+				newField.find('.ws-item-field-name').text(field["fieldName"]);
+				newField.find('.ws-item-field-value').text(field["fieldValue"]);
+				wsFieldList.append(newField);
+			}
+			$('#wsResponseModal').modal("toggle");
 		}
 		
 		function createWsOpSelect(combobox) {
@@ -498,7 +586,207 @@
 		        }
 		    });
 		}
-			
+		
+		function loadComponentFeatureBar(elementId, component, basePath) {
+			var elementName = component["processType"];
+			var featureBar = createNewFeatureBar(elementId, elementName);
+			processName = featureBar.find('.component-name input').val(component["processName"]);
+			var params;
+			var wsRequestParam;
+			if (elementName == "webservice") {
+				params = component["params"];
+				wsRequestParam = params["wsdlUrl"];
+				var wsdlUrl = wsRequestParam["paramValue"];
+				featureBar.find('.wsdl-input').val(wsdlUrl);
+			    $.ajax({
+			        type: "POST",
+			        url: basePath + "/ws/readWsdl",
+			        data: "wsdlUrl=" + wsdlUrl,
+			        success: function (data) {
+			            if (data.status == 1) {
+			            	var combobox = featureBar.find(".ws-opreations");
+			            	var operations = data.operations;
+			            	var cloneOption = combobox.children().first().clone();
+			            	combobox.empty();
+			            	combobox.append(cloneOption);
+			            	var newOption;
+			            	for (var i in operations) {
+			            		newOption = cloneOption.clone();
+			            		newOption.attr("value", operations[i]);
+			            		newOption.text(operations[i]);
+			            		combobox.append(newOption);
+							}
+			            	featureBar.find('.ws-run-button').css("display", "none");
+			            	createWsOpSelect(combobox);
+			            	wsRequestParam = params["operationName"];
+			    			var operationName = wsRequestParam["paramValue"];
+			            	combobox.val(operationName);
+			            	combobox.parent().find('.custom-combobox-input').val(operationName);
+			    			var paramsContainer = featureBar.find('.params-container');
+			    		    $.ajax({
+			    		        type: "POST",
+			    		        url: basePath + "/ws/getOpDetail",
+			    		        data: "wsdlUrl=" + wsdlUrl + "&operationName=" + operationName,
+			    		        success: function (data) {
+			    		            if (data.status == 1) {
+			    		            	var tempParamContainer = featureBar.find("#param-name-container");
+			    		            	paramsContainer.empty();
+			    		            	var inputParams = data.inputParams;
+			    		            	var newParam;
+			    		            	var paramType;
+			    		            	for (var paramName in inputParams) {
+			    		            		paramType = inputParams[paramName];
+			    							wsRequestParam = params[paramName];
+			    		            		if (paramType == "string" || paramType == "int" || paramType == "long" 
+			    		            				|| paramType == "float" || paramType == "double" || paramType == "boolean") {
+			    			            		newParam = tempParamContainer.clone();
+			    			            		newParam.attr("id", paramName + "-container");
+			    			            		newParam.find('.param-name').text(paramName);
+			    			            		newParam.find('.param-type').text(paramType);
+			    			            		newParam.find('.feature-input').attr("id", paramName + "-input");
+			    			            		newParam.find('.feature-input').attr("name", paramName);
+			    			            		newParam.find('.feature-input').val(wsRequestParam["paramValue"]);
+			    			            		paramsContainer.append(newParam);
+			    							} else if (paramType == "dateTime") {
+			    								newParam = tempParamContainer.clone();
+			    			            		newParam.attr("id", paramName + "-container");
+			    			            		newParam.find('.param-name').text(paramName);
+			    			            		newParam.find('.param-type').text(paramType);
+			    			            		newParam.find('.feature-input').attr("id", paramName + "-input");
+			    			            		newParam.find('.feature-input').attr("name", paramName);
+			    			            		newParam.find('.feature-input').datetimepicker();
+			    			            		newParam.find('.feature-input').val(wsRequestParam["paramValue"]);
+			    			            		paramsContainer.append(newParam);
+			    							} else if (paramType == "date") {
+			    								newParam = tempParamContainer.clone();
+			    			            		newParam.attr("id", paramName + "-container");
+			    			            		newParam.find('.param-name').text(paramName);
+			    			            		newParam.find('.param-type').text(paramType);
+			    			            		newParam.find('.feature-input').attr("id", paramName + "-input");
+			    			            		newParam.find('.feature-input').attr("name", paramName);
+			    			            		newParam.find('.feature-input').datepicker("option", "showAnim", "slide");
+			    			            		newParam.find('.feature-input').val(wsRequestParam["paramValue"]);
+			    			            		paramsContainer.append(newParam);
+			    							}
+			    						}
+			    		            	if(paramsContainer.children().length > 5) {
+			    		            		paramsContainer.parent().css("overflow-y", "scroll");
+			    		            		paramsContainer.parent().css("overflow-x", "hidden");
+			    		            	}
+			    		            	featureBar.find(".ws-run-button").css("display", "block");
+			    		            } else if (data.status < 1) {
+			    		            	notify('getOpDetailErrorNotification', 'alert-danger', data.message, 5000);
+			    		            }
+			    		        }
+			    		    });
+			            } else if (data.status < 1) {
+			            	notify('readWSDLErrorNotification', 'alert-danger', data.message, 5000);
+			            }
+			        }
+			    });
+			}
+		}
+		
+		function loadElementToView(component) {
+			var elementName = component["processType"];
+			var cloneElement = $("#products").find("li[element-name='" + elementName + "']").find('.list-item-container').clone();
+			cloneElement.removeClass("list-item-container").addClass("generated-item");
+			cloneElement.find('.list-item-label').remove();
+			cloneElement.attr("id", elementName + "-" + newElementId);
+			cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + elementName + "')");
+			cloneElement.css("left", component["positionLeft"]);
+			cloneElement.css("top", component["positionTop"]);
+			$('.view').append(cloneElement);
+
+			if (newElementId == 1) {
+				flowchart = drawFlowchart(cloneElement.attr("id"));
+			} else {
+				flowchart.doWhileSuspended(function() {
+                	
+                		_addEndpoints(cloneElement.attr("id"), ["TopCenter", "BottomCenter"], ["LeftMiddle", "RightMiddle"]);  
+                        
+                		flowchart.bind("connection", function(connInfo, originalEvent) { 
+                                init(connInfo.connection);
+                        });                        
+                                                
+                		flowchart.draggable(jsPlumb.getSelector("#flowchart-view .generated-item"), { grid: [20, 20] });                
+
+                		flowchart.bind("click", function(conn, originalEvent) {
+                                if (confirm("Delete connection from " + conn.sourceId + " to " + conn.targetId + "?"))
+                                        jsPlumb.detach(conn); 
+                        });        
+                        
+                		flowchart.bind("connectionDrag", function(connection) {
+                                console.log("connection " + connection.id + " is being dragged. suspendedElement is ", connection.suspendedElement, " of type ", connection.suspendedElementType);
+                        });                
+                        
+                		flowchart.bind("connectionDragStop", function(connection) {
+                                console.log("connection " + connection.id + " was dragged");
+                        });
+
+                		flowchart.bind("connectionMoved", function(params) {
+                                console.log("connection " + params.connection.id + " was moved");
+                        });
+                });
+			}
+			newElementId++;
+			return cloneElement;
+		}
+
+		function loadConnections(connections) {
+			flowchart.doWhileSuspended(function() {
+            	
+        		flowchart.bind("connection", function(connInfo, originalEvent) { init(connInfo.connection); });                        
+                                        
+        		flowchart.draggable(jsPlumb.getSelector("#flowchart-view .generated-item"), { grid: [20, 20] });
+        		
+        		var targetId;
+        		for (var sourceId in connections) {
+        			targetId = connections[sourceId];
+        			flowchart.connect({uuids:[sourceId + "BottomCenter", targetId + "LeftMiddle"], editable:true});
+				}
+
+        		flowchart.bind("click", function(conn, originalEvent) {
+                        if (confirm("Delete connection from " + conn.sourceId + " to " + conn.targetId + "?"))
+                                jsPlumb.detach(conn); 
+                });        
+                
+        		flowchart.bind("connectionDrag", function(connection) {
+                        console.log("connection " + connection.id + " is being dragged. suspendedElement is ", connection.suspendedElement, " of type ", connection.suspendedElementType);
+                });                
+                
+        		flowchart.bind("connectionDragStop", function(connection) {
+                        console.log("connection " + connection.id + " was dragged");
+                });
+
+        		flowchart.bind("connectionMoved", function(params) {
+                        console.log("connection " + params.connection.id + " was moved");
+                });
+        });
+		}
+
+		function onload(processView, basePath) {
+			if (processView) {
+				$('#view-input').val(processView["viewName"]);
+				var components = processView["components"];
+				var component;
+				var loadedElement;
+				var connectionIdAndName = {};
+				for ( var i in components) {
+					component = components[i];
+					loadedElement = loadElementToView(component);
+					connectionIdAndName[component["processName"]] = loadedElement.attr("id");
+					loadComponentFeatureBar(loadedElement.attr("id").split("-")[1], component, basePath);
+				}
+				
+				var connections = {};
+				var processNameConnections = processView["connections"];
+				for (var sourceProcessName in processNameConnections) {
+					connections[connectionIdAndName[sourceProcessName]] = connectionIdAndName[processNameConnections[sourceProcessName]];
+				}
+				loadConnections(connections);
+			}
+		}
 	</script>
 </body>
 </html>

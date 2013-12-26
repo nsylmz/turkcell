@@ -226,3 +226,24 @@
 .go-to-view-button {
 	float: right;
 }
+
+.class-name {
+	font-size: 1.2em;
+}
+
+.class-name {
+	font-size: 1.2em;
+}
+
+.ws-response-item {
+	margin-left: 35px;
+}
+
+.ws-item-field-name {
+	float: left;
+	font-weight: 600;
+}
+
+.ws-item-field-value {
+	margin-left: 400px;
+}
