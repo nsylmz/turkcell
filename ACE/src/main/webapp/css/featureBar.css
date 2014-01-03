@@ -81,7 +81,7 @@
 }
 
 .wsdl-input {
-	width: 63%;
+	width: 60%;
 }
 
 .WebService-feature {
@@ -106,6 +106,7 @@
 .get-operation-button {
 	margin-left: 30px;
     margin-top: -3px;
+    float: right;
 }
 
 .ws-run-button {
@@ -124,7 +125,7 @@
 .custom-combobox {
 	position: relative;
 	display: inline-block;
-	width: 47.3%;
+	width: 40%;
 }
 
 .custom-combobox-toggle {
@@ -180,4 +181,10 @@
 
 .component-label-container {
 	margin-top: 25px;
+}
+
+.delete-button-container {
+	right: 15px;
+	bottom: 15px;
+	position: absolute;
 }

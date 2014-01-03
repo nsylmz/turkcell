@@ -8,6 +8,8 @@ public interface IProcessViewAPI {
 	
     public void saveProcessView(ProcessView processView);
     
+    public void deleteProcessView(String viewName);
+    
     public ProcessView findProcessViewByName(String viewName);
     
     public List<ProcessView> findAll();

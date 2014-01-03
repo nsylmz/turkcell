@@ -204,12 +204,13 @@ body {
     display: block;
 }
 
-.appStore-notification {
+.ace-notification {
     display: none;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
     position: relative;
+    opacity: 1;
 }
 
 .notification-close {
@@ -218,3 +219,11 @@ body {
 	top: 5px;
 	font-size: 17px;
 }	
+
+#temp-confirm {
+	opacity: 1;
+}
+	
+.confirm-button-container {
+	
+}

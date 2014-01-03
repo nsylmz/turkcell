@@ -209,6 +209,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 	<script src="${pageContext.request.contextPath}/js/jquery-2.0.3.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="${pageContext.request.contextPath}/js/holder.js" type="text/javascript"></script>

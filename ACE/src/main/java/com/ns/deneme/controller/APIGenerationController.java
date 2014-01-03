@@ -199,6 +199,7 @@ public class APIGenerationController {
 				}
 			}
 			processView.setStartProcess(startProcess);
+			processViewAPI.findProcessViewByName(processViewVO.getViewName());
 			processViewAPI.saveProcessView(processView);
 			data.put("status", "1");
 			data.put("message", "Saved Successfully.");

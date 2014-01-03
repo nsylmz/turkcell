@@ -26,6 +26,10 @@ public class ProcessViewAPI implements IProcessViewAPI {
     	processViewRepository.save(processView);        
     }
     
+    public void deleteProcessView(String viewName) {
+    	processViewRepository.delete(processViewRepository.findByPropertyValue("viewName", viewName.trim()));
+    }
+    
     public ProcessView findProcessViewByName(String viewName) {
     	return processViewRepository.findByPropertyValue("viewName", viewName.trim());
     }

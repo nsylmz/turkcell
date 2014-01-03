@@ -12,11 +12,11 @@ See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-5level %logger{0} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{0} - %msg%n</pattern>
         </encoder>
     </appender>
 
-	<!--<logger name="org.hibernate" level="debug"/> -->
+	<logger name="org.springframework.data.neo4j" level="debug"/>
    <!-- Uncomment and add your logger here:
     <logger name="org.springframework.samples.service.service" level="debug"/> -->
          
