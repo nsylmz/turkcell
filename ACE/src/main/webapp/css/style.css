@@ -227,3 +227,17 @@ body {
 .confirm-button-container {
 	
 }
+
+.body-table,
+.body-table-tr,
+.body-table-td {
+	width: 100%;
+}
+
+.header-container {
+	position: relative;
+}
+
+.header-container table {
+	font-size: 1em;
+}

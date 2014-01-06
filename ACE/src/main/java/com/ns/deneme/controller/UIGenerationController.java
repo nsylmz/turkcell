@@ -54,7 +54,7 @@ public class UIGenerationController {
 			uiViewNames.add(uiView.getViewName());
 		}
 		model.addAttribute("viewNames", uiViewNames);
-		return "UIGeneration";
+		return "/ui/UIGeneration";
 	}
 	
 	@RequestMapping(value = "/getAllViewNames", method = RequestMethod.POST)
@@ -116,7 +116,7 @@ public class UIGenerationController {
 		} catch (JsonProcessingException e) {
 			logger.error(e.getMessage(), e);
 		}
-		return "UIGeneration";
+		return "/ui/UIGeneration";
 	}
 	
 	@RequestMapping(value = "/saveView", method = RequestMethod.POST)

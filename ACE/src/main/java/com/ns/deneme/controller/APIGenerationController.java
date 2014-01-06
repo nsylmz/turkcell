@@ -54,7 +54,7 @@ public class APIGenerationController {
 			processNames.add(processView.getViewName());
 		}
 		model.addAttribute("viewNames", processNames);
-		return "APIGeneration";
+		return "api/APIGeneration";
 	}
 	
 	@RequestMapping(value = "/{viewName}", method = RequestMethod.GET)
@@ -122,7 +122,7 @@ public class APIGenerationController {
 		} catch (JsonProcessingException e) {
 			logger.error(e.getMessage(), e);
 		}
-		return "APIGeneration";
+		return "api/APIGeneration";
 	}
 	
 	@RequestMapping(value = "/save", method = RequestMethod.POST)

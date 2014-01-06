@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,6 +22,15 @@
 		<link href="${pageContext.request.contextPath}/css/UIGeneration.css" rel="stylesheet" type="text/css" />
 		<link href="${pageContext.request.contextPath}/css/flowchart.css" rel="stylesheet" type="text/css" />
 		<link href="${pageContext.request.contextPath}/css/featureBar.css" rel="stylesheet" type="text/css" />
+		
+		<script src="${pageContext.request.contextPath}/js/jquery-2.0.3.js" type="text/javascript"></script>
+		<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
+		<script src="${pageContext.request.contextPath}/js/holder.js" type="text/javascript"></script>
+		<script src="${pageContext.request.contextPath}/js/ladda/spin.min.js"></script>
+		<script src="${pageContext.request.contextPath}/js/ladda/ladda.min.js"></script>
+		<script src="${pageContext.request.contextPath}/js/jquery-ui.js" type="text/javascript"></script>
+		<script src="${pageContext.request.contextPath}/js/ComboBox.js" type="text/javascript"></script>
+		<script src="${pageContext.request.contextPath}/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
 	</head>
 	<body>
 		<table class="body-table" border="0" cellspacing="0" cellpadding="0">
@@ -40,14 +50,5 @@
 	            </td>
 	        </tr>
 	    </table>
-	    
-	    <script src="${pageContext.request.contextPath}/js/jquery-2.0.3.js" type="text/javascript"></script>
-		<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
-		<script src="${pageContext.request.contextPath}/js/holder.js" type="text/javascript"></script>
-		<script src="${pageContext.request.contextPath}/js/ladda/spin.min.js"></script>
-		<script src="${pageContext.request.contextPath}/js/ladda/ladda.min.js"></script>
-		<script src="${pageContext.request.contextPath}/js/jquery-ui.js" type="text/javascript"></script>
-		<script src="${pageContext.request.contextPath}/js/ComboBox.js" type="text/javascript"></script>
-		<script src="${pageContext.request.contextPath}/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
 	</body>
 </html>
