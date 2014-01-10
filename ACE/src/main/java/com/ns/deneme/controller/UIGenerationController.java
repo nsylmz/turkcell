@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ns.deneme.neo4j.api.IHtmlElementCategoryAPI;
 import com.ns.deneme.neo4j.api.IProcessViewAPI;
 import com.ns.deneme.neo4j.api.IUIVewAPI;
+import com.ns.deneme.neo4j.domain.HtmlElement;
 import com.ns.deneme.neo4j.domain.ProcessView;
 import com.ns.deneme.neo4j.domain.UIComponent;
 import com.ns.deneme.neo4j.domain.UIView;
@@ -41,6 +43,9 @@ public class UIGenerationController {
 	@Autowired
 	private IUIVewAPI uiVewAPI;
 	
+	@Autowired
+	private IHtmlElementCategoryAPI htmlElementCategoryAPI;
+	
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public String showUIGeneration(Model model) {
 		logger.debug("Received request to show ui generation screen");
@@ -54,6 +59,9 @@ public class UIGenerationController {
 			uiViewNames.add(uiView.getViewName());
 		}
 		model.addAttribute("viewNames", uiViewNames);
+		
+		Map<String, List<HtmlElement>> categories = htmlElementCategoryAPI.mapHtmlElementsByCategory();
+		model.addAttribute("categories", categories);
 		return "/ui/UIGeneration";
 	}
 	

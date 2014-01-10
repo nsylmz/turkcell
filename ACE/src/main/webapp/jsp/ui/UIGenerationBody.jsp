@@ -47,58 +47,55 @@
 	<div id="products">
 		<h1 class="ui-widget-header">Components</h1>
 		<div id="catalog">
+			<c:forEach var="category" items="${categories}">
+				<h2>
+					<a href="#">${category.key}</a>
+				</h2>
+				<div>
+					<ul class="list-group component-list">
+						<c:forEach var="element" items="${category.value}">
+							<li class="list-group-item" element-name="${element.elementLabel}">
+								<div class="list-item-container">
+									<img class="component-img" src="${pageContext.request.contextPath}/img/${element.iconName}" >
+									<div class="list-item-label">${element.elementLabel}</div>
+									<c:out value="${element.elementHtml}" escapeXml="false"/>
+									<!-- button class="temp-component ace-button btn btn-primary ladda-button" element-name="button" data-style="expand-right">
+					                	<span class="ladda-label">button</span>
+					                </button -->
+								</div>
+							</li>
+							<!-- 
+							<li class="list-group-item" element-name="input" element-type="checkbox">
+								<div class="list-item-container">
+									<div class="list-item-label">Check Box</div>
+								</div>
+							</li>
+							<li class="list-group-item" element-name="input" element-type="radio">
+								<div class="list-item-container">
+									<div class="list-item-label">Radio Button</div>
+								</div>
+							</li>
+							<li class="list-group-item" element-name="input" element-type="text">
+								<div class="list-item-container">
+									<div class="list-item-label">Text Field</div>
+								</div>
+							</li>
+							<li class="list-group-item" element-name="input" element-type="textarea">
+								<div class="list-item-container">
+									<div class="list-item-label">Text Area</div>
+								</div>
+							</li>
+							 -->
+						</c:forEach>
+					</ul>
+				</div>
+			</c:forEach>
+			<!-- 
 			<h2>
-				<a href="#">UI-basics</a>
+				<a href="#">List Components</a>
 			</h2>
 			<div>
 				<ul class="list-group component-list">
-					<li class="list-group-item" element-name="button">
-						<div class="list-item-container">
-							<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
-							<div class="list-item-label">Button</div>
-							<button class="temp-component ace-button btn btn-primary ladda-button" element-name="button" data-style="expand-right">
-			                	<span class="ladda-label">button</span>
-			                </button>
-						</div>
-					</li>
-					<li class="list-group-item" element-name="input" element-type="checkbox">
-						<div class="list-item-container">
-							<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
-							<div class="list-item-label">Check Box</div>
-						</div>
-					</li>
-					<li class="list-group-item" element-name="input" element-type="radio">
-						<div class="list-item-container">
-							<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
-							<div class="list-item-label">Radio Button</div>
-						</div>
-					</li>
-					<li class="list-group-item" element-name="input" element-type="text">
-						<div class="list-item-container">
-							<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
-							<div class="list-item-label">Text Field</div>
-						</div>
-					</li>
-					<li class="list-group-item" element-name="input" element-type="textarea">
-						<div class="list-item-container">
-							<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
-							<div class="list-item-label">Text Area</div>
-						</div>
-					</li>
-					<li class="list-group-item" element-name="a">
-						<div class="list-item-container">
-							<!-- img class="component-img" src="${pageContext.request.contextPath}/img/start.png" -->
-							<div class="list-item-label">Hyperlink</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-			<h2>
-				<a href="#">Value Input Components</a>
-			</h2>
-			<div>
-				<ul class="list-group component-list">
-					<li class="list-group-item">Text Input</li>
 					<li class="list-group-item">Select</li>
 					<li class="list-group-item">Combo Box</li>
 				</ul>
@@ -111,6 +108,7 @@
 					<li class="list-group-item">Form</li>
 				</ul>
 			</div>
+			 -->
 		</div>
 	</div>
 
@@ -120,7 +118,7 @@
 	</div>
 	
 	<div class="feature-container">
-		<div id="button-feature-bar" class="feature-bar display-none">
+		<div id="Button-feature-bar" class="feature-bar display-none">
 			<button type="button" class="close featureBar-close" aria-hidden="true" onclick="closeFeatureBar()">&times;</button>
 			<div id="tabs" class="feature-tabs">
 				<ul>
@@ -171,149 +169,12 @@
 	UIGeneration();
 	$(".feature-tabs").tabs();
 	$( "#selectable" ).selectable();
-	
-	function openViewModal(basePath) {
-		$('#openViewModal').modal('toggle');
-	}
-	
-	function goToUIView(button, basePath) {
-		var viewName = $(button).parent().find('.ui-selected').text();
-		if (viewName) {
-			window.location.href = basePath + "/UIGeneration/" + viewName;
-		} else {
-			notify('noViewSelectedErrorNotification', 'alert-info', 'No UIView Selected!!! Please Select UI View.', 5000);
-		}
-	}
-	
-	function changeButtonLabel(input) {
-		var uiComponentId = $(input).parent().parent().parent().parent().parent().parent().parent().attr("id").replace("-feature-bar", "");
-		$('#' + uiComponentId).find('span').text($(input).val());
-	}
-
-	function openSaveBar() {
-		$(".view-bar").css("left", "-165px");
-		$(".save-bar").css("left", "0px");
-	}
-
-	function closeSaveBar() {
-		$(".save-bar").css("left", "-255px");
-		$(".view-bar").css("left", "0px");
-	}
-
-	function runProcess(button, basePath) {
-		var l = Ladda.create(button);
-		l.start();
-		var processName = $(button).parent().find('.processes').find(
-				'option:selected').val();
-		$.ajax({
-			type : "POST",
-			data : "processName=" + processName,
-			url : basePath + "/UIGeneration/runProcess",
-			success : function(data) {
-				l.stop();
-				if (data.status == 1) {
-					notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
-				} else if (data.status < 1) {
-					notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
-				}
-			}
-		});
-	}
-
-	function loadElementToView(component) {
-		var tempElement;
-		if (component["elementType"]) {
-			tempElement = $("#products").find("li[element-name='" + component["elementName"] + "'][element-type='" + component["elementType"] + "']").find(".temp-component");
-		} else {
-			tempElement = $("#products").find("li[element-name='" + component["elementName"] + "']").find(".temp-component");
-		}
-		var cloneElement = tempElement.clone();
-		cloneElement.removeClass("temp-component");
-		if (component["elementType"]) {
-			cloneElement.attr("id", component["elementName"] + "-" + component["elementType"] + "-" + newElementId);
-			cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + component["elementName"]  + "', '" + component["elementType"] + "')");
-		} else {
-			cloneElement.attr("id", component["elementName"] + "-" + newElementId);
-			cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + component["elementName"]  + "', " + component["elementType"] + ")");
-		}
-		cloneElement.css("position", "relative");
-		cloneElement.css("left", component["positionLeft"]);
-		cloneElement.css("top", component["positionTop"]);
-		cloneElement.find('span').text(component["componentLabel"]);
-		cloneElement.draggable({
-			containment : "parent",
-			cancel : false
-		});
-		$('.view').append(cloneElement);
-		newElementId++;
-		return cloneElement;
-	}
-
-	function loadComponentFeatureBar(elementId, component) {
-		var featureBar = createNewFeatureBar(elementId, component["elementName"], component["elementType"]);
-		featureBar.find('.component-name').val(component["componentName"]);
-		featureBar.find('.component-label').val(component["componentLabel"]);
-		featureBar.find('.processes').val(component["componentProcessName"]);
-		featureBar.find('.custom-combobox-input').val(component["componentProcessName"]);
-	}
-
-	function onload(uiView) {
-		if (uiView) {
-			$('#view-input').val(uiView["viewName"]);
-			var components = uiView["components"];
-			var component;
-			var loadedElement;
-			for ( var i in components) {
-				component = components[i];
-				loadedElement = loadElementToView(component);
-				loadComponentFeatureBar(
-						loadedElement.attr("id").split("-")[1], component);
-			}
-		}
-	}
-
-	function saveView(button, basePath) {
-		var l = Ladda.create(button);
-		l.start();
-		var componentFeatures;
-		var components = [];
-		$('.view').children().each(
-				function() {
-					var elementName = $(this).attr("element-name");
-					var elementType = $(this).attr("element-type");
-					var positionLeft = $(this).css("left");
-					var positionTop = $(this).css("top");
-					var featureBar = $("#" + $(this).attr("id") + "-feature-bar");
-					var componentName = featureBar.find('.component-name').val();
-					var componentLabel = featureBar.find('.component-label').val();
-					var componentProcessName = featureBar.find('option:selected').val();
-					componentFeatures = {
-						"componentName" : componentName,
-						"componentLabel" : componentLabel,
-						"positionLeft" : positionLeft,
-						"positionTop" : positionTop,
-						"componentProcessName" : componentProcessName,
-						"elementName" : elementName,
-						"elementType" : elementType
-					};
-					components.push(componentFeatures);
-				});
-		var viewName = $('#view-input').val();
-		var uiView = { "viewName" : viewName, "components" : components };
-		$.ajax({
-			type : "POST",
-			dataType : 'json',
-			contentType : "application/json",
-			url : basePath + "/UIGeneration/saveView",
-			data : JSON.stringify(uiView),
-			success : function(data) {
-				l.stop();
-				if (data.status == 1) {
-					notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
-				} else if (data.status < 1) {
-					notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
-				}
-			}
-		});
-	}
 </script>
+
+<c:if test="${not empty uiView}">
+	<script type="text/javascript">
+		$(document).ready(function() {
+			onload(${uiView});
+		});
+	</script>
+</c:if>

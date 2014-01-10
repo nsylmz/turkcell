@@ -106,3 +106,148 @@ function closeNotification(notificationId) {
 	var notification = $("#" + notificationId);
 	notification.remove();
 }
+
+function openViewModal(basePath) {
+	$('#openViewModal').modal('toggle');
+}
+
+function goToUIView(button, basePath) {
+	var viewName = $(button).parent().find('.ui-selected').text();
+	if (viewName) {
+		window.location.href = basePath + "/UIGeneration/" + viewName;
+	} else {
+		notify('noViewSelectedErrorNotification', 'alert-info', 'No UIView Selected!!! Please Select UI View.', 5000);
+	}
+}
+
+function changeButtonLabel(input) {
+	var uiComponentId = $(input).parent().parent().parent().parent().parent().parent().parent().attr("id").replace("-feature-bar", "");
+	$('#' + uiComponentId).find('span').text($(input).val());
+}
+
+function openSaveBar() {
+	$(".view-bar").css("left", "-165px");
+	$(".save-bar").css("left", "0px");
+}
+
+function closeSaveBar() {
+	$(".save-bar").css("left", "-255px");
+	$(".view-bar").css("left", "0px");
+}
+
+function runProcess(button, basePath) {
+	var l = Ladda.create(button);
+	l.start();
+	var processName = $(button).parent().find('.processes').find(
+			'option:selected').val();
+	$.ajax({
+		type : "POST",
+		data : "processName=" + processName,
+		url : basePath + "/UIGeneration/runProcess",
+		success : function(data) {
+			l.stop();
+			if (data.status == 1) {
+				notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
+			} else if (data.status < 1) {
+				notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
+			}
+		}
+	});
+}
+
+function loadElementToView(component) {
+	var tempElement;
+	if (component["elementType"]) {
+		tempElement = $("#products").find("li[element-name='" + component["elementName"] + "'][element-type='" + component["elementType"] + "']").find(".temp-component");
+	} else {
+		tempElement = $("#products").find("li[element-name='" + component["elementName"] + "']").find(".temp-component");
+	}
+	var cloneElement = tempElement.clone();
+	cloneElement.removeClass("temp-component");
+	if (component["elementType"]) {
+		cloneElement.attr("id", component["elementName"] + "-" + component["elementType"] + "-" + newElementId);
+		cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + component["elementName"]  + "', '" + component["elementType"] + "')");
+	} else {
+		cloneElement.attr("id", component["elementName"] + "-" + newElementId);
+		cloneElement.attr("onclick", "openFeatureBar('" + newElementId + "', '" + component["elementName"]  + "', " + component["elementType"] + ")");
+	}
+	cloneElement.css("position", "relative");
+	cloneElement.css("left", component["positionLeft"]);
+	cloneElement.css("top", component["positionTop"]);
+	cloneElement.find('span').text(component["componentLabel"]);
+	cloneElement.draggable({
+		containment : "parent",
+		cancel : false
+	});
+	$('.view').append(cloneElement);
+	newElementId++;
+	return cloneElement;
+}
+
+function loadComponentFeatureBar(elementId, component) {
+	var featureBar = createNewFeatureBar(elementId, component["elementName"], component["elementType"]);
+	featureBar.find('.component-name').val(component["componentName"]);
+	featureBar.find('.component-label').val(component["componentLabel"]);
+	featureBar.find('.processes').val(component["componentProcessName"]);
+	featureBar.find('.custom-combobox-input').val(component["componentProcessName"]);
+}
+
+function onload(uiView) {
+	if (uiView) {
+		$('#view-input').val(uiView["viewName"]);
+		var components = uiView["components"];
+		var component;
+		var loadedElement;
+		for ( var i in components) {
+			component = components[i];
+			loadedElement = loadElementToView(component);
+			loadComponentFeatureBar(
+					loadedElement.attr("id").split("-")[1], component);
+		}
+	}
+}
+
+function saveView(button, basePath) {
+	var l = Ladda.create(button);
+	l.start();
+	var componentFeatures;
+	var components = [];
+	$('.view').children().each(
+			function() {
+				var elementName = $(this).attr("element-name");
+				var elementType = $(this).attr("element-type");
+				var positionLeft = $(this).css("left");
+				var positionTop = $(this).css("top");
+				var featureBar = $("#" + $(this).attr("id") + "-feature-bar");
+				var componentName = featureBar.find('.component-name').val();
+				var componentLabel = featureBar.find('.component-label').val();
+				var componentProcessName = featureBar.find('option:selected').val();
+				componentFeatures = {
+					"componentName" : componentName,
+					"componentLabel" : componentLabel,
+					"positionLeft" : positionLeft,
+					"positionTop" : positionTop,
+					"componentProcessName" : componentProcessName,
+					"elementName" : elementName,
+					"elementType" : elementType
+				};
+				components.push(componentFeatures);
+			});
+	var viewName = $('#view-input').val();
+	var uiView = { "viewName" : viewName, "components" : components };
+	$.ajax({
+		type : "POST",
+		dataType : 'json',
+		contentType : "application/json",
+		url : basePath + "/UIGeneration/saveView",
+		data : JSON.stringify(uiView),
+		success : function(data) {
+			l.stop();
+			if (data.status == 1) {
+				notify('runProcessSuccessNotification', 'alert-info', data.message, 5000);
+			} else if (data.status < 1) {
+				notify('runProcessErrorNotification', 'alert-danger', data.message, 5000);
+			}
+		}
+	});
+}

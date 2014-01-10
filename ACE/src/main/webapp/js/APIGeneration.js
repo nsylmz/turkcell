@@ -573,3 +573,8 @@ function closeConfirmNotification(notificationId) {
 	closeNotification(notificationId);
 	$(".modal-backdrop.fade.in").remove();
 }
+
+function getURLParameter(name) {
+    return decodeURI(
+        (new RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);
+}

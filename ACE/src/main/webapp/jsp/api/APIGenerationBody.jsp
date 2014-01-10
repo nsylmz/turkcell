@@ -299,7 +299,6 @@
 		}
 	}
 	
-	
 	function deleteComponent(featureBarId) {
 	    var featureBar = $("#" + featureBarId);
 	    var componentId = featureBar.attr("id").replace("-feature-bar", "");

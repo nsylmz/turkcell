@@ -17,10 +17,10 @@
 					</div>
 					<div class="navbar-collapse collapse">
 						<ul class="nav navbar-nav">
-							<li>
+							<li id="UIGeneration">
 								<a href="${pageContext.request.contextPath}/UIGeneration">UI Generation</a>
 							</li>
-							<li>
+							<li id="APIGeneration">
 								<a href="${pageContext.request.contextPath}/APIGeneration">API Generation</a>
 							</li>
 						</ul>
@@ -30,3 +30,15 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		if (document.URL.indexOf("UIGeneration") != -1) {
+			$('#UIGeneration').addClass("active");
+			$('#APIGeneration').removeClass("active");
+		} else if (document.URL.indexOf("APIGeneration") != -1) {
+			$('#UIGeneration').removeClass("active");
+			$('#APIGeneration').addClass("active");
+		}
+	});
+</script>
