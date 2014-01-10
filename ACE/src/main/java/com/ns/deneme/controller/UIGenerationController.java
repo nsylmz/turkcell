@@ -93,6 +93,9 @@ public class UIGenerationController {
 			}
 			model.addAttribute("processNames", processNames);
 			
+			Map<String, List<HtmlElement>> categories = htmlElementCategoryAPI.mapHtmlElementsByCategory();
+			model.addAttribute("categories", categories);
+			
 			ObjectMapper mapper = new ObjectMapper();
 			UIView uiView = uiVewAPI.findUIViewByName(viewName);
 			if (uiView != null && uiView.getViewName() != null && uiView.getViewName().length() > 0) {
