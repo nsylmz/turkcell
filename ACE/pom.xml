@@ -45,6 +45,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.18.1-GA</version>
+		</dependency>
 		<!--jackson Dependencies-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
