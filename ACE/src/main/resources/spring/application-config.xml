@@ -5,6 +5,7 @@
 	xmlns:neo4j="http://www.springframework.org/schema/data/neo4j"
 	xmlns:camel="http://camel.apache.org/schema/spring"
     xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans.xsd
    http://www.springframework.org/schema/tx
@@ -16,8 +17,13 @@
    http://camel.apache.org/schema/spring 
    http://camel.apache.org/schema/spring/camel-spring.xsd
    http://camel.apache.org/schema/cxf 
-   http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+   http://camel.apache.org/schema/cxf/camel-cxf.xsd
+   http://www.springframework.org/schema/aop
+   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
+	<context:load-time-weaver aspectj-weaving="on" />
+	<aop:config proxy-target-class="true"/>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 	<context:annotation-config />
 	<context:spring-configured />
 	<context:property-placeholder location="classpath*:db.properties" />

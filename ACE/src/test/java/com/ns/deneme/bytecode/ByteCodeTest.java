@@ -25,9 +25,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.UrlResource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
@@ -35,25 +37,57 @@ import org.springframework.data.neo4j.aspects.core.NodeBacked;
 import org.springframework.data.neo4j.repository.GraphRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ns.deneme.appContext.AppContext;
+import com.ns.deneme.neo4j.domain.AbstractEntity;
+import com.ns.deneme.neo4j.domain.MappingHelper;
 import com.ns.deneme.neo4j.domain.TemplateEntity;
+import com.ns.deneme.neo4j.repository.MappingHelperRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:spring/application-config.xml")
+@Transactional(readOnly=false, propagation = Propagation.REQUIRED, noRollbackFor = { EmptyResultDataAccessException.class }, rollbackFor = { Exception.class })
+@TransactionConfiguration(defaultRollback=false)
 public class ByteCodeTest {
 	
 	private static Logger logger = LoggerFactory.getLogger(ByteCodeTest.class);
 	
 	private ClassPool pool;
+	
+	@Autowired
+	private MappingHelperRepository mappingHelperRepository;
+	
+//	@Test
+	public void test2() {
+		MappingHelper helper = new MappingHelper();
+		helper.setMapName("paramType");
+		helper.setMapRule("WSRequestParameter.paramType");
+		mappingHelperRepository.save(helper);
+		
+		helper = new MappingHelper();
+		helper.setMapName("paramValue");
+		helper.setMapRule("WSRequestParameter.paramValue");
+		mappingHelperRepository.save(helper);
+		
+		helper = new MappingHelper();
+		helper.setMapName("paramName");
+		helper.setMapRule("Map.key");
+		mappingHelperRepository.save(helper);
+	}
 
 	@Before
 	public void before() {
 		try {
 			pool = ClassPool.getDefault();
 			pool.insertClassPath(new ClassClassPath(this.getClass()));
-			prepareNode();
+//			prepareNode();
+			prepareSimpleNode();
 			prepareRepository();
+			XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(((BeanDefinitionRegistry) AppContext.getFactory()));
+			reader.loadBeanDefinitions(new UrlResource("file:/C:/Users/ext0183504/git/turkcell/ACE/target/classes/spring/application-config.xml"));
 //			prepareFromTemplate();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -77,16 +111,30 @@ public class ByteCodeTest {
 			GraphRepository entityRep = (GraphRepository) AppContext.getApplicationContext().getBean("addressRepository");
 			Class clazz = Class.forName("com.ns.deneme.neo4j.domain.Address");
 			Object obj = clazz.newInstance();
-			Class[] parametersClasses = new Class[]{Long.class};
-			Method setterMethod = obj.getClass().getMethod("setId", parametersClasses);
-			setterMethod.invoke(obj, 1L);
+			
+//			CtClass cc = pool.get("com.ns.deneme.neo4j.domain.MappingHelper");
+//			Class clazzz = Class.forName("com.ns.deneme.neo4j.domain.MappingHelper");
+//			Constructor[] cons = clazzz.getConstructors();
+//			Object objj = cc.toClass().newInstance();
+			
+			Class clazzz = AppContext.getApplicationContext().getClassLoader().loadClass("com.ns.deneme.neo4j.domain.MappingHelper");
+			Object objj = clazzz.newInstance();
+			
+			Class[] parametersClasses = new Class[]{String.class};
+			Method setterMethod = obj.getClass().getMethod("setName", parametersClasses);
+			setterMethod.invoke(obj, "deneme");
+			
+//			parametersClasses = new Class[]{Long.class};
+//			setterMethod = obj.getClass().getMethod("setId", parametersClasses);
+//			setterMethod.invoke(obj, 1L);
+			
 			entityRep.save(obj);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
 	}
 	
-	private void prepareRepository() {
+	private void prepareRepository() { 	
 		try {
 			CtClass cc = pool.makeInterface("com.ns.deneme.neo4j.repository.AddressRepository");
 			cc.setSuperclass(pool.get("org.springframework.data.neo4j.repository.GraphRepository"));
@@ -97,7 +145,60 @@ public class ByteCodeTest {
 		}
 	}
 	
-	private void prepareNode() {
+	private void prepareSimpleNode() {
+		try {
+			CtClass cc = pool.makeClass("com.ns.deneme.neo4j.domain.Address");
+			cc.addInterface(pool.get(Serializable.class.getName()));
+			cc.setSuperclass(pool.get(AbstractEntity.class.getName()));
+			// Add Annotation to Class
+			ClassFile ccFile = cc.getClassFile();
+			ConstPool constpool = ccFile.getConstPool();
+			constpool.addClassInfo(NodeEntity.class.getName());
+			
+			AnnotationsAttribute attr = new AnnotationsAttribute(constpool, AnnotationsAttribute.visibleTag);
+			Annotation annot = new Annotation(NodeEntity.class.getName(), constpool);
+			attr.addAnnotation(annot);
+			ccFile.addAttribute(attr);
+			
+			//Add constant field to Class
+			// ID
+//			CtField id = new CtField(ClassPool.getDefault().get("java.lang.Long"), "id", cc);
+//			cc.addField(id);
+//			id.setModifiers(Modifier.PRIVATE);
+//			
+//			// Annotation GraphId
+//			AnnotationsAttribute attrId = new AnnotationsAttribute(constpool, AnnotationsAttribute.visibleTag);
+//			annot = new Annotation(GraphId.class.getName(), constpool);
+//			attrId.addAnnotation(annot);
+//			id.getFieldInfo().addAttribute(attrId);
+//			
+//			CtMethod getterId = CtNewMethod.getter("getId", id);
+//			CtMethod setterId = CtNewMethod.setter("setId", id);
+//			cc.addMethod(getterId);
+//			cc.addMethod(setterId);
+			
+			CtField name = new CtField(ClassPool.getDefault().get("java.lang.String"), "name", cc);
+			name.setModifiers(Modifier.PRIVATE);
+			cc.addField(name);
+			
+			// Annotation GraphId
+			AnnotationsAttribute attrIndex = new AnnotationsAttribute(constpool, AnnotationsAttribute.visibleTag);
+			annot = new Annotation(Indexed.class.getName(), constpool);
+			attrIndex.addAnnotation(annot);
+			name.getFieldInfo().addAttribute(attrIndex);
+			
+			CtMethod getterName = CtNewMethod.getter("getName", name);
+			CtMethod setterName = CtNewMethod.setter("setName", name);
+			cc.addMethod(getterName);
+			cc.addMethod(setterName);
+			
+			cc.writeFile("target/classes/");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	private void prepareAspectNode() {
 		try {
 			CtClass cc = pool.makeClass("com.ns.deneme.neo4j.domain.Address");
 //			CtConstructor ctc = new CtConstructor(new CtClass[0], cc);
@@ -527,7 +628,7 @@ public class ByteCodeTest {
 		}
 	}
 	
-	private void prepareFromTemplate() {
+	private void prepareAspectNodeFromTemplate() {
 		try {
 			CtClass cc = pool.getAndRename(TemplateEntity.class.getName(), "com.ns.deneme.neo4j.domain.Address");
 			CtField city = new CtField(ClassPool.getDefault().get("java.lang.String"), "city", cc);

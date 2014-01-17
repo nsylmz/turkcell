@@ -1,0 +1,11 @@
+<!DOCTYPE aspectj PUBLIC
+        "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+    <weaver>
+        <include within="com.ns.deneme.neo4j.*" />
+    </weaver>
+    <aspects>
+        <aspect name="org.springframework.data.neo4j.aspects.support.node.Neo4jNodeBacking"/>
+		<aspect name="org.springframework.data.neo4j.aspects.support.relationship.Neo4jRelationshipBacking"/>
+    </aspects>
+</aspectj>
