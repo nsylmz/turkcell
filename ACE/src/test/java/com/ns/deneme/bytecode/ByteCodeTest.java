@@ -25,7 +25,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.parsing.BeanComponentDefinition;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.UrlResource;
@@ -35,6 +38,7 @@ import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.aspects.core.NodeBacked;
 import org.springframework.data.neo4j.repository.GraphRepository;
+import org.springframework.data.repository.config.RepositoryBeanNameGenerator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -43,9 +47,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ns.deneme.appContext.AppContext;
 import com.ns.deneme.neo4j.domain.AbstractEntity;
-import com.ns.deneme.neo4j.domain.MappingHelper;
 import com.ns.deneme.neo4j.domain.TemplateEntity;
-import com.ns.deneme.neo4j.repository.MappingHelperRepository;
+import com.ns.deneme.neo4j.repository.RepositoryBeanDefinitionBuilder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:spring/application-config.xml")
@@ -57,27 +60,6 @@ public class ByteCodeTest {
 	
 	private ClassPool pool;
 	
-	@Autowired
-	private MappingHelperRepository mappingHelperRepository;
-	
-//	@Test
-	public void test2() {
-		MappingHelper helper = new MappingHelper();
-		helper.setMapName("paramType");
-		helper.setMapRule("WSRequestParameter.paramType");
-		mappingHelperRepository.save(helper);
-		
-		helper = new MappingHelper();
-		helper.setMapName("paramValue");
-		helper.setMapRule("WSRequestParameter.paramValue");
-		mappingHelperRepository.save(helper);
-		
-		helper = new MappingHelper();
-		helper.setMapName("paramName");
-		helper.setMapRule("Map.key");
-		mappingHelperRepository.save(helper);
-	}
-
 	@Before
 	public void before() {
 		try {
@@ -86,8 +68,8 @@ public class ByteCodeTest {
 //			prepareNode();
 			prepareSimpleNode();
 			prepareRepository();
-			XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(((BeanDefinitionRegistry) AppContext.getFactory()));
-			reader.loadBeanDefinitions(new UrlResource("file:/C:/Users/ext0183504/git/turkcell/ACE/target/classes/spring/application-config.xml"));
+//			XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(((BeanDefinitionRegistry) AppContext.getFactory()));
+//			reader.loadBeanDefinitions(new UrlResource("file:/C:/Users/ext0183504/git/turkcell/ACE/target/classes/spring/application-config.xml"));
 //			prepareFromTemplate();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -104,29 +86,31 @@ public class ByteCodeTest {
 //			beanDefinition.setAbstract(false);  
 //			beanDefinition.setAutowireCandidate(true);  
 //			beanDefinition.setScope("singleton");  
-//			  
-//			BeanDefinitionRegistry registry = ((BeanDefinitionRegistry) AppContext.getFactory());  
 //			registry.registerBeanDefinition("addressRepository", beanDefinition);
+			
+			BeanDefinitionRegistry registry = ((BeanDefinitionRegistry) AppContext.getFactory());  
+			RepositoryBeanDefinitionBuilder definitionBuilder = new RepositoryBeanDefinitionBuilder();
+			
+			BeanDefinitionBuilder builder = definitionBuilder.build(registry, AppContext.getApplicationContext());
+			
+			AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
+			beanDefinition.setSource(null);
+
+			RepositoryBeanNameGenerator generator = new RepositoryBeanNameGenerator();
+			generator.setBeanClassLoader(null);
+
+			String beanName = generator.generateBeanName(beanDefinition, registry);
+			
+			BeanComponentDefinition definition = new BeanComponentDefinition(beanDefinition, beanName);
+			BeanDefinitionReaderUtils.registerBeanDefinition(definition, registry);
 			
 			GraphRepository entityRep = (GraphRepository) AppContext.getApplicationContext().getBean("addressRepository");
 			Class clazz = Class.forName("com.ns.deneme.neo4j.domain.Address");
 			Object obj = clazz.newInstance();
 			
-//			CtClass cc = pool.get("com.ns.deneme.neo4j.domain.MappingHelper");
-//			Class clazzz = Class.forName("com.ns.deneme.neo4j.domain.MappingHelper");
-//			Constructor[] cons = clazzz.getConstructors();
-//			Object objj = cc.toClass().newInstance();
-			
-			Class clazzz = AppContext.getApplicationContext().getClassLoader().loadClass("com.ns.deneme.neo4j.domain.MappingHelper");
-			Object objj = clazzz.newInstance();
-			
 			Class[] parametersClasses = new Class[]{String.class};
 			Method setterMethod = obj.getClass().getMethod("setName", parametersClasses);
 			setterMethod.invoke(obj, "deneme");
-			
-//			parametersClasses = new Class[]{Long.class};
-//			setterMethod = obj.getClass().getMethod("setId", parametersClasses);
-//			setterMethod.invoke(obj, 1L);
 			
 			entityRep.save(obj);
 		} catch (Exception e) {
