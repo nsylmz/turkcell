@@ -38,6 +38,7 @@ import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.aspects.core.NodeBacked;
 import org.springframework.data.neo4j.repository.GraphRepository;
+import org.springframework.data.neo4j.support.mapping.Neo4jMappingContext;
 import org.springframework.data.repository.config.RepositoryBeanNameGenerator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -87,6 +88,10 @@ public class ByteCodeTest {
 //			beanDefinition.setAutowireCandidate(true);  
 //			beanDefinition.setScope("singleton");  
 //			registry.registerBeanDefinition("addressRepository", beanDefinition);
+			
+			Class nodeClass = Class.forName("com.ns.deneme.neo4j.domain.Address");
+			Neo4jMappingContext nodeFactory = (Neo4jMappingContext) AppContext.getApplicationContext().getBean(Neo4jMappingContext.class);
+			nodeFactory.getPersistentEntity(nodeClass);
 			
 			BeanDefinitionRegistry registry = ((BeanDefinitionRegistry) AppContext.getFactory());  
 			RepositoryBeanDefinitionBuilder definitionBuilder = new RepositoryBeanDefinitionBuilder();
