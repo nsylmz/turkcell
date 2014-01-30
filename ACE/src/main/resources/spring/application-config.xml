@@ -21,9 +21,9 @@
    http://www.springframework.org/schema/aop
    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-	<context:load-time-weaver aspectj-weaving="on" />
+	<!-- context:load-time-weaver aspectj-weaving="on" />
 	<aop:config proxy-target-class="true"/>
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <aop:aspectj-autoproxy proxy-target-class="true"/ -->
 	<context:annotation-config />
 	<context:spring-configured />
 	<context:property-placeholder location="classpath*:db.properties" />
