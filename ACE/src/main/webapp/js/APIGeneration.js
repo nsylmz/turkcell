@@ -541,7 +541,7 @@ function confirmNotify(notificationId, notificationText, confirmText, cancelText
 		newNotification.attr("id", notificationId);
 		newNotification.css("display", "block");
 		newNotification.addClass("alert-info");
-		newNotification.append(notificationText);
+		newNotification.find(".confirm-text-container").append(notificationText);
 		newNotification.find(".confirm-button span").text(confirmText);
 		newNotification.find(".cancel-button span").text(cancelText);
 		newNotification.find(".cancel-button").attr("onclick", "closeConfirmNotification('" + notificationId + "')");

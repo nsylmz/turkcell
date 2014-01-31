@@ -33,6 +33,23 @@
 		<script src="${pageContext.request.contextPath}/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
 	</head>
 	<body>
+		<div class="notification-container">
+		 	<div class="alert ace-notification">
+				<button type="button" class="close notification-close" aria-hidden="true" onclick="closeNotification()">&times;</button>
+		    </div>
+		    <div id="temp-confirm" class="alert ace-notification">
+		    	<div class="confirm-text-container">
+		    	</div>
+		     	<div id="temp-confirm" class="confirm-button-container">
+		     		<button class="confirm-button ace-button btn btn-primary ladda-button" data-style="expand-right">
+				        <span class="ladda-label"></span>
+			        </button>
+			        <button class="cancel-button ace-button btn btn-primary ladda-button" data-style="expand-right">
+				        <span class="ladda-label"></span>
+			        </button>
+		     	</div>
+		    </div>
+		</div>
 		<table class="body-table" border="0" cellspacing="0" cellpadding="0">
 	        <tr class="body-table-tr">
 	            <td class="body-table-td">

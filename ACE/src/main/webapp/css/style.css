@@ -211,6 +211,7 @@ body {
     width: 100%;
     position: relative;
     opacity: 1;
+	text-align: center;
 }
 
 .notification-close {
@@ -225,7 +226,7 @@ body {
 }
 	
 .confirm-button-container {
-	
+	margin-top: 15px;
 }
 
 .body-table,
