@@ -7,6 +7,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.data.neo4j.support.mapping.Neo4jMappingContext;
+import org.springframework.data.neo4j.support.mapping.Neo4jPersistentEntityImpl;
 import org.springframework.data.repository.config.RepositoryBeanNameGenerator;
 import org.springframework.stereotype.Component;
 
@@ -19,15 +20,16 @@ public class RepositoryBeanRegistery implements RepositoryBeanRegisteryI {
 	@Autowired
 	private Neo4jMappingContext mappingContext;
 	
-	public void registerNode(String nodeClassName) {
+	@Override
+	public Neo4jPersistentEntityImpl<?>  registerNode(String nodeClassName) throws ClassNotFoundException {
 		Class<?> nodeClass = Class.forName(nodeClassName);
-		Neo4jMappingContext nodeFactory = (Neo4jMappingContext) AppContext.getApplicationContext().getBean(Neo4jMappingContext.class);
-		nodeFactory.getPersistentEntity(nodeClass);
+		return mappingContext.getPersistentEntity(nodeClass);
 	}
 	
-	public void registerRepository() {
+	@Override
+	public void registerRepository(String repositoryInterface) {
 		BeanDefinitionRegistry registry = ((BeanDefinitionRegistry) AppContext.getFactory());  
-		RepositoryBeanDefinitionBuilder definitionBuilder = new RepositoryBeanDefinitionBuilder();
+		RepositoryBeanDefinitionBuilder definitionBuilder = new RepositoryBeanDefinitionBuilder(repositoryInterface);
 		
 		BeanDefinitionBuilder builder = definitionBuilder.build(registry, AppContext.getApplicationContext());
 		
