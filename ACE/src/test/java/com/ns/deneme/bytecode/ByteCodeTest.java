@@ -49,7 +49,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ns.deneme.appContext.AppContext;
 import com.ns.deneme.neo4j.domain.AbstractEntity;
 import com.ns.deneme.neo4j.domain.TemplateEntity;
-import com.ns.deneme.neo4j.repository.RepositoryBeanDefinitionBuilder;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:spring/application-config.xml")

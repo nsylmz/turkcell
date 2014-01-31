@@ -1,4 +1,4 @@
-package com.ns.deneme.neo4j.repository;
+package com.ns.deneme.bytecode;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,23 +30,43 @@ public class RepositoryBeanDefinitionBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryBeanDefinitionBuilder.class);
 
-	private String repositoryInterface = "com.ns.deneme.neo4j.repository.AddressRepository";
+	private String repositoryInterface;
 	
-	private QueryLookupStrategy.Key queryLookupStrategyKey = QueryLookupStrategy.Key.CREATE_IF_NOT_FOUND;
+	private static final QueryLookupStrategy.Key queryLookupStrategyKey = QueryLookupStrategy.Key.CREATE_IF_NOT_FOUND;
 	
-	private String implementationBeanName = "addressRepositoryImpl";
+	private String implementationBeanName;
 	
-	private String implementationClassName = "AddressRepositoryImpl";
+	private String implementationClassName;
 	
-	private String[] basePackages = new String[]{"com.ns.deneme.neo4j"};
+	private String[] basePackages = new String[]{};
 	
-	private String defaultNamedQueryLocation = "classpath*:META-INF/neo4j-named-queries.properties";
+	private static final String defaultNamedQueryLocation = "classpath*:META-INF/neo4j-named-queries.properties";
 	
 	private String namedQueriesLocation = null;
 	
-	private String neo4jTemplate = "neo4jTemplate";
+	private static final String neo4jTemplate = "neo4jTemplate";
 	
-	private String neo4jMappingContext = "neo4jMappingContext";
+	private static final String neo4jMappingContext = "neo4jMappingContext";
+	
+	private static final String factoryBeanName = GraphRepositoryFactoryBean.class.getName();
+	
+	public RepositoryBeanDefinitionBuilder(String repositoryInterface) {
+		this.repositoryInterface = repositoryInterface;
+		String[] repositoryInterfaceParts = repositoryInterface.split("[.]");
+		String repositoryInterfaceName = repositoryInterfaceParts[repositoryInterfaceParts.length-1];
+		this.implementationBeanName = StringUtils.uncapitalize(repositoryInterfaceName);
+		this.implementationClassName = repositoryInterfaceName;
+		this.basePackages = new String[]{repositoryInterface.substring(0, repositoryInterface.lastIndexOf("neo4j"))};
+	}
+	
+	public RepositoryBeanDefinitionBuilder(String repositoryInterface, String namedQueriesLocation) {
+		this.repositoryInterface = repositoryInterface;
+		String[] repositoryInterfaceParts = repositoryInterface.split("[.]");
+		String repositoryInterfaceName = repositoryInterfaceParts[repositoryInterfaceParts.length-1];
+		this.implementationBeanName = StringUtils.uncapitalize(repositoryInterfaceName);
+		this.implementationClassName = repositoryInterfaceName;
+		this.basePackages = new String[]{repositoryInterface.substring(0, repositoryInterface.lastIndexOf("neo4j"))};
+	}
 	
 	/**
 	 * Builds a new {@link BeanDefinitionBuilder} from the given {@link BeanDefinitionRegistry} and {@link ResourceLoader}
@@ -60,8 +80,6 @@ public class RepositoryBeanDefinitionBuilder {
 
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null!");
 		Assert.notNull(resourceLoader, "ResourceLoader must not be null!");
-
-		String factoryBeanName = GraphRepositoryFactoryBean.class.getName();
 
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(factoryBeanName);
 
