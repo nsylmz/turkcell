@@ -48,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ns.deneme.appContext.AppContext;
 import com.ns.deneme.neo4j.domain.AbstractEntity;
-import com.ns.deneme.neo4j.domain.TemplateEntity;
+import com.ns.deneme.neo4j.domain.TemplateNodeEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:spring/application-config.xml")
@@ -80,20 +80,12 @@ public class ByteCodeTest {
 	@Test
 	public void test() {
 		try {
-//			GenericBeanDefinition beanDefinition = new GenericBeanDefinition();  
-//			beanDefinition.setBeanClassName(pool.get("com.ns.deneme.neo4j.repository.AddressRepository").getName());  
-//			beanDefinition.setLazyInit(false);  
-//			beanDefinition.setAbstract(false);  
-//			beanDefinition.setAutowireCandidate(true);  
-//			beanDefinition.setScope("singleton");  
-//			registry.registerBeanDefinition("addressRepository", beanDefinition);
-			
 			Class nodeClass = Class.forName("com.ns.deneme.neo4j.domain.Address");
 			Neo4jMappingContext nodeFactory = (Neo4jMappingContext) AppContext.getApplicationContext().getBean(Neo4jMappingContext.class);
 			nodeFactory.getPersistentEntity(nodeClass);
 			
 			BeanDefinitionRegistry registry = ((BeanDefinitionRegistry) AppContext.getFactory());  
-			RepositoryBeanDefinitionBuilder definitionBuilder = new RepositoryBeanDefinitionBuilder();
+			RepositoryBeanDefinitionBuilder definitionBuilder = new RepositoryBeanDefinitionBuilder("com.ns.deneme.neo4j.domain.AddressRepository");
 			
 			BeanDefinitionBuilder builder = definitionBuilder.build(registry, AppContext.getApplicationContext());
 			
@@ -618,7 +610,7 @@ public class ByteCodeTest {
 	
 	private void prepareAspectNodeFromTemplate() {
 		try {
-			CtClass cc = pool.getAndRename(TemplateEntity.class.getName(), "com.ns.deneme.neo4j.domain.Address");
+			CtClass cc = pool.getAndRename(TemplateNodeEntity.class.getName(), "com.ns.deneme.neo4j.domain.Address");
 			CtField city = new CtField(ClassPool.getDefault().get("java.lang.String"), "city", cc);
 			cc.addField(city);
 			city.setModifiers(Modifier.PRIVATE);

@@ -1,11 +1,13 @@
 package com.ns.deneme.bytecode;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.data.neo4j.support.mapping.Neo4jMappingContext;
 import org.springframework.data.neo4j.support.mapping.Neo4jPersistentEntityImpl;
 import org.springframework.data.repository.config.RepositoryBeanNameGenerator;
@@ -28,6 +30,7 @@ public class RepositoryBeanRegistery implements RepositoryBeanRegisteryI {
 	
 	@Override
 	public void registerRepository(String repositoryInterface) {
+		
 		BeanDefinitionRegistry registry = ((BeanDefinitionRegistry) AppContext.getFactory());  
 		RepositoryBeanDefinitionBuilder definitionBuilder = new RepositoryBeanDefinitionBuilder(repositoryInterface);
 		
@@ -38,8 +41,27 @@ public class RepositoryBeanRegistery implements RepositoryBeanRegisteryI {
 
 		RepositoryBeanNameGenerator generator = new RepositoryBeanNameGenerator();
 		generator.setBeanClassLoader(null);
-
 		String beanName = generator.generateBeanName(beanDefinition, registry);
+		
+		BeanComponentDefinition definition = new BeanComponentDefinition(beanDefinition, beanName);
+		BeanDefinitionReaderUtils.registerBeanDefinition(definition, registry);
+	}
+	
+	@Override
+	public void registerRepositoryAPI(String repositoryAPI) {
+		
+		BeanDefinitionRegistry registry = ((BeanDefinitionRegistry) AppContext.getFactory());  
+		
+		GenericBeanDefinition beanDefinition = new GenericBeanDefinition();  
+		beanDefinition.setBeanClassName(repositoryAPI);  
+		beanDefinition.setLazyInit(false);  
+		beanDefinition.setAbstract(false);  
+		beanDefinition.setAutowireCandidate(true);  
+		beanDefinition.setScope("singleton");  
+		
+		RepositoryBeanNameGenerator generator = new RepositoryBeanNameGenerator();
+		generator.setBeanClassLoader(null);
+		String beanName = StringUtils.uncapitalize(StringUtils.substringAfterLast(repositoryAPI, "."));
 		
 		BeanComponentDefinition definition = new BeanComponentDefinition(beanDefinition, beanName);
 		BeanDefinitionReaderUtils.registerBeanDefinition(definition, registry);

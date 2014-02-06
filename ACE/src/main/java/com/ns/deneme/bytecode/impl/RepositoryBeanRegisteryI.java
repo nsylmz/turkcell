@@ -7,4 +7,7 @@ public interface RepositoryBeanRegisteryI {
 	public Neo4jPersistentEntityImpl<?> registerNode(String nodeClassName) throws ClassNotFoundException;
 	
 	public void registerRepository(String repositoryInterface);
+	
+	public void registerRepositoryAPI(String repositoryAPI);
+	
 }

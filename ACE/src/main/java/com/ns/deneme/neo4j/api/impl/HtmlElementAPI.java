@@ -31,6 +31,10 @@ public class HtmlElementAPI implements IHtmlElementAPI {
     public HtmlElement findHtmlElementByLabel(String elementLabel) {
     	return htmlElementRepository.findByPropertyValue("elementLabel", elementLabel.trim());
     }
+    
+    public void temp() {
+    	
+    }
 
 	@Override
 	public List<HtmlElement> findAll() {

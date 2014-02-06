@@ -21,11 +21,6 @@ import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-/**
- * Builder to create {@link BeanDefinitionBuilder} instance to eventually create Spring Data repository instances.
- * 
- * @author Oliver Gierke
- */
 public class RepositoryBeanDefinitionBuilder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryBeanDefinitionBuilder.class);
@@ -66,6 +61,7 @@ public class RepositoryBeanDefinitionBuilder {
 		this.implementationBeanName = StringUtils.uncapitalize(repositoryInterfaceName);
 		this.implementationClassName = repositoryInterfaceName;
 		this.basePackages = new String[]{repositoryInterface.substring(0, repositoryInterface.lastIndexOf("neo4j"))};
+		this.namedQueriesLocation = namedQueriesLocation;
 	}
 	
 	/**

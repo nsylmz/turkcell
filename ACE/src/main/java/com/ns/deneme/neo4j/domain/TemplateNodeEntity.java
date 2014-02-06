@@ -4,14 +4,18 @@ import java.io.Serializable;
 
 import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 
 @SuppressWarnings("serial")
 @NodeEntity
-public class TemplateEntity implements Serializable {
+public class TemplateNodeEntity implements Serializable {
 
 	@GraphId
 	private Long id;
+	
+	@Indexed
+	private String name;
 	
 	@Version
 	private int version;
@@ -22,6 +26,14 @@ public class TemplateEntity implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getVersion() {

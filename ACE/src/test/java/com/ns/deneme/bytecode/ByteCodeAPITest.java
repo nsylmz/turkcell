@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ns.deneme.appContext.AppContext;
 import com.ns.deneme.neo4j.domain.HtmlElementCategory;
-import com.ns.deneme.neo4j.domain.TemplateEntity;
+import com.ns.deneme.neo4j.domain.TemplateNodeEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath*:spring/application-config.xml")
@@ -171,7 +171,7 @@ public class ByteCodeAPITest {
 	
 	private void prepareAspectNodeFromTemplate() {
 		try {
-			CtClass cc = pool.getAndRename(TemplateEntity.class.getName(), "com.ns.deneme.neo4j.domain.Address");
+			CtClass cc = pool.getAndRename(TemplateNodeEntity.class.getName(), "com.ns.deneme.neo4j.domain.Address");
 			CtField city = new CtField(ClassPool.getDefault().get("java.lang.String"), "city", cc);
 			cc.addField(city);
 			city.setModifiers(Modifier.PRIVATE);
