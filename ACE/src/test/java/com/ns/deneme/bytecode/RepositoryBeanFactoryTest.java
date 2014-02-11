@@ -32,7 +32,7 @@ public class RepositoryBeanFactoryTest {
 //		repositoryBeanFactory.createRepository("com.ns.deneme.neo4j.repository.AddressRepository", "com.ns.deneme.neo4j.domain.Address");
 //		repositoryBeanFactory.createRepositoryAPI("com.ns.deneme.neo4j.api.impl.AddressAPI");
 		
-		CtClass node = repositoryBeanFactory.cloneNode("com.ns.deneme.neo4j.domain.Address");
+		CtClass node = repositoryBeanFactory.cloneNode("com.ns.deneme.neo4j.domain.Address", null);
 		CtClass repository = repositoryBeanFactory.cloneRepository("com.ns.deneme.neo4j.repository.AddressRepository", node.getName());
 		repositoryBeanFactory.cloneRepositoryAPI("com.ns.deneme.neo4j.api.impl.AddressAPI", node, repository);
 	}

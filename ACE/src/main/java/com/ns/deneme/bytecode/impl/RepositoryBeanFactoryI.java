@@ -1,6 +1,10 @@
 package com.ns.deneme.bytecode.impl;
 
+import java.util.List;
+
 import javassist.CtClass;
+
+import com.ns.deneme.bytecode.NodeProperty;
 
 public interface RepositoryBeanFactoryI {
 
@@ -16,6 +20,6 @@ public interface RepositoryBeanFactoryI {
 	
 	public CtClass cloneRepository(String repositoryInterface, String node);
 	
-	public CtClass cloneNode(String node);
+	public CtClass cloneNode(String node, List<NodeProperty> nodeProperties);
 
 }

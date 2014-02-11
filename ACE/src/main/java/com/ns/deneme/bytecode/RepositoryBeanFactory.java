@@ -1,6 +1,7 @@
 package com.ns.deneme.bytecode;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,10 +55,65 @@ public class RepositoryBeanFactory implements RepositoryBeanFactoryI {
 	
 	private static String defaultClassLoader = "target/classes/";
 	
-	public CtClass cloneNode(String node) {
+	public CtClass cloneNode(String node, List<NodeProperty> nodeProperties) {
 		CtClass cc = null;
 		try {
 			cc = pool.getAndRename(TemplateNodeEntity.class.getName(), node);
+			ClassFile ccFile = cc.getClassFile();
+			ConstPool constpool = ccFile.getConstPool();
+			
+			List<NodeAnnotationProperty> annotProperties;
+			CtField ctField;
+			AnnotationsAttribute anotAttr;
+			Annotation annot;
+			List<AnnotationMember> annotationMembers;
+			AnnotationMemberMethod[] javassistMemberMethods;
+			Object javassistMemberObject;
+			Method javassistMemberMethod;
+			// Add Node Properties
+			for (NodeProperty nodeProperty : nodeProperties) {
+				ctField = new CtField(ClassPool.getDefault().get(nodeProperty.getPropertyType().getName()), nodeProperty.getPropertyName(), cc);
+				ctField.setModifiers(Modifier.PRIVATE);
+				
+				// Add Field Annnotations
+				annotProperties = nodeProperty.getAnnotations();
+				for (NodeAnnotationProperty nodeAnnotationProperty : annotProperties) {
+					anotAttr = new AnnotationsAttribute(constpool, AnnotationsAttribute.visibleTag);
+					annot = new Annotation(nodeAnnotationProperty.getAnnotationInterface().getName(), constpool);
+					anotAttr.addAnnotation(annot);
+
+					// Add Annotation Members
+					annotationMembers = nodeAnnotationProperty.getAnnotationMembers();
+					for (AnnotationMember annotationMember : annotationMembers) {
+						// TODO: Check ArrayMemberValue
+						javassistMemberObject = annotationMember.getMemberType().javassistClass.newInstance();
+						javassistMemberMethods = annotationMember.getMemberType().methods;
+						for (AnnotationMemberMethod method : javassistMemberMethods) {
+							javassistMemberMethod = javassistMemberObject.getClass().getMethod(method.getMethodName(), method.getMethodParamClass());
+							if (method.getMethodName().equals("setValue")) {
+								javassistMemberMethod.invoke(javassistMemberObject, annotationMember.getMemberValue());
+							} else if (method.getMethodName().equals("setType")) {
+								javassistMemberMethod.invoke(javassistMemberObject, annotationMember.getMemberValue().getClass().getName());
+							}
+						}
+					}
+					ctField.getFieldInfo().addAttribute(anotAttr);
+				}
+				
+				// Field Getter And Setter Methods
+				CtMethod getterMethod;
+				if (nodeProperty.getClass().isAssignableFrom(Boolean.class)) {
+					getterMethod = CtNewMethod.getter("is" + StringUtils.capitalize(nodeProperty.getPropertyName()), ctField);
+				} else {
+					getterMethod = CtNewMethod.getter("get" + StringUtils.capitalize(nodeProperty.getPropertyName()), ctField);
+				}
+				cc.addMethod(getterMethod);
+				
+				CtMethod setterMethod = CtNewMethod.setter("set" + StringUtils.capitalize(nodeProperty.getPropertyName()), ctField);
+				cc.addMethod(setterMethod);
+				
+				cc.addField(ctField);
+			}
 			cc.writeFile(defaultClassLoader);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -495,5 +551,5 @@ public class RepositoryBeanFactory implements RepositoryBeanFactoryI {
 	private String generateRepositoryNameFromApiInterfaceName(String repositoryApiInterface) {
 		return generateNodeNameFromRepositoryAPI(repositoryApiInterface).replace(".domain.", ".repository.") + "Repository";
 	}
-	
+
 }
