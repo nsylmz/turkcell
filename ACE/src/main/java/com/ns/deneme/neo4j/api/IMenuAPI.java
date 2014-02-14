@@ -17,5 +17,7 @@ public interface IMenuAPI {
 	public List<Menu> findAll();
 
 	public Menu findOne(Long id);
+
+	public List<String[]> mapMenusToJSON(List<Menu> menus);
 	
 }

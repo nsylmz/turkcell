@@ -51,4 +51,17 @@ public class MenuAPI implements IMenuAPI {
 		}
     	return resultList;
 	}
+
+	@Override
+	public List<String[]> mapMenusToJSON(List<Menu> menus) {
+		List<String[]> jsonList = new ArrayList<>();
+		String[] jsonMenu;
+		for (Menu menu : menus) {
+			jsonMenu = new String[2];
+			jsonMenu[0] = menu.getId().toString();
+			jsonMenu[1] = menu.getMenuName();
+			jsonList.add(jsonMenu);
+		}
+		return jsonList;
+	}
 }

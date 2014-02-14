@@ -1,4 +1,4 @@
-package com.ns.deneme.bytecode.impl;
+package com.ns.deneme.bytecode;
 
 import org.springframework.data.neo4j.support.mapping.Neo4jPersistentEntityImpl;
 

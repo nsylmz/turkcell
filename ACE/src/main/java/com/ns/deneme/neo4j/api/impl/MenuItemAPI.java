@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ns.deneme.neo4j.api.IMenuItemAPI;
+import com.ns.deneme.neo4j.domain.Menu;
 import com.ns.deneme.neo4j.domain.MenuItem;
 import com.ns.deneme.neo4j.repository.MenuItemRepository;
 
@@ -50,5 +51,19 @@ public class MenuItemAPI implements IMenuItemAPI {
     		resultList.add((MenuItem) iter.next());
 		}
     	return resultList;
+	}
+
+	public List<String[]> mapMenuItemsToJSON(List<MenuItem> menuItems) {
+		List<String[]> jsonList = new ArrayList<>();
+		String[] jsonMenuItem;
+		for (MenuItem menuItem : menuItems) {
+			jsonMenuItem = new String[4];
+			jsonMenuItem[0] = menuItem.getId().toString();
+			jsonMenuItem[1] = menuItem.getMenuItemName();
+			jsonMenuItem[2] = menuItem.getMenuItemPage().getId().toString();
+			jsonMenuItem[3] = menuItem.getMenuItemPage().getPageName();
+			jsonList.add(jsonMenuItem);
+		}
+		return jsonList;
 	}
 }

@@ -20,10 +20,7 @@ public class App implements Serializable {
 	private Long id;
 	
 	@Indexed
-	private String uniqueName;
-	
-	@Indexed
-	private String marketName;
+	private String appName;
 	
 	private boolean approved;
 	
@@ -46,20 +43,12 @@ public class App implements Serializable {
 		this.id = id;
 	}
 
-	public String getUniqueName() {
-		return uniqueName;
+	public String getAppName() {
+		return appName;
 	}
 
-	public void setUniqueName(String uniqueName) {
-		this.uniqueName = uniqueName;
-	}
-
-	public String getMarketName() {
-		return marketName;
-	}
-
-	public void setMarketName(String marketName) {
-		this.marketName = marketName;
+	public void setAppName(String appName) {
+		this.appName = appName;
 	}
 
 	public boolean isApproved() {

@@ -18,4 +18,10 @@
         <put-attribute name="footer" value="/jsp/tilesTemplate/footer.jsp"/>
     </definition>
     
+    <definition name="appPage" template="/jsp/tilesTemplate/template.jsp">
+        <put-attribute name="header" value="/jsp/tilesTemplate/header.jsp"/>
+        <put-attribute name="body" value="/jsp/app/AppBody.jsp"/>
+        <put-attribute name="footer" value="/jsp/tilesTemplate/footer.jsp"/>
+    </definition>
+    
 </tiles-definitions>

@@ -1,4 +1,4 @@
-package com.ns.deneme.bytecode;
+package com.ns.deneme.bytecode.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,8 @@ import org.springframework.data.repository.config.RepositoryBeanNameGenerator;
 import org.springframework.stereotype.Component;
 
 import com.ns.deneme.appContext.AppContext;
-import com.ns.deneme.bytecode.impl.RepositoryBeanRegisteryI;
+import com.ns.deneme.bytecode.RepositoryBeanDefinitionBuilder;
+import com.ns.deneme.bytecode.RepositoryBeanRegisteryI;
 
 @Component
 public class RepositoryBeanRegistery implements RepositoryBeanRegisteryI {

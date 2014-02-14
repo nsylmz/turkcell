@@ -1,10 +1,9 @@
-package com.ns.deneme.bytecode.impl;
+package com.ns.deneme.bytecode;
 
 import java.util.List;
 
 import javassist.CtClass;
 
-import com.ns.deneme.bytecode.NodeProperty;
 
 public interface RepositoryBeanFactoryI {
 

@@ -1,4 +1,4 @@
-package com.ns.deneme.bytecode;
+package com.ns.deneme.bytecode.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -37,7 +37,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.aspectj.AnnotationTransactionAspect;
 
-import com.ns.deneme.bytecode.impl.RepositoryBeanFactoryI;
+import com.ns.deneme.bytecode.AnnotationMember;
+import com.ns.deneme.bytecode.AnnotationMemberMethod;
+import com.ns.deneme.bytecode.NodeAnnotationProperty;
+import com.ns.deneme.bytecode.NodeProperty;
+import com.ns.deneme.bytecode.RepositoryBeanFactoryI;
 import com.ns.deneme.bytecode.util.APIOperationType;
 import com.ns.deneme.neo4j.api.ITemplateAPI;
 import com.ns.deneme.neo4j.api.impl.TemplateAPI;

@@ -17,5 +17,7 @@ public interface IMenuItemAPI {
 	public List<MenuItem> findAll();
 
 	public MenuItem findOne(Long id);
+
+	public List<String[]> mapMenuItemsToJSON(List<MenuItem> menuItems);
 	
 }

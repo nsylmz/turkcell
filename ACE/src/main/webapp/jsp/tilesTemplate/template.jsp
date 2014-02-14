@@ -22,6 +22,8 @@
 		<link href="${pageContext.request.contextPath}/css/UIGeneration.css" rel="stylesheet" type="text/css" />
 		<link href="${pageContext.request.contextPath}/css/flowchart.css" rel="stylesheet" type="text/css" />
 		<link href="${pageContext.request.contextPath}/css/featureBar.css" rel="stylesheet" type="text/css" />
+		<link href="${pageContext.request.contextPath}/css/tandem_select.css" rel="stylesheet" type="text/css" />
+		<link href="${pageContext.request.contextPath}/css/jquery.dataTables_themeroller.css" rel="stylesheet" type="text/css" />
 		
 		<script src="${pageContext.request.contextPath}/js/jquery-2.0.3.js" type="text/javascript"></script>
 		<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
@@ -31,6 +33,8 @@
 		<script src="${pageContext.request.contextPath}/js/jquery-ui.js" type="text/javascript"></script>
 		<script src="${pageContext.request.contextPath}/js/ComboBox.js" type="text/javascript"></script>
 		<script src="${pageContext.request.contextPath}/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
+		<script src="${pageContext.request.contextPath}/js/jquery.dataTables.min.js"></script>
+		<script src="${pageContext.request.contextPath}/js/tandem_select.js"></script>
 	</head>
 	<body>
 		<div class="notification-container">
