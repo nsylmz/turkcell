@@ -18,12 +18,12 @@ public class MenuItem implements Serializable {
 	@GraphId
 	private Long id;
 	
-	@Indexed
+	@Indexed(unique = true)
 	private String menuItemName;
 	
-//	@Fetch
-//	@RelatedTo(type="menu", direction=Direction.OUTGOING)
-//	private Menu menu;
+	@Fetch
+	@RelatedTo(type="menu", direction=Direction.INCOMING)
+	private Menu menu;
 	
 	@Fetch
 	@RelatedTo(type="menuItemPage", direction=Direction.OUTGOING)
@@ -48,6 +48,14 @@ public class MenuItem implements Serializable {
 
 	public void setMenuItemName(String menuItemName) {
 		this.menuItemName = menuItemName;
+	}
+
+	public Menu getMenu() {
+		return menu;
+	}
+
+	public void setMenu(Menu menu) {
+		this.menu = menu;
 	}
 
 	public Page getMenuItemPage() {

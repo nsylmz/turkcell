@@ -12,17 +12,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ns.deneme.neo4j.api.IAppAPI;
+import com.ns.deneme.neo4j.api.IEntityAPI;
 import com.ns.deneme.neo4j.domain.App;
+import com.ns.deneme.neo4j.domain.Entity;
+import com.ns.deneme.vo.AppEntityVO;
+import com.ns.deneme.vo.EntityVO;
 
 @Controller
-@RequestMapping(value = "/app")
+@RequestMapping(value = "/dev/entity", method = RequestMethod.POST)
 public class EntityController {
 	
 	private static Logger logger = LoggerFactory.getLogger(EntityController.class);
@@ -30,71 +34,101 @@ public class EntityController {
 	@Autowired
 	private IAppAPI appAPI;
 	
-	@RequestMapping(value = "/{appName}", method = RequestMethod.GET)
-	public String getApp(@PathVariable String appName, Model model) {
-	   	logger.debug("Getting App with Name : " + appName + "...");
-	   	try {
-	   		if (StringUtils.isNotEmpty(appName)) {
-	   			App app = appAPI.findByPropertyValue("appName", appName);
-	   			if (app != null) {
-					// Post App Informations
-				} else {
-					logger.error("There is not exists any app which is named : " + appName);
-				}
-	   		} else {
-	   			logger.error("App Name is Null.");
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			logger.debug("Getting App is Ended.");
-		}
-	 	return "/app/App";
-	}
-	
-	@RequestMapping(value = "/ACE", method = RequestMethod.GET)
-	public String getAppNames(Model model) {
-	   	logger.debug("Getting Apps...");
-	   	try {
-	   		List<App> apps = appAPI.findAll();
-	   		List<String> appNames = new ArrayList<String>();
-	   		if (apps != null) {
-	   			for (App app : apps) {
-	   				appNames.add(app.getAppName());
-				}
-			}
-	   		model.addAttribute("appNames", appNames);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		} finally {
-			logger.debug("Getting Apps is Ended.");
-		}
-	 	return "/app/ACE";
-	}
-	
-	@RequestMapping(value = "/createApp", consumes={MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> createApp(@RequestBody String appName, Model model) {
+	@Autowired
+	private IEntityAPI entityAPI;
+
+	@RequestMapping(value = "/getEntities")
+	public @ResponseBody Map<String, Object> getMenus(@RequestParam(value="appId") Long appId, Model model) {
 		Map<String, Object> data = new LinkedHashMap<String, Object>();
-	   	logger.debug("Creating App with Name : " + appName + "...");
+	   	logger.debug("Getting Entities for App Id : " + appId + " ...");
 	   	try {
-	   		if (StringUtils.isNotEmpty(appName)) {
-	   			App app = new App();
-	   			app.setAppName(appName);
+	   		App app = appAPI.findOne(appId);
+	   		List<Entity> entities = new ArrayList<>();
+	   		entities.addAll(app.getAppEntities());
+	   		data.put("entities", entityAPI.mapEntitiesToJSON(entities)); 
+	   		data.put("status", "1");
+		} catch (Exception e) {
+			data.put("status", "-1");
+			data.put("message", "Can Not Retrieve Entities For App Id : " + appId + " !!!");
+			logger.error(e.getMessage(), e);
+		} finally {
+			logger.debug("Getting Entities Is Ended.");
+		}
+	 	return data;
+	}
+	
+	@RequestMapping(value = "/deleteEntity")
+	public @ResponseBody Map<String, Object> deleteMenu(@RequestParam(value="entityId") Long entityId, Model model) {
+		Map<String, Object> data = new LinkedHashMap<String, Object>();
+	   	logger.debug("Deleting Entity with Id : " + entityId + " ...");
+	   	try {
+	   		entityAPI.deleteById(entityId);
+	   		data.put("status", "1");
+			data.put("message", "Entity Is Successfully Deleted");
+		} catch (Exception e) {
+			data.put("status", "-1");
+			data.put("message", "Deleting Entity was Failed!!!");
+			logger.error(e.getMessage(), e);
+		} finally {
+			logger.debug("Deleting Entity is Ended.");
+		}
+	 	return data;
+	}
+	
+	@RequestMapping(value = "/createEntity", consumes={MediaType.APPLICATION_JSON_VALUE})
+	public @ResponseBody Map<String, Object> createMenu(@RequestBody AppEntityVO appEntityVO, Model model) {
+		Map<String, Object> data = new LinkedHashMap<String, Object>();
+	   	logger.debug("Creating Entity with Name : " + appEntityVO.getEntityName() + " to App Id : " + appEntityVO.getAppId());
+	   	try {
+	   		if (appEntityVO.getAppId() != null && appEntityVO.getAppId() > 0 && StringUtils.isNotEmpty(appEntityVO.getEntityName())) {
+	   			Entity entity = new Entity();
+	   			entity.setEntityName(appEntityVO.getEntityName());
+	   			entityAPI.save(entity);
+	   			
+	   			App app = appAPI.findOne(appEntityVO.getAppId());
+	   			app.getAppEntities().add(entity);
 	   			appAPI.save(app);
 	   			data.put("status", "1");
-				data.put("message", "App Is Successfully Created.");
+	   			data.put("id", entity.getId());
+				data.put("message", "Entity Is Successfully Created and Added To The App.");
 			} else {
 				data.put("status", "-2");
-				data.put("message", "App Name Should Not Be Null!!!");
+				data.put("message", "App Id and Entity Name Should Not Be Null!!!");
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			data.put("status", "-1");
-			data.put("message", "Createing App Was Failed!!!");
+			data.put("message", "Creating Entity Was Failed!!!");
 		} finally {
-			logger.debug("Creating App is Ended");
+			logger.debug("Creating Entity is Ended.");
 		}
 	 	return data;
 	}
-
+	
+	@RequestMapping(value = "/updateEntity", consumes={MediaType.APPLICATION_JSON_VALUE})
+	public @ResponseBody Map<String, Object> updateMenu(@RequestBody EntityVO entityVO, Model model) {
+		Map<String, Object> data = new LinkedHashMap<String, Object>();
+	   	logger.debug("Update Entity with Id : " + entityVO.getEntityId() + "  Name : " + entityVO.getEntityName());
+	   	try {
+	   		if (entityVO.getEntityId() != null && entityVO.getEntityId() > 0 
+	   				&& StringUtils.isNotEmpty(entityVO.getEntityName())) {
+	   			Entity entity = entityAPI.findOne(entityVO.getEntityId());
+	   			entity.setEntityName(entityVO.getEntityName());
+	   			entityAPI.save(entity);
+	   			data.put("status", "1");
+				data.put("message", "Entity Is Successfully Updated.");
+			} else {
+				data.put("status", "-2");
+				data.put("message", "Entity Id and Entity Name Should Not Be Null!!!");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			data.put("status", "-1");
+			data.put("message", "Updating Entity Was Failed!!!");
+		} finally {
+			logger.debug("Updating Entity is Ended.");
+		}
+	 	return data;
+	}
+	
 }

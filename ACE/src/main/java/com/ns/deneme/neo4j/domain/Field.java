@@ -16,7 +16,7 @@ public class Field implements Serializable {
 	@GraphId
 	private Long id;
 
-	@Indexed
+	@Indexed(unique = true)
 	private String fieldName;
 
 	private Set<FieldAnnotation> fieldAnnotations;

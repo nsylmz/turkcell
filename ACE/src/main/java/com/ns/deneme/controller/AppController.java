@@ -1,6 +1,7 @@
 package com.ns.deneme.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ns.deneme.neo4j.api.IAppAPI;
 import com.ns.deneme.neo4j.domain.App;
+import com.ns.deneme.neo4j.domain.Menu;
+import com.ns.deneme.neo4j.domain.Page;
 
 @Controller
 @RequestMapping(value = "/app")
@@ -37,7 +40,25 @@ public class AppController {
 	   		if (StringUtils.isNotEmpty(appName)) {
 	   			App app = appAPI.findByPropertyValue("appName", appName);
 	   			if (app != null) {
-					// Post App Informations
+	   				model.addAttribute("appName", appName);
+	   				model.addAttribute("appId", app.getId());
+	   				List<String[]> appMenus = new ArrayList<String[]>();
+	   				List<String[]> appPages = new ArrayList<String[]>();
+	   				Iterator<Menu> menuIter = app.getAppMenus().iterator();
+	   				Menu menu;
+	   				while (menuIter.hasNext()) {
+						menu = (Menu) menuIter.next();
+						appMenus.add(new String[]{menu.getId().toString(), menu.getMenuName()});
+					}
+	   				model.addAttribute("appMenus", appMenus);
+	   				
+	   				Iterator<Page> pageIter = app.getAppPages().iterator();
+	   				Page page;
+	   				while (pageIter.hasNext()) {
+	   					page = (Page) pageIter.next();
+	   					appPages.add(new String[]{page.getId().toString(), page.getPageName()});
+					}
+	   				model.addAttribute("appPages", appPages);
 				} else {
 					logger.error("There is not exists any app which is named : " + appName);
 				}

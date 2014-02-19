@@ -7,7 +7,7 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
 @NodeEntity
 public class HtmlElementCategory extends AbstractEntity {
 
-	@Indexed
+	@Indexed(unique = true)
 	private String categoryName;
 
 	public String getCategoryName() {

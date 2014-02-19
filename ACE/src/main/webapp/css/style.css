@@ -214,6 +214,16 @@ body {
 	text-align: center;
 }
 
+.confirm-notification {
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    position: relative;
+    opacity: 1;
+    text-align: center;
+}
+
 .notification-close {
 	position: absolute;
 	right: 5px;
@@ -338,7 +348,7 @@ body {
 .dev-bar {
 	background: #FFFFFF;
 	width: 1000px;
-	height: 600px;
+	height: 750px;
 	position: absolute;
 	z-index: 1000;
 	top: 0px;
@@ -373,7 +383,7 @@ body {
 
 .dev-item-container {
 	width: 950px;
-	height: 520px;
+	height: 669px;
 }
 
 .dev-menu .ui-widget-header {
@@ -382,4 +392,55 @@ body {
 	color: #000;
 	font-weight: bold;
 	border-radius: 0px;
+}
+
+.menu-container {
+	width: 500px;
+}
+
+.dev-item-container {
+	
+}
+
+.dev-input-container {
+	margin-bottom: 10px;
+}
+
+.dev-button-container {
+	float: right;
+}
+
+table.dataTable tr.odd { 
+	background-color: #E2E4FF;
+}
+
+table.dataTable tr.even { 
+	background-color: white; 
+}
+
+table.dataTable tr.even td.sorting_1 { 
+	background-color: #EAEBFF; 
+}
+
+table.dataTable tr.even td.sorting_2 { 
+	background-color: #F2F3FF; 
+}
+
+table.dataTable tr.even td.sorting_3 { 
+	background-color: #F9F9FF; 
+}
+
+table.display tr.even.row_selected td,
+table.display tr.odd.row_selected td {
+	background-color: #16385E;
+	color: #fff;
+}
+
+.dev-table-container {
+	margin-top: 60px;
+	margin-bottom: 15px;
+}
+
+.ui-front {
+	z-index: 1001!important;
 }

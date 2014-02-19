@@ -15,7 +15,7 @@ public class FieldAnnotationMember implements Serializable {
 	@GraphId
 	private Long id;
 
-	@Indexed
+	@Indexed(unique = true)
 	private String fieldAnnotationMemberName;
 
 	private String fieldAnnotationMemberType;

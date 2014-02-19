@@ -10,7 +10,7 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 @NodeEntity
 public class HtmlElement extends AbstractEntity {
 
-	@Indexed
+	@Indexed(unique = true)
 	private String elementLabel;
 
 	private String elementHtml;

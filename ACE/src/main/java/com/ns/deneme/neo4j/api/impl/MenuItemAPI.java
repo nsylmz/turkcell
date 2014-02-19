@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ns.deneme.neo4j.api.IMenuItemAPI;
-import com.ns.deneme.neo4j.domain.Menu;
 import com.ns.deneme.neo4j.domain.MenuItem;
 import com.ns.deneme.neo4j.repository.MenuItemRepository;
 
@@ -57,11 +56,18 @@ public class MenuItemAPI implements IMenuItemAPI {
 		List<String[]> jsonList = new ArrayList<>();
 		String[] jsonMenuItem;
 		for (MenuItem menuItem : menuItems) {
-			jsonMenuItem = new String[4];
+			jsonMenuItem = new String[6];
 			jsonMenuItem[0] = menuItem.getId().toString();
 			jsonMenuItem[1] = menuItem.getMenuItemName();
-			jsonMenuItem[2] = menuItem.getMenuItemPage().getId().toString();
-			jsonMenuItem[3] = menuItem.getMenuItemPage().getPageName();
+			jsonMenuItem[2] = menuItem.getMenu().getId().toString();
+			jsonMenuItem[3] = menuItem.getMenu().getMenuName();
+			if (menuItem.getMenuItemPage() != null) {
+				jsonMenuItem[4] = menuItem.getMenuItemPage().getId().toString();
+				jsonMenuItem[5] = menuItem.getMenuItemPage().getPageName();
+			} else {
+				jsonMenuItem[4] = "";
+				jsonMenuItem[5] = "No Page Is Set";
+			}
 			jsonList.add(jsonMenuItem);
 		}
 		return jsonList;

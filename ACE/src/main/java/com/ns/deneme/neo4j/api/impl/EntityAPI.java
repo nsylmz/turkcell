@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ns.deneme.neo4j.api.IEntityAPI;
 import com.ns.deneme.neo4j.domain.Entity;
+import com.ns.deneme.neo4j.domain.Menu;
 import com.ns.deneme.neo4j.repository.EntityRepository;
 
 @Component
@@ -50,5 +51,17 @@ public class EntityAPI implements IEntityAPI {
     		resultList.add((Entity) iter.next());
 		}
     	return resultList;
+	}
+	
+	public List<String[]> mapEntitiesToJSON(List<Entity> entities) {
+		List<String[]> jsonList = new ArrayList<>();
+		String[] jsonEntity;
+		for (Entity entity : entities) {
+			jsonEntity = new String[2];
+			jsonEntity[0] = entity.getId().toString();
+			jsonEntity[1] = entity.getEntityName();
+			jsonList.add(jsonEntity);
+		}
+		return jsonList;
 	}
 }

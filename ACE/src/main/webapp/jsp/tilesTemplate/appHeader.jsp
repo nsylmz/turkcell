@@ -11,18 +11,17 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<a class="navbar-brand" href="${pageContext.request.contextPath}/UIGeneration">
-							Application Creation Environment
+						<a class="navbar-brand" href="${pageContext.request.contextPath}/${appName}">
+							${appName}
 						</a>
 					</div>
 					<div class="navbar-collapse collapse">
 						<ul class="nav navbar-nav">
-							<li id="UIGeneration">
-								<a href="${pageContext.request.contextPath}/UIGeneration">UI Generation</a>
-							</li>
-							<li id="APIGeneration">
-								<a href="${pageContext.request.contextPath}/APIGeneration">API Generation</a>
-							</li>
+							<c:forEach var="menu" items="${appMenus}">
+								<li id="UIGeneration">
+									<a href="${pageContext.request.contextPath}/${menu[1]}">${menu[1]}</a>
+								</li>
+							</c:forEach>
 						</ul>
 					</div>
 				</div>

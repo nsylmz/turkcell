@@ -19,7 +19,7 @@ public class Menu implements Serializable {
 	@GraphId
 	private Long id;
 	
-	@Indexed
+	@Indexed(unique = true)
 	private String menuName;
 	
 	@Fetch

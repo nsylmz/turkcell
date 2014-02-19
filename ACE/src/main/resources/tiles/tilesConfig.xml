@@ -19,8 +19,16 @@
     </definition>
     
     <definition name="appPage" template="/jsp/tilesTemplate/template.jsp">
-        <put-attribute name="header" value="/jsp/tilesTemplate/header.jsp"/>
-        <put-attribute name="body" value="/jsp/app/AppBody.jsp"/>
+        <put-attribute name="header" value="/jsp/tilesTemplate/appHeader.jsp"/>
+        <put-attribute name="body">
+        	<definition template="/jsp/app/AppBody.jsp">
+		        <put-attribute name="menuTab" value="/jsp/app/MenuTab.jsp"/>
+		        <put-attribute name="menuItemTab" value="/jsp/app/MenuItemTab.jsp"/>
+		        <put-attribute name="pageTab" value="/jsp/app/PageTab.jsp"/>
+		        <put-attribute name="entityTab" value="/jsp/app/EntityTab.jsp"/>
+		        <put-attribute name="fieldTab" value="/jsp/app/FieldTab.jsp"/>
+            </definition>
+        </put-attribute>
         <put-attribute name="footer" value="/jsp/tilesTemplate/footer.jsp"/>
     </definition>
     

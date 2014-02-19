@@ -22,7 +22,7 @@ import com.ns.deneme.neo4j.api.IAppAPI;
 import com.ns.deneme.neo4j.domain.App;
 
 @Controller
-@RequestMapping(value = "/app")
+@RequestMapping(value = "/dev/field")
 public class FieldController {
 	
 	private static Logger logger = LoggerFactory.getLogger(FieldController.class);

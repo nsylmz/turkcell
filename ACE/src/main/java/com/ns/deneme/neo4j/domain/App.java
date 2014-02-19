@@ -15,24 +15,32 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 @SuppressWarnings("serial")
 @NodeEntity
 public class App implements Serializable {
-	
+
 	@GraphId
 	private Long id;
-	
-	@Indexed
+
+	@Indexed(unique = true)
 	private String appName;
-	
+
 	private boolean approved;
-	
+
 	private String desc;
-	
+
 	@Fetch
-	@RelatedTo(type="appMenu", direction=Direction.INCOMING)
+	@RelatedTo(type = "appMenu", direction = Direction.INCOMING)
 	private Set<Menu> appMenus;
-	
+
+	@Fetch
+	@RelatedTo(type = "appPage", direction = Direction.INCOMING)
+	private Set<Page> appPages;
+
+	@Fetch
+	@RelatedTo(type = "appEntity", direction = Direction.INCOMING)
+	private Set<Entity> appEntities;
+
 	@Version
 	private Long version;
-	
+
 	private Date transactionDate;
 
 	public Long getId() {
@@ -75,6 +83,22 @@ public class App implements Serializable {
 		this.appMenus = appMenus;
 	}
 
+	public Set<Page> getAppPages() {
+		return appPages;
+	}
+
+	public void setAppPages(Set<Page> appPages) {
+		this.appPages = appPages;
+	}
+
+	public Set<Entity> getAppEntities() {
+		return appEntities;
+	}
+
+	public void setAppEntities(Set<Entity> appEntities) {
+		this.appEntities = appEntities;
+	}
+
 	public Long getVersion() {
 		return version;
 	}
@@ -90,5 +114,5 @@ public class App implements Serializable {
 	public void setTransactionDate(Date transactionDate) {
 		this.transactionDate = transactionDate;
 	}
-	
+
 }

@@ -17,5 +17,7 @@ public interface IEntityAPI {
 	public List<Entity> findAll();
 
 	public Entity findOne(Long id);
-	
+
+	public List<String[]> mapEntitiesToJSON(List<Entity> entities);
+
 }
