@@ -51,4 +51,20 @@ public class FieldAPI implements IFieldAPI {
 		}
     	return resultList;
 	}
+	@Override
+	public List<String[]> mapFieldsToJSON(List<Field> fields) {
+		List<String[]> jsonList = new ArrayList<>();
+		String[] jsonField;
+		for (Field field : fields) {
+			jsonField = new String[6];
+			jsonField[0] = field.getId().toString();
+			jsonField[1] = field.getFieldName();
+			jsonField[2] = field.getType();
+			jsonField[3] = field.isIndexed() + "";
+			jsonField[4] = field.getEntity().getId().toString();
+			jsonField[5] = field.getEntity().getEntityName();
+			jsonList.add(jsonField);
+		}
+		return jsonList;
+	}
 }

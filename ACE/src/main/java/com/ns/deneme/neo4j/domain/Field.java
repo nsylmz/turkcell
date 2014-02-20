@@ -4,10 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import org.neo4j.graphdb.Direction;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.annotation.RelatedTo;
 
 @SuppressWarnings("serial")
 @NodeEntity
@@ -18,9 +21,15 @@ public class Field implements Serializable {
 
 	@Indexed(unique = true)
 	private String fieldName;
+	
+	@Fetch
+	@RelatedTo(type="entity", direction=Direction.INCOMING)
+	private Entity entity;
 
+	@Fetch
+	@RelatedTo(type="annotation", direction=Direction.OUTGOING)
 	private Set<FieldAnnotation> fieldAnnotations;
-
+	
 	@Version
 	private Long version;
 
@@ -29,11 +38,11 @@ public class Field implements Serializable {
 	private boolean indexed;
 
 	private String type;
-
+	
 	public Long getId() {
 		return id;
 	}
-
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -44,6 +53,14 @@ public class Field implements Serializable {
 
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
+	}
+
+	public Entity getEntity() {
+		return entity;
+	}
+
+	public void setEntity(Entity entity) {
+		this.entity = entity;
 	}
 
 	public Set<FieldAnnotation> getFieldAnnotations() {

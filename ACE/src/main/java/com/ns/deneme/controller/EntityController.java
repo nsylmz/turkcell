@@ -38,7 +38,7 @@ public class EntityController {
 	private IEntityAPI entityAPI;
 
 	@RequestMapping(value = "/getEntities")
-	public @ResponseBody Map<String, Object> getMenus(@RequestParam(value="appId") Long appId, Model model) {
+	public @ResponseBody Map<String, Object> getEntities(@RequestParam(value="appId") Long appId, Model model) {
 		Map<String, Object> data = new LinkedHashMap<String, Object>();
 	   	logger.debug("Getting Entities for App Id : " + appId + " ...");
 	   	try {
@@ -58,7 +58,7 @@ public class EntityController {
 	}
 	
 	@RequestMapping(value = "/deleteEntity")
-	public @ResponseBody Map<String, Object> deleteMenu(@RequestParam(value="entityId") Long entityId, Model model) {
+	public @ResponseBody Map<String, Object> deleteEntity(@RequestParam(value="entityId") Long entityId, Model model) {
 		Map<String, Object> data = new LinkedHashMap<String, Object>();
 	   	logger.debug("Deleting Entity with Id : " + entityId + " ...");
 	   	try {
@@ -76,7 +76,7 @@ public class EntityController {
 	}
 	
 	@RequestMapping(value = "/createEntity", consumes={MediaType.APPLICATION_JSON_VALUE})
-	public @ResponseBody Map<String, Object> createMenu(@RequestBody AppEntityVO appEntityVO, Model model) {
+	public @ResponseBody Map<String, Object> createEntity(@RequestBody AppEntityVO appEntityVO, Model model) {
 		Map<String, Object> data = new LinkedHashMap<String, Object>();
 	   	logger.debug("Creating Entity with Name : " + appEntityVO.getEntityName() + " to App Id : " + appEntityVO.getAppId());
 	   	try {
@@ -106,7 +106,7 @@ public class EntityController {
 	}
 	
 	@RequestMapping(value = "/updateEntity", consumes={MediaType.APPLICATION_JSON_VALUE})
-	public @ResponseBody Map<String, Object> updateMenu(@RequestBody EntityVO entityVO, Model model) {
+	public @ResponseBody Map<String, Object> updateEntity(@RequestBody EntityVO entityVO, Model model) {
 		Map<String, Object> data = new LinkedHashMap<String, Object>();
 	   	logger.debug("Update Entity with Id : " + entityVO.getEntityId() + "  Name : " + entityVO.getEntityName());
 	   	try {

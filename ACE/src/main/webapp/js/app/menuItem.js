@@ -1,5 +1,4 @@
 var menuItemTable;
-var pages;
 $(document).ready(function() {
 	$("#menuSelect").combobox();
 	$("#pageSelect").combobox();
@@ -66,6 +65,8 @@ function createMenuItem(button, aPos) {
 	} else if (!($('#menuSelect') && $('#menuSelect').val())) {
 		notify('warnNoMenuDefinedNotification', 'alert-info', 'Please Define A Menu And Go To Menu Tab!!!', 10000);
 	} else {
+		var l = Ladda.create(button);
+	    l.start();
 	    menuItem["menuId"] = $('#menuSelect').val();
 	    var menuName = $('#menuSelect').text().trim();
 	    var menuItemPageName;
@@ -112,6 +113,8 @@ function deleteMenuItem(button) {
     var rowData = menuItemTable.fnGetData(selectedRow);
     var rowNum = menuItemTable.fnGetPosition(selectedRow);
 	if (rowData != null && rowData[0] != null && rowData[0] > 0) {
+		var l = Ladda.create(button);
+	    l.start();
 		$.ajax({
 	        type: "POST",
 	        data: "menuItemId=" + rowData[0],
@@ -133,8 +136,6 @@ function deleteMenuItem(button) {
 }
 
 function updateMenuItem(button, aPos) {
-	var l = Ladda.create(button);
-    l.start();
     var rowData = menuItemTable.fnGetData(aPos);
     var menuItem = {};
     menuItem["menuItemId"] = rowData[0];
@@ -144,6 +145,8 @@ function updateMenuItem(button, aPos) {
 	} else if (!($('#menuSelect') && $('#menuSelect').val())) {
 		notify('warnNoMenuDefinedNotification', 'alert-info', 'Please Define A Menu And Go To Menu Tab!!!', 10000);
 	} else {
+		var l = Ladda.create(button);
+	    l.start();
 		menuItem["menuId"] = $('#menuSelect').val();
 	    var menuName = $('#menuSelect').text().trim();
 	    var menuItemPageName;

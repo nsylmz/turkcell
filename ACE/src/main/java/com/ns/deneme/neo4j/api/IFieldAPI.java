@@ -17,5 +17,7 @@ public interface IFieldAPI {
 	public List<Field> findAll();
 
 	public Field findOne(Long id);
+
+	public List<String[]> mapFieldsToJSON(List<Field> fields);
 	
 }

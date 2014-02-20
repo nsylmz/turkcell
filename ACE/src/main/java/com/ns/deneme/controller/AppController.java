@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ns.deneme.neo4j.api.IAppAPI;
 import com.ns.deneme.neo4j.domain.App;
+import com.ns.deneme.neo4j.domain.Entity;
 import com.ns.deneme.neo4j.domain.Menu;
 import com.ns.deneme.neo4j.domain.Page;
 
@@ -44,6 +45,7 @@ public class AppController {
 	   				model.addAttribute("appId", app.getId());
 	   				List<String[]> appMenus = new ArrayList<String[]>();
 	   				List<String[]> appPages = new ArrayList<String[]>();
+	   				List<String[]> appEntities = new ArrayList<String[]>();
 	   				Iterator<Menu> menuIter = app.getAppMenus().iterator();
 	   				Menu menu;
 	   				while (menuIter.hasNext()) {
@@ -59,6 +61,14 @@ public class AppController {
 	   					appPages.add(new String[]{page.getId().toString(), page.getPageName()});
 					}
 	   				model.addAttribute("appPages", appPages);
+	   				
+	   				Iterator<Entity> entityIter = app.getAppEntities().iterator();
+	   				Entity entity;
+	   				while (entityIter.hasNext()) {
+	   					entity = (Entity) entityIter.next();
+	   					appEntities.add(new String[]{entity.getId().toString(), entity.getEntityName()});
+					}
+	   				model.addAttribute("appEntities", appEntities);
 				} else {
 					logger.error("There is not exists any app which is named : " + appName);
 				}

@@ -444,3 +444,27 @@ table.display tr.odd.row_selected td {
 .ui-front {
 	z-index: 1001!important;
 }
+
+.field-feature-contianer {
+	border-style:solid;
+	border-width:5px;
+	border-color: #63A1E5;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	height: 250px;
+}
+
+
+.field-feature-header {
+	background-image: url(../img/glossy.png);
+	background-color: #ffe000;
+	color: #00000;
+	font-weight: bold;
+	padding: 8px;
+	text-align: center;
+}
+
+.field-container {
+	overflow-y: scroll;
+	overflow-x: hidden;
+}

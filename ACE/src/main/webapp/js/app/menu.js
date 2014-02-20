@@ -90,8 +90,6 @@ $(document).ready(function() {
 });
 
 function createMenu(button, aPos) {
-	var l = Ladda.create(button);
-    l.start();
     var name = $("#menuName").val();
     var appMenu = {};
     appMenu["appId"] = appId;
@@ -99,6 +97,8 @@ function createMenu(button, aPos) {
     if (!name) {
     	notify('warnNoDataEntredNotification', 'alert-info', 'No Values Entred!!!', 10000);
 	} else {
+		var l = Ladda.create(button);
+		l.start();
 	    $.ajax({
 	        type: "POST",
 	        dataType: "json",
@@ -124,12 +124,12 @@ function createMenu(button, aPos) {
 }
 
 function deleteMenu(button) {
-	var l = Ladda.create($("#" + button)[0]);
-    l.start();
     var selectedRow = fnGetSelected(menuTable);
     var rowData = menuTable.fnGetData(selectedRow);
     var rowNum = menuTable.fnGetPosition(selectedRow);
 	if (rowData != null && rowData[0] != null && rowData[0] > 0) {
+		var l = Ladda.create($("#" + button)[0]);
+		l.start();
 		$.ajax({
 	        type: "POST",
 	        data: "menuId=" + rowData[0],
@@ -151,8 +151,6 @@ function deleteMenu(button) {
 }
 
 function updateMenu(button, aPos) {
-	var l = Ladda.create(button);
-    l.start();
     var rowData = menuTable.fnGetData(aPos);
     var name = $("#menuName").val();
     var menu = {};
@@ -161,6 +159,8 @@ function updateMenu(button, aPos) {
     if (rowData[1] == name) {
     	notify('warnNoDataChangesNotification', 'alert-info', 'No Values Changed!!!', 10000);
 	} else {
+		var l = Ladda.create(button);
+		l.start();
 	    $.ajax({
 	        type: "POST",
 	        dataType: "json",
