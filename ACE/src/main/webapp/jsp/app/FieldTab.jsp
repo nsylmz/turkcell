@@ -4,7 +4,7 @@
 <div class="field-container dev-item-container">
 	<div class="container dev-input-container">
 		<label>Field Name</label>
-		<input id="fieldName" class="ace-input" type="text" name="fieldName" placeholder="Enter An Field Name">
+		<input id="fieldName" class="ace-input" type="text" name="fieldName" placeholder="Enter A Field Name">
 	</div>
 	<div class="container dev-input-container">
 		<c:choose>
@@ -95,18 +95,6 @@
 				</tr>
 			</tfoot>
 		</table>
-	</div>
-	
-	<div class="field-feature-contianer">
-		<div class="field-feature-header">
-			Field Annotation Features
-		</div>
-	</div>
-	
-	<div class="field-feature-contianer">
-		<div class="field-feature-header">
-			Field Annotation Member Features
-		</div>
 	</div>
 </div>
 

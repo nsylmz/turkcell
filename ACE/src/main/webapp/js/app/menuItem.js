@@ -46,14 +46,14 @@ $(document).ready(function() {
                     	var aPos = menuItemTable.fnGetPosition(this);
                         $("#menuItemName").val(data[1]);
                         $("#menuSelect");
-                        if ($("#menuSelect").find("option[value*=" + data[2] + "]")) {
+                        if ($("#menuSelect").find("option[value*=" + data[2] + "]").length > 0) {
                         	$("#menuSelect").val(data[2]);
                         	$("#menuSelect").next().find("input").val(data[3]);
                         } else {
                         	notify('menuUnknownNotification', 'alert-danger', "Menu(" + data[3] + ") Is Unkown!!!", 10000);
                         }
                         if ($("#pageSelect") && data[5] != "No Page Is Set") {
-                        	if ($("#pageSelect").find("option[value*=" + data[2] + "]")) {
+                        	if ($("#pageSelect").find("option[value*=" + data[2] + "]").length > 0) {
                         		$("#pageSelect").val(data[4]);
                         		$("#pageSelect").next().find("input").val(data[5]);
 							} else {
@@ -173,9 +173,7 @@ function updateMenuItem(button, aPos) {
     var menuItem = {};
     menuItem["menuItemId"] = rowData[0];
     menuItem["menuItemName"] = $("#menuItemName").val();
-    if (rowData[1] == menuItem["menuItemName"]) {
-    	notify('warnNoDataChangesNotification', 'alert-info', 'No Values Changed!!!', 10000);
-	} else if (!($('#menuSelect') && $('#menuSelect').val())) {
+    if (!($('#menuSelect') && $('#menuSelect').val())) {
 		notify('warnNoMenuDefinedNotification', 'alert-info', 'Please Define A Menu And Go To Menu Tab!!!', 10000);
 	} else {
 		var l = Ladda.create(button);
@@ -206,9 +204,9 @@ function updateMenuItem(button, aPos) {
 	            				 menuName,
 	            				 menuItem["menuItemPageId"],
 	            				 menuItemPageName], aPos);
-	            	notify('updateMovieSuccessNotification', 'alert-info', data.message, 10000);
+	            	notify('updateMenuItemSuccessNotification', 'alert-info', data.message, 10000);
 	            } else if (data.status < 1) {
-	            	notify('updateMovieErrorNotification', 'alert-danger', data.message, 10000);
+	            	notify('updateMenuItemErrorNotification', 'alert-danger', data.message, 10000);
 	            }
 	        }
 	    });

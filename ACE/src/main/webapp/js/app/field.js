@@ -48,16 +48,16 @@ $(document).ready(function() {
                         if (data[3] == true) {
                         	$("#indexedField").attr("checked", "checked");
 						}
-                        if ($("#fieldEntitySelect").find("option[value*=" + data[4] + "]")) {
+                        if ($("#fieldEntitySelect").find("option[value*=" + data[4] + "]").length > 0) {
                         	$("#fieldEntitySelect").val(data[4]);
                         	$("#fieldEntitySelect").next().find("input").val(data[5]);
                         } else {
                         	notify('entityUnknownNotification', 'alert-danger', "Entity(" + data[5] + ") Is Unkown!!!", 10000);
                         }
-                    	if ($("#fieldTypeSelect").find("option[value*=" + data[2] + "]")) {
+                    	if ($("#fieldTypeSelect").find("option[value*=" + data[2] + "]").length > 0) {
                     		$("#fieldTypeSelect").val(data[2]);
                     		$("#fieldTypeSelect").next().find("input").val(data[2]);
-						} else if ($("#fieldEntityTypeSelect").find("option:contains('" + data[2] + "')")) {
+						} else if ($("#fieldEntityTypeSelect").find("option:contains('" + data[2] + "')").length > 0) {
 							$("#fieldEntityTypeSelect").val($("#fieldEntityTypeSelect").find("option:contains('" + data[2] + "')").val());
 							$("#fieldEntityTypeSelect").next().find("input").val(data[2]);
 						} else {
@@ -93,12 +93,12 @@ function createField(button, aPos) {
 		var l = Ladda.create(button);
 	    l.start();
 	    field["entityId"] = $('#fieldEntitySelect').val();
-	    field["entityName"] = $('#fieldEntitySelect').text().trim();
+	    field["entityName"] = $('#fieldEntitySelect').find('option:selected').text().trim();
 	    field["indexed"] = $('#indexedField').prop('checked');
 	    if ($('#fieldTypeSelect').val()) {
 	    	field["fieldType"] = $('#fieldTypeSelect').val();
 		} else if ($('#fieldEntityTypeSelect').val()) {
-			field["fieldType"] = $('#fieldEntityTypeSelect').val();
+			field["fieldType"] = $('#fieldEntityTypeSelect').find('option:selected').text().trim();
 		}
 	    $.ajax({
 	        type: "POST",
@@ -175,9 +175,7 @@ function updateField(button, aPos) {
     var field = {};
     field["fieldId"] = rowData[0];
     field["fieldName"] = $("#fieldName").val();
-    if (rowData[1] == field["fieldName"]) {
-    	notify('warnNoDataChangesNotification', 'alert-info', 'No Values Changed!!!', 10000);
-	} else if (!$('#fieldEntitySelect').val()) {
+    if (!$('#fieldEntitySelect').val()) {
 		notify('warnNoEntitySelectedNotification', 'alert-info', 'Please Select An Entity!!!', 10000);
 	} else if (!$('#fieldTypeSelect').val() && !$('#fieldEntityTypeSelect').val()) {
 		notify('warnNoTypeSelectedNotification', 'alert-info', 'Please Select A Field Type Or Field Entity Type!!!', 10000);
@@ -185,12 +183,12 @@ function updateField(button, aPos) {
 		var l = Ladda.create(button);
 	    l.start();
 		field["entityId"] = $('#fieldEntitySelect').val();
-	    field["entityName"] = $('#fieldEntitySelect').text().trim();
+	    field["entityName"] = $('#fieldEntitySelect').find('option:selected').text().trim();
 	    field["indexed"] = $('#indexedField').prop('checked');
 	    if ($('#fieldTypeSelect').val()) {
 	    	field["fieldType"] = $('#fieldTypeSelect').val();
 		} else if ($('#fieldEntityTypeSelect').val()) {
-			field["fieldType"] = $('#fieldEntityTypeSelect').val();
+			field["fieldType"] = $('#fieldEntityTypeSelect').find('option:selected').text().trim();
 		}
 	    $.ajax({
 	        type: "POST",

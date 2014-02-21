@@ -1,6 +1,7 @@
 package com.ns.deneme.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,6 +12,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.neo4j.annotation.Fetch;
+import org.springframework.data.neo4j.annotation.RelatedTo;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,12 +23,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ns.deneme.bytecode.util.AnnotationMemberType;
 import com.ns.deneme.neo4j.api.IAppAPI;
 import com.ns.deneme.neo4j.api.IEntityAPI;
 import com.ns.deneme.neo4j.api.IFieldAPI;
+import com.ns.deneme.neo4j.api.IFieldAnnotationAPI;
+import com.ns.deneme.neo4j.api.IFieldAnnotationMemberAPI;
 import com.ns.deneme.neo4j.domain.App;
 import com.ns.deneme.neo4j.domain.Entity;
 import com.ns.deneme.neo4j.domain.Field;
+import com.ns.deneme.neo4j.domain.FieldAnnotation;
+import com.ns.deneme.neo4j.domain.FieldAnnotationMember;
+import com.ns.deneme.neo4j.domain.util.FieldType;
 import com.ns.deneme.vo.FieldVO;
 
 @Controller
@@ -39,6 +48,12 @@ public class FieldController {
 	
 	@Autowired
 	private IFieldAPI fieldAPI;
+	
+	@Autowired
+	private IFieldAnnotationAPI fieldAnnotationAPI;
+	
+	@Autowired
+	private IFieldAnnotationMemberAPI fieldAnnotationMemberAPI;
 	
 	@Autowired
 	private IEntityAPI entityAPI;
@@ -76,7 +91,24 @@ public class FieldController {
 		Map<String, Object> data = new LinkedHashMap<String, Object>();
 	   	logger.debug("Deleting Field with Id : " + fieldId + " ...");
 	   	try {
-	   		fieldAPI.deleteById(fieldId);
+	   		Field field = fieldAPI.findOne(fieldId);
+	   		Set<FieldAnnotation> annots = field.getFieldAnnotations();
+	   		Iterator<FieldAnnotation> annotIter = annots.iterator();
+	   		FieldAnnotation fieldAnnotation;
+	   		Set<FieldAnnotationMember> members;
+	   		Iterator<FieldAnnotationMember> memberIter;
+	   		FieldAnnotationMember fieldAnnotationMember;
+	   		while (annotIter.hasNext()) {
+				fieldAnnotation = (FieldAnnotation) annotIter.next();
+				members = fieldAnnotation.getFieldAnnotationMemebers();
+				memberIter = members.iterator();
+				while (memberIter.hasNext()) {
+					fieldAnnotationMember = (FieldAnnotationMember) memberIter.next();
+					fieldAnnotationMemberAPI.delete(fieldAnnotationMember);
+				}
+				fieldAnnotationAPI.delete(fieldAnnotation);
+			}
+	   		fieldAPI.delete(field);
 	   		data.put("status", "1");
 			data.put("message", "Field Is Successfully Deleted");
 		} catch (Exception e) {
@@ -101,7 +133,39 @@ public class FieldController {
 	   			if (entity != null) {
 	   				Field field = new Field();
 	   				field.setFieldName(fieldVO.getFieldName());
-	   				field.setType(fieldVO.getFieldType());
+	   				FieldType type = FieldType.getValue(fieldVO.getFieldType());
+	   				if (type != null) { // Not A Relation
+	   					field.setType(fieldVO.getFieldType());
+					} else { // Create Field Annotation And Field Annotation Member
+						FieldAnnotationMember annotType = new FieldAnnotationMember();
+						annotType.setFieldAnnotationMemberName("type");
+						annotType.setFieldAnnotationMemberType(AnnotationMemberType.STRING.name);
+						annotType.setFieldAnnotationMemberValue(fieldVO.getFieldName());
+						fieldAnnotationMemberAPI.save(annotType);
+						
+						FieldAnnotationMember graphDirection = new FieldAnnotationMember();
+						graphDirection.setFieldAnnotationMemberName("direction");
+						graphDirection.setFieldAnnotationMemberType(AnnotationMemberType.ENUM.name);
+						graphDirection.setFieldAnnotationMemberValue("OUTGOING");
+						fieldAnnotationMemberAPI.save(graphDirection);
+						
+						FieldAnnotation relatedTo = new FieldAnnotation();
+						relatedTo.setFieldAnnotationName("RelatedTo");
+						relatedTo.setFieldAnnotationClass(RelatedTo.class.getName());
+						relatedTo.setFieldAnnotationMemebers(new HashSet<FieldAnnotationMember>());
+						relatedTo.getFieldAnnotationMemebers().add(annotType);
+						relatedTo.getFieldAnnotationMemebers().add(graphDirection);
+						fieldAnnotationAPI.save(relatedTo);
+						
+						FieldAnnotation fetch = new FieldAnnotation();
+						fetch.setFieldAnnotationName("Fetch");
+						fetch.setFieldAnnotationClass(Fetch.class.getName());
+						fieldAnnotationAPI.save(fetch);
+						
+						field.setFieldAnnotations(new HashSet<FieldAnnotation>());
+						field.getFieldAnnotations().add(fetch);
+						field.getFieldAnnotations().add(relatedTo);
+					}
 	   				field.setEntity(entity);
 	   				field.setIndexed(fieldVO.isIndexed());
 	   				fieldAPI.save(field);
@@ -150,7 +214,59 @@ public class FieldController {
 							field.setFieldName(fieldVO.getFieldName());
 				   			field.setEntity(entity);
 				   			field.setIndexed(fieldVO.isIndexed());
-				   			field.setType(fieldVO.getFieldType());
+				   			if (!field.getType().trim().equals(fieldVO.getFieldType().trim())) {
+				   				FieldType type = FieldType.getValue(fieldVO.getFieldType());
+				   				if (type != null) { // Not A Relation
+				   					field.setType(fieldVO.getFieldType());
+				   				} else {
+				   					// Delete Old Annotations And Members
+				   					Set<FieldAnnotation> annots = field.getFieldAnnotations();
+				   			   		Iterator<FieldAnnotation> annotIter = annots.iterator();
+				   			   		FieldAnnotation fieldAnnotation;
+				   			   		Set<FieldAnnotationMember> members;
+				   			   		Iterator<FieldAnnotationMember> memberIter;
+				   			   		FieldAnnotationMember fieldAnnotationMember;
+				   			   		while (annotIter.hasNext()) {
+				   						fieldAnnotation = (FieldAnnotation) annotIter.next();
+				   						members = fieldAnnotation.getFieldAnnotationMemebers();
+				   						memberIter = members.iterator();
+				   						while (memberIter.hasNext()) {
+				   							fieldAnnotationMember = (FieldAnnotationMember) memberIter.next();
+				   							fieldAnnotationMemberAPI.delete(fieldAnnotationMember);
+				   						}
+				   						fieldAnnotationAPI.delete(fieldAnnotation);
+				   					}
+				   			   		// Create Field Annotation And Field Annotation Member
+				   					FieldAnnotationMember annotType = new FieldAnnotationMember();
+				   					annotType.setFieldAnnotationMemberName("type");
+				   					annotType.setFieldAnnotationMemberType(AnnotationMemberType.STRING.name);
+				   					annotType.setFieldAnnotationMemberValue(fieldVO.getFieldName());
+				   					fieldAnnotationMemberAPI.save(annotType);
+				   					
+				   					FieldAnnotationMember graphDirection = new FieldAnnotationMember();
+				   					graphDirection.setFieldAnnotationMemberName("direction");
+				   					graphDirection.setFieldAnnotationMemberType(AnnotationMemberType.ENUM.name);
+				   					graphDirection.setFieldAnnotationMemberValue("OUTGOING");
+				   					fieldAnnotationMemberAPI.save(graphDirection);
+				   					
+				   					FieldAnnotation relatedTo = new FieldAnnotation();
+				   					relatedTo.setFieldAnnotationName("RelatedTo");
+				   					relatedTo.setFieldAnnotationClass(RelatedTo.class.getName());
+				   					relatedTo.setFieldAnnotationMemebers(new HashSet<FieldAnnotationMember>());
+				   					relatedTo.getFieldAnnotationMemebers().add(annotType);
+				   					relatedTo.getFieldAnnotationMemebers().add(graphDirection);
+				   					fieldAnnotationAPI.save(relatedTo);
+				   					
+				   					FieldAnnotation fetch = new FieldAnnotation();
+				   					fetch.setFieldAnnotationName("Fetch");
+				   					fetch.setFieldAnnotationClass(Fetch.class.getName());
+				   					fieldAnnotationAPI.save(fetch);
+				   					
+				   					field.setFieldAnnotations(new HashSet<FieldAnnotation>());
+				   					field.getFieldAnnotations().add(fetch);
+				   					field.getFieldAnnotations().add(relatedTo);
+				   				}
+							}
 				   			fieldAPI.save(field);
 				   			
 				   			entity.getFields().add(field);
