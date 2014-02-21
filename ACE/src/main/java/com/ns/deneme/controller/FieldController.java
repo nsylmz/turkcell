@@ -96,21 +96,28 @@ public class FieldController {
 	   	try {
 	   		if (fieldVO.getEntityId() != null && fieldVO.getEntityId() > 0 
 	   				&& StringUtils.isNotEmpty(fieldVO.getFieldName())) {
-	   			Field field = new Field();
-	   			field.setFieldName(fieldVO.getFieldName());
-	   			field.setType(fieldVO.getFieldType());
-	   			field.setIndexed(fieldVO.isIndexed());
-	   			fieldAPI.save(field);
-	   			
 	   			Entity entity = entityAPI.findOne(fieldVO.getEntityId());
-	   			entity.getFields().add(field);
-	   			entityAPI.save(entity);
-	   			data.put("status", "1");
-	   			data.put("id", entity.getId());
-				data.put("message", "Field Is Successfully Created and Added To The Entity.");
+	   			
+	   			if (entity != null) {
+	   				Field field = new Field();
+	   				field.setFieldName(fieldVO.getFieldName());
+	   				field.setType(fieldVO.getFieldType());
+	   				field.setEntity(entity);
+	   				field.setIndexed(fieldVO.isIndexed());
+	   				fieldAPI.save(field);
+	   				
+	   				entity.getFields().add(field);
+	   				entityAPI.save(entity);
+	   				data.put("status", "1");
+	   				data.put("id", entity.getId());
+	   				data.put("message", "Field Is Successfully Created and Added To The Entity.");
+				} else {
+					data.put("status", "-3");
+					data.put("message", "Given Entity Id " + fieldVO.getEntityId() + " Does Not Exist!!!");
+				}
 			} else {
 				data.put("status", "-2");
-				data.put("message", "App Id and Field Name Should Not Be Null!!!");
+				data.put("message", "Entity Id and Field Name Should Not Be Null!!!");
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

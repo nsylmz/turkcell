@@ -11,6 +11,7 @@
 			<c:when test="${not empty appMenus}">
 				<label>Select Menu</label>
 				<select id="menuSelect">
+					<option value=""></option>
 					<c:forEach var="menu" items="${appMenus}">
 						<option value="${menu[0]}">${menu[1]}</option>
 					</c:forEach>
@@ -26,6 +27,7 @@
 			<c:when test="${not empty appPages}">
 				<label>Select Page</label>
 				<select id="pageSelect">
+					<option value=""></option>
 					<c:forEach var="page" items="${appPages}">
 						<option value="${page[0]}">${page[1]}</option>
 					</c:forEach>

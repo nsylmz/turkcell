@@ -30,6 +30,13 @@ $(document).ready(function() {
             	$('#fieldTable').delegate('tr','click', function() {
                     if ($(this).hasClass('row_selected')) {
                         $("#fieldName").val("");
+                        $("#fieldEntitySelect").val("");
+    	            	$("#fieldEntitySelect").next().find("input").val("");
+                        $("#fieldTypeSelect").val("");
+                        $("#fieldTypeSelect").next().find("input").val("");
+                        $("#fieldEntityTypeSelect").val("");
+                        $("#fieldEntityTypeSelect").next().find("input").val("");
+                        $("#indexedField").removeAttr("checked");
                         $("#createFieldButtonLabel").html("Add Field");
                         $("#createFieldButtonLabel").parent().attr("onclick", "createField(this)");
                         $("#deleteField").attr('disabled', 'disabled');
@@ -38,6 +45,24 @@ $(document).ready(function() {
                     	var data = fieldTable.fnGetData(this);
                     	var aPos = fieldTable.fnGetPosition(this);
                         $("#fieldName").val(data[1]);
+                        if (data[3] == true) {
+                        	$("#indexedField").attr("checked", "checked");
+						}
+                        if ($("#fieldEntitySelect").find("option[value*=" + data[4] + "]")) {
+                        	$("#fieldEntitySelect").val(data[4]);
+                        	$("#fieldEntitySelect").next().find("input").val(data[5]);
+                        } else {
+                        	notify('entityUnknownNotification', 'alert-danger', "Entity(" + data[5] + ") Is Unkown!!!", 10000);
+                        }
+                    	if ($("#fieldTypeSelect").find("option[value*=" + data[2] + "]")) {
+                    		$("#fieldTypeSelect").val(data[2]);
+                    		$("#fieldTypeSelect").next().find("input").val(data[2]);
+						} else if ($("#fieldEntityTypeSelect").find("option:contains('" + data[2] + "')")) {
+							$("#fieldEntityTypeSelect").val($("#fieldEntityTypeSelect").find("option:contains('" + data[2] + "')").val());
+							$("#fieldEntityTypeSelect").next().find("input").val(data[2]);
+						} else {
+							notify('fieldTypeUnknownNotification', 'alert-danger', "Selected Field's(" + data[1] + ")  Type(" + data[2] + ") Unkown!!!", 10000);
+						}
                         $("#createFieldButtonLabel").html("Update Field");
                         $("#createFieldButtonLabel").parent().attr("onclick", "updateField(this," + aPos +")");
                     	$("#deleteField").attr("onclick", "confirmNotify('deleteAnField', 'Are You Sure Delete This Field?', 'Delete', 'Cancel', 'deleteField', ['deleteAnFieldConfirmButton'])");
@@ -93,6 +118,13 @@ function createField(button, aPos) {
 	            				 field["entityName"]
 	            				 ]);
 	            	$("#fieldName").val("");
+	            	$("#fieldEntitySelect").val("");
+	            	$("#fieldEntitySelect").next().find("input").val("");
+                    $("#fieldTypeSelect").val("");
+                    $("#fieldTypeSelect").next().find("input").val("");
+                    $("#fieldEntityTypeSelect").val("");
+                    $("#fieldEntityTypeSelect").next().find("input").val("");
+                    $("#indexedField").removeAttr("checked");
 	            	$("#createFieldButtonLabel").html("Add Field");
                     $("#createFieldButtonLabel").parent().attr("onclick", "createField(this)");
 	            	notify('addFieldSuccessNotification', 'alert-info', data.message, 10000);
@@ -119,6 +151,13 @@ function deleteField(button) {
 	        	l.stop();
 	            if (data.status == 1) {
 	            	$("#fieldName").val("");
+	            	$("#fieldEntitySelect").val("");
+	            	$("#fieldEntitySelect").next().find("input").val("");
+                    $("#fieldTypeSelect").val("");
+                    $("#fieldTypeSelect").next().find("input").val("");
+                    $("#fieldEntityTypeSelect").val("");
+                    $("#fieldEntityTypeSelect").next().find("input").val("");
+                    $("#indexedField").removeAttr("checked");
 	            	$("#createFieldButtonLabel").html("Add Field");
                     $("#createFieldButtonLabel").parent().attr("onclick", "createField(this)");
 	            	fieldTable.fnDeleteRow(rowNum);
@@ -147,7 +186,7 @@ function updateField(button, aPos) {
 	    l.start();
 		field["entityId"] = $('#fieldEntitySelect').val();
 	    field["entityName"] = $('#fieldEntitySelect').text().trim();
-	    field["indexed"] = $('#indexedField').val();
+	    field["indexed"] = $('#indexedField').prop('checked');
 	    if ($('#fieldTypeSelect').val()) {
 	    	field["fieldType"] = $('#fieldTypeSelect').val();
 		} else if ($('#fieldEntityTypeSelect').val()) {

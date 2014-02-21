@@ -11,6 +11,7 @@
 			<c:when test="${not empty appEntities}">
 				<label>Select An Entity</label>
 				<select id="fieldEntitySelect">
+					<option value=""></option>
 					<c:forEach var="entity" items="${appEntities}">
 						<option value="${entity[0]}">${entity[1]}</option>
 					</c:forEach>
@@ -28,6 +29,7 @@
 	<div class="container dev-input-container">
 		<label>Select A Field Type</label>
 		<select id="fieldTypeSelect">
+			<option value=""></option>
 			<option value="String">String</option>
 			<option value="Char">Char</option>
 			<option value="Integer">Integer</option>

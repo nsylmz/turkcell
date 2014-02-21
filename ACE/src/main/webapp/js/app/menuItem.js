@@ -31,6 +31,12 @@ $(document).ready(function() {
             	$('#menuItemTable').delegate('tr','click', function() {
                     if ($(this).hasClass('row_selected')) {
                         $("#menuItemName").val("");
+                        $("#menuSelect").val("");
+                        $("#menuSelect").next().find("input").val("");
+                        if ($("#pageSelect")) {
+                        	$("#pageSelect").val("");
+                        	$("#pageSelect").next().find("input").val("");
+						}
                         $("#createMenuItemButtonLabel").html("Add Menu Item");
                         $("#createMenuItemButtonLabel").parent().attr("onclick", "createMenuItem(this)");
                         $("#deleteMenu").attr('disabled', 'disabled');
@@ -39,6 +45,21 @@ $(document).ready(function() {
                     	var data = menuItemTable.fnGetData(this);
                     	var aPos = menuItemTable.fnGetPosition(this);
                         $("#menuItemName").val(data[1]);
+                        $("#menuSelect");
+                        if ($("#menuSelect").find("option[value*=" + data[2] + "]")) {
+                        	$("#menuSelect").val(data[2]);
+                        	$("#menuSelect").next().find("input").val(data[3]);
+                        } else {
+                        	notify('menuUnknownNotification', 'alert-danger', "Menu(" + data[3] + ") Is Unkown!!!", 10000);
+                        }
+                        if ($("#pageSelect") && data[5] != "No Page Is Set") {
+                        	if ($("#pageSelect").find("option[value*=" + data[2] + "]")) {
+                        		$("#pageSelect").val(data[4]);
+                        		$("#pageSelect").next().find("input").val(data[5]);
+							} else {
+								notify('pageUnknownNotification', 'alert-danger', "Page(" + data[5] + ") Is Unkown!!!", 10000);
+							}
+                        }
                         $("#createMenuItemButtonLabel").html("Update Menu Item");
                         $("#createMenuItemButtonLabel").parent().attr("onclick", "updateMenuItem(this," + aPos +")");
                     	$("#deleteMenuItem").attr("onclick", "confirmNotify('deleteAnMenuItem', 'Are You Sure Delete This Menu Item?', 'Delete', 'Cancel', 'deleteMenuItem', ['deleteAnMenuItemConfirmButton'])");
@@ -95,6 +116,12 @@ function createMenuItem(button, aPos) {
 	            				 menuItemPageName
 	            				 ]);
 	            	$("#menuItemName").val("");
+	            	$("#menuSelect").val("");
+	            	$("#menuSelect").next().find("input").val("");
+	            	if ($("#pageSelect")) {
+	            		$("#pageSelect").val("");
+	            		$("#pageSelect").next().find("input").val("");
+					}
 	            	$("#createMenuItemButtonLabel").html("Add Menu Item");
                     $("#createMenuItemButtonLabel").parent().attr("onclick", "createMenuItem(this)");
 	            	notify('addMenuItemSuccessNotification', 'alert-info', data.message, 10000);
@@ -123,6 +150,12 @@ function deleteMenuItem(button) {
 	        	l.stop();
 	            if (data.status == 1) {
 	            	$("#menuItemName").val("");
+	            	$("#menuSelect").val("");
+	            	$("#menuSelect").next().find("input").val("");
+	            	if ($("#pageSelect")) {
+	            		$("#pageSelect").val("");
+	            		$("#pageSelect").next().find("input").val("");
+					}
 	            	$("#createMenuItemButtonLabel").html("Add Menu Item");
                     $("#createMenuItemButtonLabel").parent().attr("onclick", "createMenuItem(this)");
 	            	menuItemTable.fnDeleteRow(rowNum);
